@@ -3,13 +3,13 @@ package entities;
 import java.util.ArrayList;
 
 public class Cliente {
-    String nome;
-    String cpf;
-    ArrayList<Endereco> enderecos;
-    ArrayList<Contato> contatos;
-    String login;
-    String senha;
-    ArrayList<Conta> contas;
+    private String nome;
+    private String cpf;
+    private ArrayList<Endereco> enderecos;
+    private ArrayList<Contato> contatos;
+    private String login;
+    private String senha;
+    private ArrayList<Conta> contas;
 
     public Cliente(String nome, String cpf, ArrayList<Endereco> enderecos, ArrayList<Contato> contatos, String login, String senha, ArrayList<Conta> contas) {
         this.nome = nome;
@@ -22,7 +22,7 @@ public class Cliente {
     }
 
     public boolean criarConta() {
-        return contas.add(new Conta(this));
+        return true;
     }
     
 
