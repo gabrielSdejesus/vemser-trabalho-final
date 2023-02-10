@@ -9,4 +9,9 @@ public class Item {
         this.valor = valor;
         this.quantidade = quantidade;
     }
+
+    public double returnPrecoItem(){
+        return valor*quantidade;
+    }
+
 }
