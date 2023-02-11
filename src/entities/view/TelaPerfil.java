@@ -54,26 +54,26 @@ public class TelaPerfil  implements Tela {
                 if(senhaAdm.equals("ABACAXI")){
                     String nomeCliente, cpfCliente, loginCliente, senhaCliente;
 
-                    System.out.println("Etapa [1] de [6]");
+                    System.out.println("\tEtapa [1] de [6]");
                     System.out.println("Insira o Nome do cliente:");
                     nomeCliente = scanner.nextLine();
 
-                    System.out.println("Etapa [2] de [6]");
+                    System.out.println("\tEtapa [2] de [6]");
                     System.out.println("Insira o CPF do cliente:");
                     cpfCliente = scanner.nextLine();
 
-                    System.out.println("Etapa [3] de [6]");
+                    System.out.println("\tEtapa [3] de [6]");
                     System.out.println("Insira o Login do cliente:");
                     loginCliente = scanner.nextLine();
 
-                    System.out.println("Etapa [4] de [6]");
+                    System.out.println("\tEtapa [4] de [6]");
                     System.out.println("Insira a Senha do cliente:");
                     senhaCliente = scanner.nextLine();
 
                     ArrayList<Contato> contatos = new ArrayList<>();
                     String contatoInput = "";
 
-                    System.out.println("Etapa [5] de [6]");
+                    System.out.println("\tEtapa [5] de [6]");
                     while(!contatoInput.equalsIgnoreCase("ENCERRAR CONTATOS")){
                         System.out.println("Insira [ENCERRAR CONTATOS] para parar de adicionar contatos do cliente");
                         System.out.println("Insira o telefone do contato do cliente:");
@@ -98,7 +98,7 @@ public class TelaPerfil  implements Tela {
                     ArrayList<Endereco> enderecos = new ArrayList<>();
                     String enderecoInput = "";
 
-                    System.out.println("Etapa [6] de [6]");
+                    System.out.println("\tEtapa [6] de [6]");
                     while(!enderecoInput.equalsIgnoreCase("ENCERRAR ENDEREÇOS")){
                         System.out.println("Insira [ENCERRAR ENDEREÇOS] para parar de adicionar endereços do cliente");
                         System.out.println("Insira o Logradouro do endereço do cliente:");
@@ -106,7 +106,7 @@ public class TelaPerfil  implements Tela {
 
                         String cidade, estado, pais, cep;
 
-                        if(enderecoInput.equalsIgnoreCase("ENCERRAR CONTATOS")){
+                        if(enderecoInput.equalsIgnoreCase("ENCERRAR ENDEREÇOS")){
                             if (contatos.size()<1){
                                 System.out.println("Você deve adicionar ao menos um Endereço!");
                                 enderecoInput = "";
@@ -129,7 +129,10 @@ public class TelaPerfil  implements Tela {
                     Conta conta = new Conta(cliente, 0);
                     BancoDeDados.adicionarConta(conta);
                     System.out.println("Cliente adicionado com sucesso!");
-                    System.out.println("NÃO ESQUECA DE GUARDAR OS DADOS DE ACESSO DA CONTA E DO CLIENTE!");
+                    System.out.println("\tNÃO ESQUECA DE GUARDAR OS DADOS DE ACESSO DA CONTA E DO CLIENTE!");
+                    System.out.println("\t\tLogin do cliente: "+loginCliente);
+                    System.out.println("\t\tSenha do cliente: "+senhaCliente);
+                    System.out.println("\t\tNúmero da conta do cliente: "+conta.getNumero());
                 }else{
                     System.err.println("Número de conta ou senha inválida");
                 }
