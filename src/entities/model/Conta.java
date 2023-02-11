@@ -131,6 +131,9 @@ public class Conta implements Exibicao {
     }
 
     public void exibirTransferencias() {
-        System.out.println("");/////////////////
+        System.out.println("Exibindo todas as transferências da conta ["+this.numero+"]:");
+        for(Transferencia transferencia: transferencias){
+            transferencia.exibir();
+        }
     }
 }

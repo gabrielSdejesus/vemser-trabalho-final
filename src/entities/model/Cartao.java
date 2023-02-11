@@ -1,9 +1,11 @@
 package entities.model;
 
 import entities.controller.BancoDeDados;
+import entities.interfaces.Exibicao;
 
 import java.time.LocalDate;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -14,9 +16,9 @@ public abstract class Cartao {
     private String senha;
     private LocalDate vencimento;
     private Conta conta;
-    private List<Compra> compras;
+    private List<Compra> compras = new ArrayList<>();
 
-    public Cartao(){};
+    public Cartao(){}
 
     public Cartao(Conta conta) {
 
@@ -72,7 +74,10 @@ public abstract class Cartao {
     }
 
     public void exibirCompras() {
-        System.out.println("");
+        System.out.println("Exibindo compras do cartão ["+ (conta.getCartoes()[0] == this? "1": "2") +"] de "+(getTipo() == 1? "Débito": "Crédito"));
+        for(Compra compra: compras) {
+            compra.exibir();
+        }
     }
 
     public int getTipo(){
