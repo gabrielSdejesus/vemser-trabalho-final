@@ -5,9 +5,10 @@ import entities.interfaces.Tela;
 import java.util.Scanner;
 
 public class TelaCompras  implements Tela {
-    public void exibirCompras(){
+    public static void exibirCompras(){
         System.out.println("Você está na Tela de Compras");
-        this.tratarInput(this.pedirInput());
+        TelaCompras tela = new TelaCompras();
+        tela.tratarInput(tela.pedirInput());
     }
 
     @Override

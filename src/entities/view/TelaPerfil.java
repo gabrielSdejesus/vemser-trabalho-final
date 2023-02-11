@@ -5,9 +5,10 @@ import entities.interfaces.Tela;
 import java.util.Scanner;
 
 public class TelaPerfil  implements Tela {
-    public void exibirTelaPerfil(){
+    public static void exibirTelaPerfil(){
         System.out.println("Você está na Tela de Perfil");
-        this.tratarInput(this.pedirInput());
+        TelaPerfil tela = new TelaPerfil();
+        tela.tratarInput(tela.pedirInput());
     }
 
     @Override

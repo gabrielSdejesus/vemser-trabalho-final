@@ -5,9 +5,10 @@ import entities.interfaces.Tela;
 import java.util.Scanner;
 
 public class TelaPrincipal  implements Tela {
-    public void exibirTelaPrincipal(){
+    public static void exibirTelaPrincipal(){
         System.out.println("Você está na Tela Principal");
-        this.tratarInput(this.pedirInput());
+        TelaPrincipal tela = new TelaPrincipal();
+        tela.tratarInput(tela.pedirInput());
     }
 
     @Override

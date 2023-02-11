@@ -5,9 +5,10 @@ import entities.interfaces.Tela;
 import java.util.Scanner;
 
 public class TelaTransferencias implements Tela {
-    public void exibirTransferencias(){
+    public static void exibirTransferencias(){
         System.out.println("Você está na Tela de Transferências");
-        this.tratarInput(this.pedirInput());
+        TelaTransferencias tela = new TelaTransferencias();
+        tela.tratarInput(tela.pedirInput());
     }
 
     @Override

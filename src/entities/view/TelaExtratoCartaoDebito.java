@@ -5,9 +5,10 @@ import entities.interfaces.Tela;
 import java.util.Scanner;
 
 public class TelaExtratoCartaoDebito  implements Tela {
-    public void exibirTelaExtratoCartaoDebito(){
+    public static void exibirTelaExtratoCartaoDebito(){
         System.out.println("Você está na Tela de Extrato de Cartao de Débito");
-        this.tratarInput(this.pedirInput());
+        TelaExtratoCartaoDebito tela = new TelaExtratoCartaoDebito();
+        tela.tratarInput(tela.pedirInput());
     }
 
     @Override

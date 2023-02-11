@@ -8,22 +8,22 @@ public interface Tela {
     default void redirecionarParaTela(int tela){
         switch(tela){
             case 1 -> {
-                new TelaPrincipal().exibirTelaPrincipal();
+                TelaPrincipal.exibirTelaPrincipal();
             }
             case 2 -> {
-                new TelaCompras().exibirCompras();
+                TelaCompras.exibirCompras();
             }
             case 3 -> {
-                new TelaExtratoCartaoCredito().exibirTelaExtratoCartaoCredito();
+                TelaExtratoCartaoCredito.exibirTelaExtratoCartaoCredito();
             }
             case 4 -> {
-                new TelaExtratoCartaoDebito().exibirTelaExtratoCartaoDebito();
+                TelaExtratoCartaoDebito.exibirTelaExtratoCartaoDebito();
             }
             case 5 -> {
-                new TelaPerfil().exibirTelaPerfil();
+                TelaPerfil.exibirTelaPerfil();
             }
             case 6 -> {
-                new TelaTransferencias().exibirTransferencias();
+                TelaTransferencias.exibirTransferencias();
             }
             default -> {
                 System.err.println("Número da tela incorreta, erro na linha 29 da Inteface Tela");
