@@ -87,7 +87,7 @@ public class Conta implements Exibicao {
 
         if((indice == 0 || indice == 1)
                 && verificarSenha(senha)) {
-            this.cartoes[indice] = new CartaoDeDebito(this);
+            this.cartoes[indice] = null;
             BancoDeDados.alterarDadosDaConta(this);
             return true;
         };
