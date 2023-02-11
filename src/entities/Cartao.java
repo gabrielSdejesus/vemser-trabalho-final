@@ -12,6 +12,8 @@ public class Cartao {
     private Conta conta;
     private List<Compra> compras;
 
+    public Cartao(){};
+
     public Cartao(Date dataExpedicao, int codigoSeguranca, int numero, int senha, Date vencimento, Conta conta, List<Compra> compras) {
         this.dataExpedicao = dataExpedicao;
         this.codigoSeguranca = codigoSeguranca;

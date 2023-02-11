@@ -19,6 +19,8 @@ public class Cliente {
         this.login = login;
         this.senha = senha;
         this.contas = contas;
+        BancoDeDados bancoDeDados = new BancoDeDados();
+        bancoDeDados.adicionarCliente(this);
     }
 
     public boolean criarConta() {

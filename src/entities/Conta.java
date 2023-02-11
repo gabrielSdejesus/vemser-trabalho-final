@@ -26,6 +26,8 @@ public class Conta {
             this.numero = new Random().nextInt(1000, 5000);
             this.agencia = new Random().nextInt(1000,2000);
             this.saldo = saldoInicial;
+            BancoDeDados bancoDeDados = new BancoDeDados();
+            bancoDeDados.adicionarConta(this);
         }
     }
 
@@ -49,11 +51,11 @@ public class Conta {
 
     public boolean transferir(Conta conta, double valor,int senha){
 
-
         if(valor > 0 && valor >= this.saldo
                 && verificarSenha(senha)){
             this.saldo -= valor;
             conta.saldo += conta.getSaldo() + valor;
+            this.transferencias.add(new Transferencia(conta,this,valor));
             return true;
         }
         return false;
@@ -61,7 +63,7 @@ public class Conta {
 
     public void adicionarCartao(Cartao cartao, int senha){
 
-        if(verificarSenha(senha)){
+        if(verificarSenha(senha) && cartao != null){
             for(int i = 0; i < this.cartoes.length; i++){
                 if(this.cartoes[i] == null){
                     this.cartoes[i] = cartao;
@@ -69,7 +71,6 @@ public class Conta {
             }
         }
     }
-
 
     public void removerCartao(int indice, int senha){
 
