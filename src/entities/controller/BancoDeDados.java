@@ -16,7 +16,6 @@ public class BancoDeDados implements Exibicao {
     }
 
     public static void alterarDadosDaConta(Conta conta){
-
         int controlador = -1;
         for(Conta x: contas){
             controlador++;
@@ -45,7 +44,10 @@ public class BancoDeDados implements Exibicao {
 
     @Override
     public void exibir() {
-
+        System.out.println("Exibindo todas as Contas do Banco de Dados:");
+        for(Conta c: contas){
+            c.exibir();
+        }
     }
 
     public static List<Conta> getContas() {

@@ -38,7 +38,6 @@ public class Conta implements Exibicao {
     }
 
     public boolean sacar (double valor, String senha){
-
         if(valor > 0 && valor <= this.saldo + CHEQUE_ESPECIAL && verificarSenha(senha)){
             this.saldo -= valor;
             BancoDeDados.alterarDadosDaConta(this);
@@ -47,7 +46,6 @@ public class Conta implements Exibicao {
         return false;    }
 
     public boolean depositar(double valor, String senha){
-
         if(valor > 0 && verificarSenha(senha)){
             this.saldo += valor;
             BancoDeDados.alterarDadosDaConta(this);
@@ -57,7 +55,6 @@ public class Conta implements Exibicao {
     }
 
     public boolean transferir(Conta conta, double valor, String senha){
-
         if(valor > 0 && valor >= this.saldo
                 && verificarSenha(senha)){
             this.saldo -= valor;
@@ -70,7 +67,6 @@ public class Conta implements Exibicao {
     }
 
     public boolean adicionarCartao(Cartao cartao, String senha){
-
         if(verificarSenha(senha) && cartao != null){
             for(int i = 0; i < this.cartoes.length; i++){
                 if(this.cartoes[i] == null){
@@ -84,7 +80,6 @@ public class Conta implements Exibicao {
     }
 
     public boolean removerCartao(int indice, String senha){
-
         if((indice == 0 || indice == 1)
                 && verificarSenha(senha)) {
             this.cartoes[indice] = null;
@@ -95,7 +90,6 @@ public class Conta implements Exibicao {
     }
 
     public boolean alterarSenha(String senhaAntiga, String novaSenha){
-
         if(verificarSenha(senhaAntiga)){
             this.senha = novaSenha;
             BancoDeDados.alterarDadosDaConta(this);
