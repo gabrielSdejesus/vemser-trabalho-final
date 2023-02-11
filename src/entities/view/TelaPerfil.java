@@ -267,8 +267,6 @@ public class TelaPerfil  implements Tela {
 
     public static int pedirInput() {
         System.out.println("[1] -> Insira seus dados de LOGIN para exibir seus dados de CLIENTE\n[2] -> Insira seus dados de LOGIN para exibir os dados da sua CONTA\n[3] -> Cadastrar um novo CLIENTE com CONTA\n[4] -> Alterar CONTATO do CLIENTE\n[5] -> Alterar ENDEREÇO do CLIENTE\n[6] -> Deletar CONTATO do CLIENTE\n[7] -> Deletar ENDEREÇO do CLIENTE\n[8] -> Voltar para a Tela Principal");
-        int num = Integer.parseInt(new Scanner(System.in).nextLine());
-        System.out.println("NUM DIGITADO"+num);
-        return num;
+        return Integer.parseInt(new Scanner(System.in).nextLine());
     }
 }
