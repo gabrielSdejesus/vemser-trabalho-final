@@ -64,6 +64,10 @@ public class Cliente implements Exibicao {
         return senhaCliente.equals(senha);
     }
 
+    public boolean verificarLogin(String loginCliente) {
+        return loginCliente.equals(login);
+    }
+
     public ArrayList<Contato> getContatos(){
         return contatos;
     }

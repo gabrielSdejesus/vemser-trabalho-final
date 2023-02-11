@@ -21,16 +21,18 @@ public class TelaPerfil  implements Tela {
         Conta login = Tela.login();
         switch(input){
             case 1 ->{
-                String senhaCliente, numeroCliente;
-                System.out.println("Insira o número da sua conta:");
-                numeroCliente = scanner.nextLine();
-                System.out.println("Insira a senha do seu cliente:");
+                String senhaCliente, numeroConta, loginCliente;
+                System.out.println("Insira o número da sua Conta:");
+                numeroConta = scanner.nextLine();
+                System.out.println("Insira o seu login de Cliente:");
+                loginCliente = scanner.nextLine();
+                System.out.println("Insira a sua senha de Cliente:");
                 senhaCliente = scanner.nextLine();
-                Conta conta = BancoDeDados.consultarNumeroDaConta(numeroCliente);
-                if(conta != null && conta.getCliente().verificarSenha(senhaCliente)){
+                Conta conta = BancoDeDados.consultarNumeroDaConta(numeroConta);
+                if(conta != null && conta.getCliente().verificarLogin(loginCliente) && conta.getCliente().verificarSenha(senhaCliente)){
                     conta.getCliente().exibir();
                 }else{
-                    System.err.println("Número de conta ou senha do cliente");
+                    System.err.println("Número de Conta, login de Cliente ou senha de Cliente incorretos!");
                     System.out.println("Login mal-sucedido");
                 }
                 exibirTelaPerfil();
@@ -103,6 +105,8 @@ public class TelaPerfil  implements Tela {
                     Cliente cliente = new Cliente("nome", "cpf", enderecos, contatos, "login", "senha");
                     Conta conta = new Conta(cliente, 0);
                     BancoDeDados.adicionarConta(conta);
+                    System.out.println("Cliente adicionado com sucesso!");
+                    System.out.println("NÃO ESQUECA DE GUARDAR OS DADOS DE ACESSO DA CONTA E DO CLIENTE!");
                 }else{
                     System.err.println("Número de conta ou senha inválida");
                 }
