@@ -7,12 +7,10 @@ import java.util.Scanner;
 public class TelaCompras  implements Tela {
     public static void exibirCompras(){
         System.out.println("Você está na Tela de Compras");
-        TelaCompras tela = new TelaCompras();
-        tela.tratarInput(tela.pedirInput());
+        TelaCompras.tratarInput(TelaCompras.pedirInput());
     }
 
-    @Override
-    public void tratarInput(int input) {
+    public static void tratarInput(int input) {
             switch(input){
                 case 1 ->{
                     //pega as contas no banco de dados
@@ -22,7 +20,7 @@ public class TelaCompras  implements Tela {
                     //mostra o que tem que mostrar
                     exibirCompras();
                 }
-                case 2 -> redirecionarParaTela(1);
+                case 2 -> Tela.redirecionarParaTela(1);
                 default -> {
                     System.out.println("Opção inválida!");
                     exibirCompras();
@@ -30,8 +28,7 @@ public class TelaCompras  implements Tela {
             }
     }
 
-    @Override
-    public int pedirInput() {
+    public static int pedirInput() {
         System.out.println("[1] -> Selecionar uma conta e ver suas compras\n[2] -> Voltar para a Tela Principal");
         return Integer.parseInt(new Scanner(System.in).nextLine());
     }

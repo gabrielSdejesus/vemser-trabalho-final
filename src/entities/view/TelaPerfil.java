@@ -7,12 +7,10 @@ import java.util.Scanner;
 public class TelaPerfil  implements Tela {
     public static void exibirTelaPerfil(){
         System.out.println("Você está na Tela de Perfil");
-        TelaPerfil tela = new TelaPerfil();
-        tela.tratarInput(tela.pedirInput());
+        TelaPerfil.tratarInput(TelaPerfil.pedirInput());
     }
 
-    @Override
-    public void tratarInput(int input) {
+    public static void tratarInput(int input) {
         switch(input){
             case 1 ->{
                 //pega as contas no banco de dados
@@ -22,7 +20,7 @@ public class TelaPerfil  implements Tela {
                 //mostra o que tem que mostrar
                 exibirTelaPerfil();
             }
-            case 2 -> redirecionarParaTela(1);
+            case 2 -> Tela.redirecionarParaTela(1);
             default -> {
                 System.out.println("Opção inválida!");
                 exibirTelaPerfil();
@@ -30,8 +28,7 @@ public class TelaPerfil  implements Tela {
         }
     }
 
-    @Override
-    public int pedirInput() {
+    public static int pedirInput() {
         System.out.println("[1] -> Selecionar um cliente para ver seus dados\n[2] -> Voltar para a Tela Principal");
         return Integer.parseInt(new Scanner(System.in).nextLine());
     }

@@ -7,12 +7,10 @@ import java.util.Scanner;
 public class TelaTransferencias implements Tela {
     public static void exibirTransferencias(){
         System.out.println("Você está na Tela de Transferências");
-        TelaTransferencias tela = new TelaTransferencias();
-        tela.tratarInput(tela.pedirInput());
+        TelaTransferencias.tratarInput(TelaTransferencias.pedirInput());
     }
 
-    @Override
-    public void tratarInput(int input) {
+    public static void tratarInput(int input) {
         switch(input){
             case 1 ->{
                 //pega as contas no banco de dados
@@ -22,7 +20,7 @@ public class TelaTransferencias implements Tela {
                 //mostra o que tem que mostrar
                 exibirTransferencias();
             }
-            case 2 -> redirecionarParaTela(1);
+            case 2 -> Tela.redirecionarParaTela(1);
             default -> {
                 System.out.println("Opção inválida!");
                 exibirTransferencias();
@@ -30,8 +28,7 @@ public class TelaTransferencias implements Tela {
         }
     }
 
-    @Override
-    public int pedirInput() {
+    public static int pedirInput() {
         System.out.println("[1] -> Selecionar uma conta e ver suas transferências\n[2] -> Voltar para a Tela Principal");
         return Integer.parseInt(new Scanner(System.in).nextLine());
     }

@@ -3,9 +3,14 @@ package entities.interfaces;
 import entities.view.*;
 
 public interface Tela {
-    void tratarInput(int input);
-    int pedirInput();
-    default void redirecionarParaTela(int tela){
+    static void tratarInput(int input){
+        // cada classe que implementa essa inteface deve refazer esse método da sua forma
+    }
+    static int pedirInput(){
+        // cada classe que implementa essa inteface deve refazer esse método da sua forma
+        return 0;
+    }
+    static void redirecionarParaTela(int tela){
         switch(tela){
             case 1 -> {
                 TelaPrincipal.exibirTelaPrincipal();
