@@ -18,10 +18,10 @@ public class Conta {
     private List<Transferencia> transferencias = new ArrayList<>();
     private BancoDeDados bancoDeDados = new BancoDeDados();
 
-    public Conta (Cliente cliente, double saldoInicial){
+    public Conta (Cliente cliente, double saldoInicial) {
 
         int numero = new Random().nextInt(1000, 5000);
-        if(bancoDeDados.consultarNumeroDeConta(numero)){
+        while (bancoDeDados.consultarNumeroDeConta(numero)){
             numero++;
         }
 
