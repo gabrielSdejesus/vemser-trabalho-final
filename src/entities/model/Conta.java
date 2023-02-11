@@ -41,6 +41,7 @@ public class Conta implements Exibicao {
 
         if(valor > 0 && valor <= this.saldo + CHEQUE_ESPECIAL && verificarSenha(senha)){
             this.saldo -= valor;
+            BancoDeDados.alterarDadosDaConta(this);
             return true;
         }
         return false;    }
@@ -49,6 +50,7 @@ public class Conta implements Exibicao {
 
         if(valor > 0 && verificarSenha(senha)){
             this.saldo += valor;
+            BancoDeDados.alterarDadosDaConta(this);
             return true;
         }
         return false;
@@ -61,6 +63,7 @@ public class Conta implements Exibicao {
             this.saldo -= valor;
             conta.saldo += conta.getSaldo() + valor;
             this.transferencias.add(new Transferencia(conta,this,valor));
+            BancoDeDados.alterarDadosDaConta(this);
             return true;
         }
         return false;

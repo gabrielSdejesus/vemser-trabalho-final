@@ -34,15 +34,27 @@ public class Cartao {
     }
 
     public void adicionarCompra(Compra compra) {
-        compras.add(compra);
+            compras.add(compra);
     }
 
-    public void segundaViaCartao(int senha, int numero, Date vencimento, Date dataExpedicao, int codigoSeguranca) {}
+    public boolean pagarComCartao(double valor, String senha, Compra compra){
+        if(conta.getSaldo() >= valor
+                && valor > 0
+                    && compra.returnValorTotal() == valor) {
+            conta.sacar(valor, senha);
+            return true;
+        }
+        return  false;
+    }
 
     public void exibirDadosCartao() {}
 
-    public void alterarSenha(String novaSenha) {
-        this.senha = novaSenha;
+    public void alterarSenhaDoCartao(String novaSenha, String senhaAntiga) {
+        conta.alterarSenha(senhaAntiga,novaSenha);
+    }
+
+    public List<Compra> getCompras() {
+        return compras;
     }
 
     public Conta getConta() {
