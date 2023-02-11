@@ -21,10 +21,12 @@ public class Conta {
     public Conta (Cliente cliente, double saldoInicial){
 
         int numero = new Random().nextInt(1000, 5000);
-        //verificar se o numero gerado já existe no banco de dados;
+        if(bancoDeDados.consultarNumeroDeConta(numero)){
+            numero++;
+        }
+
         if(true && saldoInicial >= 0
-                    && !bancoDeDados.consultarExistenciaPorCPF(cliente)
-                        && bancoDeDados.consultarNumeroDeConta(numero)){
+                    && !bancoDeDados.consultarExistenciaPorCPF(cliente)){
             this.cliente = cliente;
             this.numero = numero;
             this.agencia = new Random().nextInt(1000,2000);
@@ -34,17 +36,17 @@ public class Conta {
         }
     }
 
-    public boolean sacar (double valor){
+    public boolean sacar (double valor, String senha){
 
-        if(valor > 0 && valor <= this.saldo + CHEQUE_ESPECIAL){
+        if(valor > 0 && valor <= this.saldo + CHEQUE_ESPECIAL && verificarSenha(senha)){
             this.saldo -= valor;
             return true;
         }
         return false;    }
 
-    public boolean depositar(double valor){
+    public boolean depositar(double valor, String senha){
 
-        if(valor > 0){
+        if(valor > 0 && verificarSenha(senha)){
             this.saldo += valor;
             return true;
         }
@@ -108,10 +110,6 @@ public class Conta {
 
     public double getSaldo() {
         return saldo;
-    }
-
-    public String getSenha() {
-        return senha;
     }
 
     public Cliente getCliente() {
