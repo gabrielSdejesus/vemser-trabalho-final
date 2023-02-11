@@ -120,10 +120,12 @@ public class Conta implements Exibicao {
 
     @Override
     public void exibir() {
-        System.out.printf("\tConta: %d\n\tCliente: %s\n\tAgência: %d\n\tSaldo: R%.2f\n\tCheque especial: R$ %.2f", numero, cliente.getNome(), agencia, saldo, CHEQUE_ESPECIAL);
+        System.out.printf("\tConta: %d\n\tCliente: %s\n\tAgência: %d\n\tSaldo: R%.2f\n\tCheque especial: R$ %.2f\n", numero, cliente.getNome(), agencia, saldo, CHEQUE_ESPECIAL);
         System.out.println("\tCartões:");
         for(Cartao cartao:cartoes){
-            cartao.exibirDadosCartao();
+            if(cartao != null){
+                cartao.exibirDadosCartao();
+            }
         }
     }
 
