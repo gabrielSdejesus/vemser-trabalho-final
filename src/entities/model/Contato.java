@@ -1,8 +1,9 @@
 package entities.model;
 
 import entities.interfaces.Alteracao;
+import entities.interfaces.Exibicao;
 
-public class Contato implements Alteracao {
+public class Contato implements Alteracao, Exibicao {
 
     private String telefone;
     private String email;
@@ -28,5 +29,11 @@ public class Contato implements Alteracao {
                 return false;
             }
         }
+    }
+
+    @Override
+    public void exibir() {
+        System.out.println("Telefone: "+this.telefone);
+        System.out.println("Email: "+this.email);
     }
 }

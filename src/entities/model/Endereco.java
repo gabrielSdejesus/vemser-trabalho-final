@@ -1,8 +1,9 @@
 package entities.model;
 
 import entities.interfaces.Alteracao;
+import entities.interfaces.Exibicao;
 
-public class Endereco implements Alteracao {
+public class Endereco implements Alteracao, Exibicao {
     private String logradouro, cidade, estado, pais, cep;
 
     public Endereco(String logradouro, String cidade, String estado, String pais, String cep) {
@@ -41,5 +42,14 @@ public class Endereco implements Alteracao {
                 return false;
             }
         }
+    }
+
+    @Override
+    public void exibir() {
+        System.out.println("Logradouro: "+this.logradouro);
+        System.out.println("Cidade: "+this.cidade);
+        System.out.println("Estado: "+this.estado);
+        System.out.println("País: "+this.pais);
+        System.out.println("CEP: "+this.cep);
     }
 }
