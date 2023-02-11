@@ -28,7 +28,9 @@ public class Cartao {
         compras.add(compra);
     }
 
-    public void segundaViaCartao(int senha, int numero, Date vencimento, Date dataExpedicao, int codigoSeguranca) {}
+    public void segundaViaCartao(int senha, int numero, Date vencimento, Date dataExpedicao, int codigoSeguranca) {
+        
+    }
 
     public void exibirDadosCartao() {}
 
