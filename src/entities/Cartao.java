@@ -29,7 +29,7 @@ public class Cartao {
     }
 
     public void segundaViaCartao(int senha, int numero, Date vencimento, Date dataExpedicao, int codigoSeguranca) {
-        
+
     }
 
     public void exibirDadosCartao() {}
