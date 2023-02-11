@@ -49,6 +49,9 @@ public interface Tela {
             case 6 -> {
                 TelaTransferencias.exibirTransferencias();
             }
+            case 7 -> {
+                TelaMovimentacoes.exibirTelaMovimentacoes();
+            }
             default -> {
                 System.err.println("Número da tela incorreta, erro na linha 29 da Inteface Tela");
             }
