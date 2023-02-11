@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class TelaTransferencias implements Tela {
     public void exibirTransferencias(){
-        System.out.println("Você está na Tela de Extrato de Cartao de Crédito");
+        System.out.println("Você está na Tela de Transferências");
         this.tratarInput(this.pedirInput());
     }
 
