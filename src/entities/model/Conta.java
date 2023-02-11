@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Random;
 
 public class Conta implements Exibicao {
-
     private Cliente cliente;
     private String senha;
     private int numero;
@@ -19,14 +18,13 @@ public class Conta implements Exibicao {
     private List<Transferencia> transferencias = new ArrayList<>();
 
     public Conta (Cliente cliente, double saldoInicial) {
-
         int numero = new Random().nextInt(1000, 5000);
         while (BancoDeDados.consultarNumeroDaConta(numero)){
             numero++;
         }
 
-        if(true && saldoInicial >= 0
-                    && !BancoDeDados.consultarExistenciaPorCPF(cliente)){
+        if(saldoInicial >= 0
+                && !BancoDeDados.consultarExistenciaPorCPF(cliente)){
             this.cliente = cliente;
             this.numero = numero;
             this.agencia = new Random().nextInt(1000,2000);
