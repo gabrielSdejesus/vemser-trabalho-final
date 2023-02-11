@@ -1,4 +1,4 @@
-package entities;
+package entities.view;
 
 public interface Tela {
     void tratarInput(int input);
