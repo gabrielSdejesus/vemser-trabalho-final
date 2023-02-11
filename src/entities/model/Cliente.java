@@ -1,10 +1,11 @@
 package entities.model;
 
 import entities.controller.BancoDeDados;
+import entities.interfaces.Exibicao;
 
 import java.util.ArrayList;
 
-public class Cliente {
+public class Cliente implements Exibicao {
     private String nome;
     private String cpf;
     private ArrayList<Endereco> enderecos;
@@ -37,5 +38,10 @@ public class Cliente {
 
     public String getSenha() {
         return senha;
+    }
+
+    @Override
+    public void exibir() {
+
     }
 }

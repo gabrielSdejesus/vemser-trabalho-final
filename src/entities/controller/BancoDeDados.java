@@ -1,12 +1,13 @@
 package entities.controller;
 
+import entities.interfaces.Exibicao;
 import entities.model.Cliente;
 import entities.model.Conta;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class BancoDeDados {
+public class BancoDeDados implements Exibicao {
 
     private List<Conta> contas = new ArrayList<>();
 
@@ -46,4 +47,8 @@ public class BancoDeDados {
     }
 
 
+    @Override
+    public void exibir() {
+
+    }
 }

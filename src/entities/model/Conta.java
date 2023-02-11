@@ -1,12 +1,13 @@
 package entities.model;
 
 import entities.controller.BancoDeDados;
+import entities.interfaces.Exibicao;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Conta {
+public class Conta implements Exibicao {
 
     private Cliente cliente;
     private String senha;
@@ -118,5 +119,10 @@ public class Conta {
 
     public int getNumero() {
         return numero;
+    }
+
+    @Override
+    public void exibir() {
+
     }
 }
