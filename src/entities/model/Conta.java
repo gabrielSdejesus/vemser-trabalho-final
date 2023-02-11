@@ -56,7 +56,10 @@ public class Conta implements Exibicao {
 
     public boolean transferir(Conta conta, double valor, String senha){
         if(valor > 0 && valor >= this.saldo
-                && verificarSenha(senha)){
+                && verificarSenha(senha)
+                && BancoDeDados.consultarNumeroDaConta(conta.getNumero())//verifica se tem uma conta com aquele número
+                && this.numero != conta.getNumero()//não pode transferir para si mesmo
+            ){
             this.saldo -= valor;
             conta.saldo += conta.getSaldo() + valor;
             this.transferencias.add(new Transferencia(conta,this,valor));
