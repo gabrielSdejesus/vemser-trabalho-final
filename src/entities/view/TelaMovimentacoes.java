@@ -67,8 +67,22 @@ public class TelaMovimentacoes implements Tela {
                     senhaConta = scanner.nextLine();
 
                     System.out.println("Insira o número da conta que receberá a transferência:");
-                    if(login.transferir(BancoDeDados.consultarNumeroDaConta(scanner.nextLine()), valor, senhaConta)){
-                        
+                    String numeroConta = scanner.nextLine();
+                    if(login.transferir(BancoDeDados.consultarNumeroDaConta(numeroConta), valor, senhaConta)){
+                        System.out.println("Transferência concluída!");
+                        System.out.printf("Saldo atual: R$ %.2f", login.getSaldo());
+                    }else{
+                        String resultado;
+                        if(BancoDeDados.consultarNumeroDaConta(numeroConta) != null){
+                            if(login.verificarSenha(senhaConta)){
+                                resultado = "Saldo insuficiente";
+                            }else{
+                                resultado = "Senha incorreta";
+                            }
+                        }else{
+                            resultado = "Número da conta inexistente";
+                        }
+                        System.err.println("Saque não realizado! "+resultado+"!");
                     }
                 }else{
                     System.out.println("Login mal-sucedido");
