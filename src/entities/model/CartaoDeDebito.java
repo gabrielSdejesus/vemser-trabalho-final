@@ -10,4 +10,8 @@ public class CartaoDeDebito extends Cartao {
         super(conta);
     }
 
+    public int getTipo(){
+        return TIPO;
+    }
+
 }

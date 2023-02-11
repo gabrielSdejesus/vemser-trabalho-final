@@ -28,4 +28,8 @@ public class CartaoDeCredito extends Cartao {
     }
 
     public double getLimite(){return limite;}
+
+    public int getTipo(){
+        return TIPO;
+    }
 }

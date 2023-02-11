@@ -32,7 +32,7 @@ public class Conta implements Exibicao {
             this.agencia = new Random().nextInt(1000,2000);
             this.saldo = saldoInicial;
             this.senha = cliente.getSenha();
-            this.cartoes[0] = new Cartao(this);
+            this.cartoes[0] = new CartaoDeDebito(this);
             BancoDeDados.adicionarConta(this);
         }
     }
@@ -87,7 +87,7 @@ public class Conta implements Exibicao {
 
         if((indice == 0 || indice == 1)
                 && verificarSenha(senha)) {
-            this.cartoes[indice] = new Cartao();
+            this.cartoes[indice] = new CartaoDeDebito(this);
             BancoDeDados.alterarDadosDaConta(this);
             return true;
         };
@@ -131,5 +131,9 @@ public class Conta implements Exibicao {
     @Override
     public void exibir() {
 
+    }
+
+    public Cartao[] getCartoes() {
+        return cartoes;
     }
 }

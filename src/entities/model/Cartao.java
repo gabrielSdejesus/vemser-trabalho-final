@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
-public class Cartao {
+public abstract class Cartao {
     private LocalDate dataExpedicao;
     private int codigoSeguranca;
     private int numero;
@@ -59,5 +59,9 @@ public class Cartao {
 
     public Conta getConta() {
         return conta;
+    }
+
+    public void exibirCompras() {
+        System.out.println("");
     }
 }
