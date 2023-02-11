@@ -1,10 +1,10 @@
 package entities.view;
 
-import entities.Exibicao;
+import entities.interfaces.Tela;
 
 import java.util.Scanner;
 
-public class TelaCompras  implements Tela{
+public class TelaCompras  implements Tela {
     public void exibirCompras(){
         System.out.println("Você está na Tela de Compras");
         this.tratarInput(this.pedirInput());

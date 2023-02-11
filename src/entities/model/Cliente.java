@@ -1,4 +1,6 @@
-package entities;
+package entities.model;
+
+import entities.controller.BancoDeDados;
 
 import java.util.ArrayList;
 
@@ -19,13 +21,21 @@ public class Cliente {
         this.login = login;
         this.senha = senha;
         this.contas = contas;
-        BancoDeDados bancoDeDados = new BancoDeDados();
-        bancoDeDados.adicionarCliente(this);
     }
 
     public boolean criarConta() {
         return true;
     }
-    
 
+    public String getNome() {
+        return nome;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
 }

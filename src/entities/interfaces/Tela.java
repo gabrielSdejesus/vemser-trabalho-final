@@ -1,6 +1,6 @@
-package entities.view;
+package entities.interfaces;
 
-import java.util.Scanner;
+import entities.view.*;
 
 public interface Tela {
     void tratarInput(int input);

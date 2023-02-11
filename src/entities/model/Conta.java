@@ -1,32 +1,35 @@
-package entities;
+package entities.model;
+
+import entities.controller.BancoDeDados;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
 public class Conta {
 
     private Cliente cliente;
-    private int senha;
+    private String senha;
     private int numero;
     private int agencia;
     private double saldo;
     private static final double CHEQUE_ESPECIAL = 200;
     private Cartao[] cartoes = new Cartao[2];
     private List<Transferencia> transferencias = new ArrayList<>();
-
-    public Conta(){};
+    private BancoDeDados bancoDeDados = new BancoDeDados();
 
     public Conta (Cliente cliente, double saldoInicial){
-        //verificar se há o CPF dentro do banco de dados;
+
+        int numero = new Random().nextInt(1000, 5000);
         //verificar se o numero gerado já existe no banco de dados;
-        if(true && saldoInicial >= 0){
+        if(true && saldoInicial >= 0
+                    && !bancoDeDados.consultarExistenciaPorCPF(cliente)
+                        && bancoDeDados.consultarNumeroDeConta(numero)){
             this.cliente = cliente;
-            this.numero = new Random().nextInt(1000, 5000);
+            this.numero = numero;
             this.agencia = new Random().nextInt(1000,2000);
             this.saldo = saldoInicial;
-            BancoDeDados bancoDeDados = new BancoDeDados();
+            this.senha = cliente.getSenha();
             bancoDeDados.adicionarConta(this);
         }
     }
@@ -37,8 +40,7 @@ public class Conta {
             this.saldo -= valor;
             return true;
         }
-        return false;
-    }
+        return false;    }
 
     public boolean depositar(double valor){
 
@@ -49,7 +51,7 @@ public class Conta {
         return false;
     }
 
-    public boolean transferir(Conta conta, double valor,int senha){
+    public boolean transferir(Conta conta, double valor, String senha){
 
         if(valor > 0 && valor >= this.saldo
                 && verificarSenha(senha)){
@@ -61,28 +63,44 @@ public class Conta {
         return false;
     }
 
-    public void adicionarCartao(Cartao cartao, int senha){
+    public boolean adicionarCartao(Cartao cartao, String senha){
 
         if(verificarSenha(senha) && cartao != null){
             for(int i = 0; i < this.cartoes.length; i++){
                 if(this.cartoes[i] == null){
                     this.cartoes[i] = cartao;
+                    bancoDeDados.alterarDadosDaConta(this);
+                    return true;
                 }
             }
         }
+        return false;
     }
 
-    public void removerCartao(int indice, int senha){
+    public boolean removerCartao(int indice, String senha){
 
         if((indice == 0 || indice == 1)
                 && verificarSenha(senha)) {
             this.cartoes[indice] = new Cartao();
+            bancoDeDados.alterarDadosDaConta(this);
+            return true;
         };
+        return false;
     }
 
-    private boolean verificarSenha(int senha){
+    public boolean alterarSenha(String senhaAntiga, String novaSenha){
 
-        if(this.senha == senha){
+        if(verificarSenha(senhaAntiga)){
+            this.senha = novaSenha;
+            bancoDeDados.alterarDadosDaConta(this);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean verificarSenha(String senha){
+
+        if(this.senha.equals(senha)){
             return true;
         }
         return false;
@@ -92,4 +110,15 @@ public class Conta {
         return saldo;
     }
 
+    public String getSenha() {
+        return senha;
+    }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public int getNumero() {
+        return numero;
+    }
 }

@@ -1,4 +1,4 @@
-package entities;
+package entities.model;
 
 public class Transferencia {
     private Conta contaRecebeu;

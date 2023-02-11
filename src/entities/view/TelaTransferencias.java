@@ -1,6 +1,6 @@
 package entities.view;
 
-import entities.Exibicao;
+import entities.interfaces.Tela;
 
 import java.util.Scanner;
 

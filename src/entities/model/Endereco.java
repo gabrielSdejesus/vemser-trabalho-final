@@ -1,4 +1,4 @@
-package entities;
+package entities.model;
 
 public class Endereco {
     private String logradouro, cidade, estado, pais, cep;
