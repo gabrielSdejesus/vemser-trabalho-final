@@ -42,7 +42,7 @@ public class TelaCompras  implements Tela {
                     System.out.println("Selecione o cartão para efetuar a compra:");
                     for(int i=0;i<cartoes.length;i++){
                         if(cartoes[i] != null){
-                            System.out.printf("Cartão [%d] -> %s", (i+1), (cartoes.getTipo() == 1 ? "Débito":"Crédito"));
+                            System.out.printf("Cartão [%d] -> %s", (i+1), (cartoes[i].getTipo() == 1 ? "Débito":"Crédito"));
                         }
                     }
                     cartao = cartoes[Integer.parseInt(scanner.nextLine())];

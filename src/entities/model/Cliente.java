@@ -44,4 +44,8 @@ public class Cliente implements Exibicao {
     public void exibir() {
 
     }
+
+    public boolean verificarSenha(String senhaCliente) {
+        return senhaCliente.equals(senha);
+    }
 }

@@ -22,18 +22,18 @@ public class TelaExtratoCartaoCredito  implements Tela {
                 Conta login = Tela.login();
                 if(login != null){
                     Cartao[] cartoes = login.getCartoes();
-                    Cartao cartao = null;
+                    int cartao = 0;
 
-                    for(Cartao c: cartoes){
-                        if(c != null && c.getTipo() == 2){
-                            cartao = c;
+                    for(int i=0;i<cartoes.length;i++){
+                        if(cartoes[i] != null && cartoes[i].getTipo() == 2){
+                            cartao = i;
                             break;
                         }
                     }
 
-                    if(cartao != null){
-                        cartao.exibirDadosCartao();
-                        cartao.exibirExtrato();
+                    if(cartoes[cartao] != null){
+                        cartoes[cartao].exibirDadosCartao();
+                        cartoes[cartao].exibirCompras();
                     }else{
                         System.out.println("Você não possui nenhum cartão de crédito");
                     }

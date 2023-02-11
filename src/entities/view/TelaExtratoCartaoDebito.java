@@ -29,7 +29,7 @@ public class TelaExtratoCartaoDebito  implements Tela {
 
                     if(cartao != null){
                         cartao.exibirDadosCartao();
-                        cartao.exibirExtrato();
+                        cartao.exibirCompras();
                     }else{
                         System.out.println("Você não possui nenhum cartão de débito");
                     }

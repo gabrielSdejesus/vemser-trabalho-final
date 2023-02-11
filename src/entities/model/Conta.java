@@ -105,11 +105,7 @@ public class Conta implements Exibicao {
     }
 
     public boolean verificarSenha(String senha){
-
-        if(this.senha.equals(senha)){
-            return true;
-        }
-        return false;
+        return this.senha.equals(senha);
     }
 
     public double getSaldo() {
@@ -135,5 +131,9 @@ public class Conta implements Exibicao {
 
     public Cartao[] getCartoes() {
         return cartoes;
+    }
+
+    public void exibirTransferencias() {
+        System.out.println("");/////////////////
     }
 }

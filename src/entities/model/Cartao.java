@@ -64,4 +64,8 @@ public abstract class Cartao {
     public void exibirCompras() {
         System.out.println("");
     }
+
+    public int getTipo(){
+        return 0;
+    }
 }
