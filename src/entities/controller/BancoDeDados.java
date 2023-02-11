@@ -47,7 +47,7 @@ public class BancoDeDados implements Exibicao {
     }
 
     public static Conta consultarNumeroDaConta(String numero){
-        
+
         int valor = Integer.parseInt(numero);
         for(Conta x: contas){
             if(x.getNumero() == valor) {
@@ -55,6 +55,16 @@ public class BancoDeDados implements Exibicao {
             }
         }
         return null;
+    }
+
+    public static boolean consultarNumeroDoCartao(int numero){
+
+        for(Conta x: contas){
+            if(x.getNumero() == numero) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

@@ -32,6 +32,7 @@ public class Conta implements Exibicao {
             this.agencia = new Random().nextInt(1000,2000);
             this.saldo = saldoInicial;
             this.senha = cliente.getSenha();
+            this.cartoes[0] = new Cartao(this);
             BancoDeDados.adicionarConta(this);
         }
     }
@@ -100,7 +101,7 @@ public class Conta implements Exibicao {
         return false;
     }
 
-    private boolean verificarSenha(String senha){
+    public boolean verificarSenha(String senha){
 
         if(this.senha.equals(senha)){
             return true;
@@ -118,6 +119,10 @@ public class Conta implements Exibicao {
 
     public int getNumero() {
         return numero;
+    }
+
+    public String getSenha() {
+        return senha;
     }
 
     @Override
