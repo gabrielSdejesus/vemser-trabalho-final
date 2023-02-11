@@ -27,44 +27,20 @@ public class BancoDeDados implements Exibicao {
     }
 
     public static boolean consultarExistenciaPorCPF(Cliente cliente){
-
-        for(Conta x: contas){
-            if(x.getCliente().getCpf().equals(cliente.getCpf())) {
-                return true;
-            }
-        }
-        return false;
+        return contas.stream().anyMatch(conta -> conta.getCliente().getCpf().equals(cliente.getCpf()));
     }
 
     public static boolean consultarNumeroDaConta(int numero){
-
-        for(Conta x: contas){
-            if(x.getNumero() == numero) {
-                return true;
-            }
-        }
-        return false;
+        return contas.stream().anyMatch(conta -> conta.getNumero() == numero);
     }
 
     public static Conta consultarNumeroDaConta(String numero){
-
         int valor = Integer.parseInt(numero);
-        for(Conta x: contas){
-            if(x.getNumero() == valor) {
-                return x;
-            }
-        }
-        return null;
+        return contas.stream().filter(conta -> conta.getNumero() == valor).findFirst().orElse(null);
     }
 
     public static boolean consultarNumeroDoCartao(int numero){
-
-        for(Conta x: contas){
-            if(x.getNumero() == numero) {
-                return true;
-            }
-        }
-        return false;
+        return contas.stream().anyMatch(conta -> conta.getNumero() == numero);
     }
 
     @Override
