@@ -12,9 +12,12 @@ public class TelaExtratoCartaoCredito  implements Tela {
     }
 
     public static void tratarInput(int input) {
+        Conta login = null;
+        if(input > 0){
+            login = Tela.login();
+        }
         switch(input){
             case 1 ->{
-                Conta login = Tela.login();
                 if(login != null){
                     Cartao[] cartoes = login.getCartoes();
                     int cartao = 0;

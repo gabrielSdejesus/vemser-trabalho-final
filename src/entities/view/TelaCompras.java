@@ -17,9 +17,13 @@ public class TelaCompras  implements Tela {
     }
 
     public static void tratarInput(int input) {
+        Scanner scanner = new Scanner(System.in);
+        Conta login = null;
+        if(input > 0){
+            login = Tela.login();
+        }
         switch(input){
             case 1 ->{
-                Conta login = Tela.login();
                 if(login != null){
                     for(Cartao cartao:login.getCartoes()){
                         if (cartao != null){
@@ -32,9 +36,7 @@ public class TelaCompras  implements Tela {
                 exibirCompras();
             }
             case 2 -> {
-                Conta login = Tela.login();
                 if(login != null){
-                    Scanner scanner = new Scanner(System.in);
                     Cartao[] cartoes = login.getCartoes();
                     Cartao cartao;
                     ArrayList<Item> itens = new ArrayList<>();
@@ -90,7 +92,7 @@ public class TelaCompras  implements Tela {
     }
 
     public static int pedirInput() {
-        System.out.println("[1] -> Exibir compras da sua conta\n[2] -> Adicionar uma compra\n[3]-> Voltar para a Tela Principal");
+        System.out.println("[1] -> Exibir compras da sua conta\n[2] -> Adicionar uma compra\n[3] -> Voltar para a Tela Principal");
         return Integer.parseInt(new Scanner(System.in).nextLine());
     }
 }
