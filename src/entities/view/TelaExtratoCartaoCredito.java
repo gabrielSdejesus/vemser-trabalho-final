@@ -1,7 +1,13 @@
 package entities.view;
 
 import entities.interfaces.Tela;
+import entities.model.Cartao;
+import entities.model.Compra;
+import entities.model.Conta;
+import entities.model.Item;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Scanner;
 
 public class TelaExtratoCartaoCredito  implements Tela {
@@ -13,11 +19,28 @@ public class TelaExtratoCartaoCredito  implements Tela {
     public static void tratarInput(int input) {
         switch(input){
             case 1 ->{
-                //pega as contas no banco de dados
-                //mostra as contas
-                System.out.println("Selecione uma conta para ver o extrato do cartão de crédito");
-                //seleciona uma conta
-                //mostra o que tem que mostrar
+                Conta login = Tela.login();
+                if(login != null){
+                    Cartao[] cartoes = login.getCartoes();
+                    Cartao cartao = null;
+
+                    for(Cartao c: cartoes){
+                        if(c != null && c.getTipo() == 2){
+                            cartao = c;
+                            break;
+                        }
+                    }
+
+                    if(cartao != null){
+                        cartao.exibirDadosCartao();
+                        cartao.exibirExtrato();
+                    }else{
+                        System.out.println("Você não possui nenhum cartão de crédito");
+                    }
+
+                }else {
+                    System.out.println("Login mal-sucedido");
+                }
                 exibirTelaExtratoCartaoCredito();
             }
             case 2 -> Tela.redirecionarParaTela(1);
@@ -29,7 +52,7 @@ public class TelaExtratoCartaoCredito  implements Tela {
     }
 
     public static int pedirInput() {
-        System.out.println("[1] -> Selecionar uma conta e ver seu extrato do cartão de crédito\n[2] -> Voltar para a Tela Principal");
+        System.out.println("[1] -> Exibir seu extrato do cartão de crédito\n[2] -> Voltar para a Tela Principal");
         return Integer.parseInt(new Scanner(System.in).nextLine());
     }
 }

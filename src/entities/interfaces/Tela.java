@@ -1,6 +1,10 @@
 package entities.interfaces;
 
+import entities.controller.BancoDeDados;
+import entities.model.Conta;
 import entities.view.*;
+
+import java.util.Scanner;
 
 public interface Tela {
     static void tratarInput(int input){
@@ -9,6 +13,21 @@ public interface Tela {
     static int pedirInput(){
         // cada classe que implementa essa inteface deve refazer esse método da sua forma
         return 0;
+    }
+    static Conta login(){
+        Scanner scanner = new Scanner(System.in);
+        String senhaConta, numeroConta;
+        System.out.println("Insira o número da sua conta:");
+        numeroConta = scanner.nextLine();
+        System.out.println("Insira a senha da sua conta:");
+        senhaConta = scanner.nextLine();
+        Conta conta = BancoDeDados.consultarNumeroDaConta(numeroConta);
+        if(conta != null && conta.verificarSenha(senhaConta)){
+            return conta;
+        }else{
+            System.err.println("Número de conta ou senha inválida");
+        }
+        return null;
     }
     static void redirecionarParaTela(int tela){
         switch(tela){

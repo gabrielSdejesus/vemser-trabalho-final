@@ -1,6 +1,7 @@
 package entities.view;
 
 import entities.interfaces.Tela;
+import entities.model.Conta;
 
 import java.util.Scanner;
 
@@ -13,11 +14,12 @@ public class TelaTransferencias implements Tela {
     public static void tratarInput(int input) {
         switch(input){
             case 1 ->{
-                //pega as contas no banco de dados
-                //mostra as contas
-                System.out.println("Selecione uma conta para ver as suas Transferências");
-                //seleciona uma conta
-                //mostra o que tem que mostrar
+                Conta login = Tela.login();
+                if(login != null){
+                    login.exibirTransferencias();
+                }else{
+                    System.out.println("Login mal-sucedido");
+                }
                 exibirTransferencias();
             }
             case 2 -> Tela.redirecionarParaTela(1);
@@ -29,7 +31,7 @@ public class TelaTransferencias implements Tela {
     }
 
     public static int pedirInput() {
-        System.out.println("[1] -> Selecionar uma conta e ver suas transferências\n[2] -> Voltar para a Tela Principal");
+        System.out.println("[1] -> Insira seus dados de login para ver suas transferências\n[2] -> Voltar para a Tela Principal");
         return Integer.parseInt(new Scanner(System.in).nextLine());
     }
 }
