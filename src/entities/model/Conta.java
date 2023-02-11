@@ -61,9 +61,10 @@ public class Conta implements Exibicao {
                 && this.numero != conta.getNumero()//não pode transferir para si mesmo
             ){
             this.saldo -= valor;
-            conta.saldo += conta.getSaldo() + valor;
+            conta.setSaldo(conta.getSaldo()+valor);
             this.transferencias.add(new Transferencia(conta,this,valor));
             BancoDeDados.alterarDadosDaConta(this);
+            BancoDeDados.alterarDadosDaConta(conta);
             return true;
         }
         return false;
@@ -107,6 +108,10 @@ public class Conta implements Exibicao {
 
     public double getSaldo() {
         return saldo;
+    }
+
+    public void setSaldo(double valor) {
+        this.saldo = valor;
     }
 
     public Cliente getCliente() {
