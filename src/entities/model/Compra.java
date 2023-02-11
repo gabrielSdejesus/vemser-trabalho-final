@@ -1,5 +1,7 @@
 package entities.model;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -20,6 +22,10 @@ public class Compra {
             total += item.returnPrecoItem();
         }
         return total;
+    }
+
+    public LocalDate getData(){
+        return data.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
 }
