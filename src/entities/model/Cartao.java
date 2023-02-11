@@ -51,7 +51,13 @@ public abstract class Cartao {
         return  false;
     }
 
-    public void exibirDadosCartao() {}
+    public void exibirDadosCartao() {
+        System.out.println("\t\tData de expedição: "+dataExpedicao);
+        System.out.println("\t\tCódigo de Segurança: "+codigoSeguranca);
+        System.out.println("\t\tNúmero: "+numero);
+        System.out.println("\t\tVencimento: "+vencimento);
+        System.out.println("\t\tTipo: " + (getTipo() == 1? "Débito": "Crédito"));
+    }
 
     public void alterarSenhaDoCartao(String novaSenha, String senhaAntiga) {
         conta.alterarSenha(senhaAntiga,novaSenha);

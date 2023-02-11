@@ -22,7 +22,9 @@ public class TelaCompras  implements Tela {
                 Conta login = Tela.login();
                 if(login != null){
                     for(Cartao cartao:login.getCartoes()){
-                        cartao.exibirCompras();
+                        if (cartao != null){
+                            cartao.exibirCompras();
+                        }
                     }
                 }else{
                     System.out.println("Login mal-sucedido");
