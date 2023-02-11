@@ -9,13 +9,13 @@ import java.util.List;
 
 public class BancoDeDados implements Exibicao {
 
-    private List<Conta> contas = new ArrayList<>();
+    private static List<Conta> contas = new ArrayList<>();
 
-    public void adicionarConta(Conta conta){
+    public static void adicionarConta(Conta conta){
         contas.add(conta);
     }
 
-    public void alterarDadosDaConta(Conta conta){
+    public static void alterarDadosDaConta(Conta conta){
 
         int controlador = -1;
         for(Conta x: contas){
@@ -26,7 +26,7 @@ public class BancoDeDados implements Exibicao {
         }
     }
 
-    public boolean consultarExistenciaPorCPF(Cliente cliente){
+    public static boolean consultarExistenciaPorCPF(Cliente cliente){
 
         for(Conta x: contas){
             if(x.getCliente().getCpf().equals(cliente.getCpf())) {
@@ -36,7 +36,7 @@ public class BancoDeDados implements Exibicao {
         return false;
     }
 
-    public boolean consultarNumeroDeConta(int numero){
+    public static boolean consultarNumeroDaConta(int numero){
 
         for(Conta x: contas){
             if(x.getNumero() == numero) {
@@ -46,9 +46,23 @@ public class BancoDeDados implements Exibicao {
         return false;
     }
 
+    public static Conta consultarNumeroDaConta(String numero){
+        
+        int valor = Integer.parseInt(numero);
+        for(Conta x: contas){
+            if(x.getNumero() == valor) {
+                return x;
+            }
+        }
+        return null;
+    }
 
     @Override
     public void exibir() {
 
+    }
+
+    public static List<Conta> getContas() {
+        return contas;
     }
 }

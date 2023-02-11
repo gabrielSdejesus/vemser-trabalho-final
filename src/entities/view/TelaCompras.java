@@ -1,5 +1,6 @@
 package entities.view;
 
+import entities.controller.BancoDeDados;
 import entities.interfaces.Tela;
 
 import java.util.Scanner;

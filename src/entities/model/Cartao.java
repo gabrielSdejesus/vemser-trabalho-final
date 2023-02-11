@@ -1,10 +1,14 @@
 package entities.model;
 
+import entities.controller.BancoDeDados;
+
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 public class Cartao {
-    private Date dataExpedicao;
+    private LocalDate dataExpedicao;
     private int codigoSeguranca;
     private int numero;
     private int senha;
@@ -15,8 +19,9 @@ public class Cartao {
     public Cartao(){};
 
     public Cartao(Date dataExpedicao, int codigoSeguranca, int numero, int senha, Date vencimento, Conta conta, List<Compra> compras) {
-        this.dataExpedicao = dataExpedicao;
-        this.codigoSeguranca = codigoSeguranca;
+
+        this.dataExpedicao = LocalDate.now();
+        this.codigoSeguranca = new Random().nextInt(100,999);
         this.numero = numero;
         this.senha = senha;
         this.vencimento = vencimento;

@@ -17,23 +17,22 @@ public class Conta implements Exibicao {
     private static final double CHEQUE_ESPECIAL = 200;
     private Cartao[] cartoes = new Cartao[2];
     private List<Transferencia> transferencias = new ArrayList<>();
-    private BancoDeDados bancoDeDados = new BancoDeDados();
 
     public Conta (Cliente cliente, double saldoInicial) {
 
         int numero = new Random().nextInt(1000, 5000);
-        while (bancoDeDados.consultarNumeroDeConta(numero)){
+        while (BancoDeDados.consultarNumeroDaConta(numero)){
             numero++;
         }
 
         if(true && saldoInicial >= 0
-                    && !bancoDeDados.consultarExistenciaPorCPF(cliente)){
+                    && !BancoDeDados.consultarExistenciaPorCPF(cliente)){
             this.cliente = cliente;
             this.numero = numero;
             this.agencia = new Random().nextInt(1000,2000);
             this.saldo = saldoInicial;
             this.senha = cliente.getSenha();
-            bancoDeDados.adicionarConta(this);
+            BancoDeDados.adicionarConta(this);
         }
     }
 
@@ -72,7 +71,7 @@ public class Conta implements Exibicao {
             for(int i = 0; i < this.cartoes.length; i++){
                 if(this.cartoes[i] == null){
                     this.cartoes[i] = cartao;
-                    bancoDeDados.alterarDadosDaConta(this);
+                    BancoDeDados.alterarDadosDaConta(this);
                     return true;
                 }
             }
@@ -85,7 +84,7 @@ public class Conta implements Exibicao {
         if((indice == 0 || indice == 1)
                 && verificarSenha(senha)) {
             this.cartoes[indice] = new Cartao();
-            bancoDeDados.alterarDadosDaConta(this);
+            BancoDeDados.alterarDadosDaConta(this);
             return true;
         };
         return false;
@@ -95,7 +94,7 @@ public class Conta implements Exibicao {
 
         if(verificarSenha(senhaAntiga)){
             this.senha = novaSenha;
-            bancoDeDados.alterarDadosDaConta(this);
+            BancoDeDados.alterarDadosDaConta(this);
             return true;
         }
         return false;
