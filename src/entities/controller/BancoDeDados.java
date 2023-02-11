@@ -40,10 +40,10 @@ public class BancoDeDados implements Exibicao {
 
         for(Conta x: contas){
             if(x.getNumero() == numero) {
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
 
