@@ -6,7 +6,6 @@ import entities.model.Compra;
 import entities.model.Conta;
 import entities.model.Item;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
@@ -39,16 +38,20 @@ public class TelaCompras  implements Tela {
                     ArrayList<Item> itens = new ArrayList<>();
                     String nomeItem = "";
 
+                    double valorTotalAtual = 0;
+
                     System.out.println("Selecione o cartão para efetuar a compra:");
                     for(int i=0;i<cartoes.length;i++){
                         if(cartoes[i] != null){
                             System.out.printf("Cartão [%d] -> %s", (i+1), (cartoes[i].getTipo() == 1 ? "Débito":"Crédito"));
                         }
                     }
-                    cartao = cartoes[Integer.parseInt(scanner.nextLine())];
+                    cartao = cartoes[Integer.parseInt(scanner.nextLine())-1];
 
 
                     while(!nomeItem.equalsIgnoreCase("ENCERRAR COMPRA")){
+                        System.out.printf("Saldo da conta: R$ %.2f", login.getSaldo());
+                        System.out.printf("Valor total da compra: R$ %.2f", valorTotalAtual);
                         System.out.println("Digite [ENCERRAR COMPRA] para encerrar a adição de itens");
                         System.out.println("Insira o nome do item a ser adicionado:");
                         nomeItem = scanner.nextLine();
@@ -62,6 +65,7 @@ public class TelaCompras  implements Tela {
                             quantidadeItem = Double.parseDouble(scanner.nextLine());
                             Item item = new Item(nomeItem, valorItem, quantidadeItem);
                             itens.add(item);
+                            valorTotalAtual += item.returnPrecoItem();
                         }
                     }
 

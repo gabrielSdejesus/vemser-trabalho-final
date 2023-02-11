@@ -34,7 +34,11 @@ public abstract class Cartao {
     }
 
     public void adicionarCompra(Compra compra) {
+        if(pagarComCartao(compra.returnValorTotal(), this.senha, compra)){
             compras.add(compra);
+        }else{
+            System.err.println("Compra não realizada, saldo indisponível!");
+        }
     }
 
     public boolean pagarComCartao(double valor, String senha, Compra compra){

@@ -45,10 +45,30 @@ public class Cliente implements Exibicao {
 
     @Override
     public void exibir() {
-
+        System.out.println("Exibindo informações do cliente");
+        System.out.println("\tNome: "+this.nome);
+        System.out.println("\tCpf: "+this.cpf);
+        System.out.println("Exibindo todos os contatos:");
+        for(int i=0;i< contatos.size();i++){
+            System.out.printf("\tContato [%d]:", (i+1));
+            contatos.get(i).exibir();
+        }
+        System.out.println("Exibindo todos os endereços:");
+        for(int i=0;i< enderecos.size();i++){
+            System.out.printf("\tEndereço [%d]:", (i+1));
+            enderecos.get(i).exibir();
+        }
     }
 
     public boolean verificarSenha(String senhaCliente) {
         return senhaCliente.equals(senha);
+    }
+
+    public ArrayList<Contato> getContatos(){
+        return contatos;
+    }
+
+    public ArrayList<Endereco> getEnderecos(){
+        return enderecos;
     }
 }

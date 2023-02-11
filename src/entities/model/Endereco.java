@@ -46,10 +46,30 @@ public class Endereco implements Alteracao, Exibicao {
 
     @Override
     public void exibir() {
-        System.out.println("Logradouro: "+this.logradouro);
-        System.out.println("Cidade: "+this.cidade);
-        System.out.println("Estado: "+this.estado);
-        System.out.println("País: "+this.pais);
-        System.out.println("CEP: "+this.cep);
+        System.out.println("\t\tLogradouro: "+this.logradouro);
+        System.out.println("\t\tCidade: "+this.cidade);
+        System.out.println("\t\tEstado: "+this.estado);
+        System.out.println("\t\tPaís: "+this.pais);
+        System.out.println("\t\tCEP: "+this.cep);
+    }
+
+    public String getLogradouro() {
+        return logradouro;
+    }
+
+    public String getCidade() {
+        return cidade;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public String getPais() {
+        return pais;
+    }
+
+    public String getCep() {
+        return cep;
     }
 }

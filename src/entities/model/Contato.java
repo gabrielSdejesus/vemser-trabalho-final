@@ -33,7 +33,15 @@ public class Contato implements Alteracao, Exibicao {
 
     @Override
     public void exibir() {
-        System.out.println("Telefone: "+this.telefone);
-        System.out.println("Email: "+this.email);
+        System.out.println("\t\tTelefone: "+this.telefone);
+        System.out.println("\t\tEmail: "+this.email);
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public String getEmail() {
+        return email;
     }
 }
