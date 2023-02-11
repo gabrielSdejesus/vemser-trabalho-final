@@ -92,6 +92,7 @@ public class TelaPerfil  implements Tela {
                             System.out.println("Insira o email do Contato do cliente");
                             email = scanner.nextLine();
                             contatos.add(new Contato(contatoInput, email));
+                            System.out.println("\tContato adicionado!");
                         }
                     }
 
@@ -101,7 +102,7 @@ public class TelaPerfil  implements Tela {
                     System.out.println("\tEtapa [6] de [6]");
                     while(!enderecoInput.equalsIgnoreCase("ENCERRAR ENDEREÇOS")){
                         System.out.println("Insira [ENCERRAR ENDEREÇOS] para parar de adicionar endereços do cliente");
-                        System.out.println("Insira o Logradouro do endereço do cliente:");
+                        System.out.println("Insira o Logradouro do Endereço do cliente:");
                         enderecoInput = scanner.nextLine();
 
                         String cidade, estado, pais, cep;
@@ -123,6 +124,7 @@ public class TelaPerfil  implements Tela {
                             System.out.println("Insira o CEP do Endereço do cliente:");
                             cep = scanner.nextLine();
                             enderecos.add(new Endereco(enderecoInput, cidade, estado, pais, cep));
+                            System.out.println("\tEndereço adicionado!");
                         }
                     }
                     Cliente cliente = new Cliente(nomeCliente, cpfCliente, enderecos, contatos, loginCliente, senhaCliente);
