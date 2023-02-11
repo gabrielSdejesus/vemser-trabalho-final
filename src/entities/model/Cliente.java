@@ -1,6 +1,5 @@
 package entities.model;
 
-import entities.controller.BancoDeDados;
 import entities.interfaces.Exibicao;
 
 import java.util.ArrayList;

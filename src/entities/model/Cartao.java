@@ -1,11 +1,9 @@
 package entities.model;
 
 import entities.controller.BancoDeDados;
-import entities.interfaces.Exibicao;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 

@@ -1,8 +1,5 @@
 package entities.model;
 
-import java.util.Date;
-import java.util.List;
-
 public class CartaoDeDebito extends Cartao {
     private final int TIPO = 1;
 

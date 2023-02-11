@@ -2,12 +2,7 @@ package entities.view;
 
 import entities.interfaces.Tela;
 import entities.model.Cartao;
-import entities.model.Compra;
 import entities.model.Conta;
-import entities.model.Item;
-
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.Scanner;
 
 public class TelaExtratoCartaoCredito  implements Tela {

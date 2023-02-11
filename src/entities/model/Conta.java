@@ -42,7 +42,8 @@ public class Conta implements Exibicao {
             BancoDeDados.alterarDadosDaConta(this);
             return true;
         }
-        return false;    }
+        return false;
+    }
 
     public boolean depositar(double valor, String senha){
         if(valor > 0 && verificarSenha(senha)){
@@ -84,7 +85,7 @@ public class Conta implements Exibicao {
             this.cartoes[indice] = null;
             BancoDeDados.alterarDadosDaConta(this);
             return true;
-        };
+        }
         return false;
     }
 

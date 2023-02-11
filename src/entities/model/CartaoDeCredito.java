@@ -1,8 +1,6 @@
 package entities.model;
 
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.List;
 
 public class CartaoDeCredito extends Cartao {
     private double limite = 1000;
@@ -13,7 +11,10 @@ public class CartaoDeCredito extends Cartao {
     }
 
     public boolean pagar(double valor, String senha) {
-        return valor <= limiteRestante();
+        if(getConta().verificarSenha(senha)){
+            return valor <= limiteRestante();
+        }
+        return false;
     }
 
     public double limiteRestante(){
