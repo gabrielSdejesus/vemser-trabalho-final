@@ -12,16 +12,19 @@ public class Cliente implements Exibicao {
     private ArrayList<Contato> contatos;
     private String login;
     private String senha;
-    private ArrayList<Conta> contas;
+    private Conta conta;
 
-    public Cliente(String nome, String cpf, ArrayList<Endereco> enderecos, ArrayList<Contato> contatos, String login, String senha, ArrayList<Conta> contas) {
+    public Cliente(String nome, String cpf, ArrayList<Endereco> enderecos, ArrayList<Contato> contatos, String login, String senha) {
         this.nome = nome;
         this.cpf = cpf;
         this.enderecos = enderecos;
         this.contatos = contatos;
         this.login = login;
         this.senha = senha;
-        this.contas = contas;
+    }
+
+    public void setConta(Conta conta){
+        this.conta = conta;
     }
 
     public boolean criarConta() {

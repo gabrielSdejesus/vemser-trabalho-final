@@ -51,9 +51,50 @@ public class TelaPerfil  implements Tela {
                 senhaAdm = scanner.nextLine();
 
                 if(senhaAdm.equals("ABACAXI")){
-                    ArrayList<Contato> contatos;
-                    ArrayList<Endereco> enderecos;
+                    ArrayList<Contato> contatos = new ArrayList<>();
+                    String contatoInput = "";
+                    while(!contatoInput.equalsIgnoreCase("ENCERRAR CONTATOS")){
+                        System.out.println("Insira [ENCERRAR CONTATOS] para parar de adicionar contatos");
+                        System.out.println("Insira o telefone do contato:");
+                        contatoInput = scanner.nextLine();
+
+                        String email;
+
+                        if(contatoInput.equalsIgnoreCase("ENCERRAR CONTATOS")){
+                            break;
+                        }else{
+                            System.out.println("Insira o email do Contato");
+                            email = scanner.nextLine();
+                            contatos.add(new Contato(contatoInput, email));
+                        }
+                    }
+
+                    ArrayList<Endereco> enderecos = new ArrayList<>();
+                    String enderecoInput = "";
+                    while(!enderecoInput.equalsIgnoreCase("ENCERRAR ENDEREÇOS")){
+                        System.out.println("Insira [ENCERRAR ENDEREÇOS] para parar de adicionar endereços");
+                        System.out.println("Insira o logradouro do endereço:");
+                        enderecoInput = scanner.nextLine();
+
+                        String cidade, estado, pais, cep;
+
+                        if(enderecoInput.equalsIgnoreCase("ENCERRAR CONTATOS")){
+                            break;
+                        }else{
+                            System.out.println("Insira a cidade do Endereço");
+                            cidade = scanner.nextLine();
+                            System.out.println("Insira o estado do Endereço");
+                            estado = scanner.nextLine();
+                            System.out.println("Insira o país do Endereço");
+                            pais = scanner.nextLine();
+                            System.out.println("Insira o cep do Endereço");
+                            cep = scanner.nextLine();
+                            enderecos.add(new Endereco(enderecoInput, cidade, estado, pais, cep));
+                        }
+                    }
                     Cliente cliente = new Cliente("nome", "cpf", enderecos, contatos, "login", "senha");
+                    Conta conta = new Conta(cliente, 0);
+                    BancoDeDados.adicionarConta(conta);
                 }else{
                     System.err.println("Número de conta ou senha inválida");
                 }
