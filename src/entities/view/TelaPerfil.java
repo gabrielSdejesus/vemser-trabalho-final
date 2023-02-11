@@ -52,11 +52,31 @@ public class TelaPerfil  implements Tela {
                 senhaAdm = scanner.nextLine();
 
                 if(senhaAdm.equals("ABACAXI")){
+                    String nomeCliente, cpfCliente, loginCliente, senhaCliente;
+
+                    System.out.println("Etapa [1] de [6]");
+                    System.out.println("Insira o Nome do cliente:");
+                    nomeCliente = scanner.nextLine();
+
+                    System.out.println("Etapa [2] de [6]");
+                    System.out.println("Insira o CPF do cliente:");
+                    cpfCliente = scanner.nextLine();
+
+                    System.out.println("Etapa [3] de [6]");
+                    System.out.println("Insira o Login do cliente:");
+                    loginCliente = scanner.nextLine();
+
+                    System.out.println("Etapa [4] de [6]");
+                    System.out.println("Insira a Senha do cliente:");
+                    senhaCliente = scanner.nextLine();
+
                     ArrayList<Contato> contatos = new ArrayList<>();
                     String contatoInput = "";
+
+                    System.out.println("Etapa [5] de [6]");
                     while(!contatoInput.equalsIgnoreCase("ENCERRAR CONTATOS")){
-                        System.out.println("Insira [ENCERRAR CONTATOS] para parar de adicionar contatos");
-                        System.out.println("Insira o telefone do contato:");
+                        System.out.println("Insira [ENCERRAR CONTATOS] para parar de adicionar contatos do cliente");
+                        System.out.println("Insira o telefone do contato do cliente:");
                         contatoInput = scanner.nextLine();
 
                         String email;
@@ -69,7 +89,7 @@ public class TelaPerfil  implements Tela {
                                 break;
                             }
                         }else{
-                            System.out.println("Insira o email do Contato");
+                            System.out.println("Insira o email do Contato do cliente");
                             email = scanner.nextLine();
                             contatos.add(new Contato(contatoInput, email));
                         }
@@ -77,9 +97,11 @@ public class TelaPerfil  implements Tela {
 
                     ArrayList<Endereco> enderecos = new ArrayList<>();
                     String enderecoInput = "";
+
+                    System.out.println("Etapa [6] de [6]");
                     while(!enderecoInput.equalsIgnoreCase("ENCERRAR ENDEREÇOS")){
-                        System.out.println("Insira [ENCERRAR ENDEREÇOS] para parar de adicionar endereços");
-                        System.out.println("Insira o Logradouro do endereço:");
+                        System.out.println("Insira [ENCERRAR ENDEREÇOS] para parar de adicionar endereços do cliente");
+                        System.out.println("Insira o Logradouro do endereço do cliente:");
                         enderecoInput = scanner.nextLine();
 
                         String cidade, estado, pais, cep;
@@ -92,18 +114,18 @@ public class TelaPerfil  implements Tela {
                                 break;
                             }
                         }else{
-                            System.out.println("Insira a Cidade do Endereço");
+                            System.out.println("Insira a Cidade do Endereço do cliente:");
                             cidade = scanner.nextLine();
-                            System.out.println("Insira o Estado do Endereço");
+                            System.out.println("Insira o Estado do Endereço do cliente:");
                             estado = scanner.nextLine();
-                            System.out.println("Insira o País do Endereço");
+                            System.out.println("Insira o País do Endereço do cliente:");
                             pais = scanner.nextLine();
-                            System.out.println("Insira o CEP do Endereço");
+                            System.out.println("Insira o CEP do Endereço do cliente:");
                             cep = scanner.nextLine();
                             enderecos.add(new Endereco(enderecoInput, cidade, estado, pais, cep));
                         }
                     }
-                    Cliente cliente = new Cliente("nome", "cpf", enderecos, contatos, "login", "senha");
+                    Cliente cliente = new Cliente(nomeCliente, cpfCliente, enderecos, contatos, loginCliente, senhaCliente);
                     Conta conta = new Conta(cliente, 0);
                     BancoDeDados.adicionarConta(conta);
                     System.out.println("Cliente adicionado com sucesso!");
