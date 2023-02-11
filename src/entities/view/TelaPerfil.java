@@ -18,10 +18,7 @@ public class TelaPerfil  implements Tela {
 
     public static void tratarInput(int input) {
         Scanner scanner = new Scanner(System.in);
-        Conta login = null;
-        if(input > 0){
-             login = Tela.login();
-        }
+        Conta login;
         switch(input){
             case 1 ->{
                 String senhaCliente, numeroConta, loginCliente;
@@ -41,6 +38,7 @@ public class TelaPerfil  implements Tela {
                 exibirTelaPerfil();
             }
             case 2 ->{
+                login = Tela.login();
                 if(login != null){
                     login.exibir();
                 }else{
@@ -116,6 +114,7 @@ public class TelaPerfil  implements Tela {
                 exibirTelaPerfil();
             }
             case 4 -> {
+                login = Tela.login();
                 if(login != null){
                     ArrayList<Contato> contatos = login.getCliente().getContatos();
                     int inputAlteracaoContato, tipoAlteracaoContato;
@@ -159,6 +158,7 @@ public class TelaPerfil  implements Tela {
                 exibirTelaPerfil();
             }
             case 5 -> {
+                login = Tela.login();
                 if(login != null){
                     ArrayList<Endereco> enderecos = login.getCliente().getEnderecos();
                     int inputAlteracaoEndereco, tipoAlteracaoEndereco;
@@ -208,6 +208,7 @@ public class TelaPerfil  implements Tela {
                 exibirTelaPerfil();
             }
             case 6 -> {
+                login = Tela.login();
                 if(login != null) {
                     ArrayList<Contato> contatos = login.getCliente().getContatos();
                     int inputExclusaoContato;
@@ -233,6 +234,7 @@ public class TelaPerfil  implements Tela {
                 exibirTelaPerfil();
             }
             case 7 -> {
+                login = Tela.login();
                 if(login != null) {
                     ArrayList<Endereco> enderecos = login.getCliente().getEnderecos();
                     int inputExclusaoEndereco;

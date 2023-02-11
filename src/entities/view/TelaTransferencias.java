@@ -12,12 +12,10 @@ public class TelaTransferencias implements Tela {
     }
 
     public static void tratarInput(int input) {
-        Conta login = null;
-        if(input > 0){
-            login = Tela.login();
-        }
+        Conta login;
         switch(input){
             case 1 ->{
+                login = Tela.login();
                 if(login != null){
                     login.exibirTransferencias();
                 }else{

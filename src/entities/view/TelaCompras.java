@@ -18,12 +18,10 @@ public class TelaCompras  implements Tela {
 
     public static void tratarInput(int input) {
         Scanner scanner = new Scanner(System.in);
-        Conta login = null;
-        if(input > 0){
-            login = Tela.login();
-        }
+        Conta login;
         switch(input){
             case 1 ->{
+                login = Tela.login();
                 if(login != null){
                     for(Cartao cartao:login.getCartoes()){
                         if (cartao != null){
@@ -36,6 +34,7 @@ public class TelaCompras  implements Tela {
                 exibirCompras();
             }
             case 2 -> {
+                login = Tela.login();
                 if(login != null){
                     Cartao[] cartoes = login.getCartoes();
                     Cartao cartao;
