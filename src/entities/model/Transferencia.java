@@ -17,6 +17,6 @@ public class Transferencia implements Exibicao {
     public void exibir() {
         System.out.println("\tNúmero da conta que pagou: "+contaPagou.getNumero());
         System.out.println("\tNúmero da conta que recebeu: "+contaRecebeu.getNumero());
-        System.out.printf("\tValor da transação R$ %.2f: ", valor);
+        System.out.printf("\tValor da transação R$ %.2f: \n", valor);
     }
 }

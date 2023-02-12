@@ -63,16 +63,16 @@ public class TelaMovimentacoes implements Tela {
             case 3 -> {
                 login = Tela.login();
                 if(login != null){
-                    System.out.println("Insira o valor da transferência:");
+                    System.out.print("Insira o valor da transferência:");
                     valor = Double.parseDouble(scanner.nextLine());
 
-                    System.out.println("Insira a senha da conta:");
+                    System.out.print("Insira a senha da conta:");
                     senhaConta = scanner.nextLine();
 
-                    System.out.println("Insira o número da conta que receberá a transferência:");
+                    System.out.print("Insira o número da conta que receberá a transferência:");
                     String numeroConta = scanner.nextLine();
                     if(login.transferir(BancoDeDados.consultarNumeroDaConta(numeroConta), valor, senhaConta)){
-                        System.out.println("Transferência concluída!");
+                        System.err.println("Transferência concluída!");
                         System.out.printf("Saldo atual: R$ %.2f\n", login.getSaldo());
                     }else{
                         String resultado;

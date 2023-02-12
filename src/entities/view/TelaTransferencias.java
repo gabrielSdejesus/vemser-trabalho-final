@@ -19,13 +19,13 @@ public class TelaTransferencias implements Tela {
                 if(login != null){
                     login.exibirTransferencias();
                 }else{
-                    System.out.println("Login mal-sucedido");
+                    System.err.println("Login mal-sucedido");
                 }
                 exibirTransferencias();
             }
             case 2 -> Tela.redirecionarParaTela(1);
             default -> {
-                System.out.println("Opção inválida!");
+                System.err.println("Opção inválida!");
                 exibirTransferencias();
             }
         }
