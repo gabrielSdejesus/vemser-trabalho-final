@@ -21,9 +21,9 @@ public class TelaPerfil  implements Tela {
         switch(input){
             case 1 ->{
                 String senhaCliente, numeroConta;
-                System.out.println("Insira o número da sua Conta:");
+                System.out.print("Insira o número da sua Conta: ");
                 numeroConta = scanner.nextLine();
-                System.out.println("Insira a sua senha de Cliente:");
+                System.out.print("Insira a sua senha de Cliente: ");
                 senhaCliente = scanner.nextLine();
                 Conta conta = BancoDeDados.consultarNumeroDaConta(numeroConta);
                 if(conta != null && conta.getCliente().verificarSenha(senhaCliente)){
@@ -50,7 +50,7 @@ public class TelaPerfil  implements Tela {
                     int inputAlteracaoContato, tipoAlteracaoContato;
                     String novoDado;
 
-                    System.out.println("Selecione um contato para alterar:");
+                    System.out.print("Selecione um contato para alterar: ");
                     for(int i=0;i<contatos.size();i++){
                         System.out.printf("[%d] Telefone: %s; Email: %s\n", (i+1), contatos.get(i).getTelefone(), contatos.get(i).getEmail());
                     }
@@ -73,7 +73,7 @@ public class TelaPerfil  implements Tela {
                                 case 2 -> tipoContato = "Email";
                                 default -> System.err.println("Erro bizarro!");
                             }
-                            System.out.println("Insira o novo ["+tipoContato+"]:");
+                            System.out.print("Insira o novo ["+tipoContato+"]: ");
                             novoDado = scanner.nextLine();
                             contatos.get(inputAlteracaoContato-1).alterarDado(tipoContato.toLowerCase(), novoDado);
                             System.out.println("Contato alterado com sucesso!");
@@ -104,11 +104,11 @@ public class TelaPerfil  implements Tela {
                     if(inputAlteracaoEndereco > 0 && inputAlteracaoEndereco <= enderecos.size()){
 
                         System.out.println("Selecione a alteração que quer fazer no Contato:");
-                        System.out.println("[1] Logradouro:");
-                        System.out.println("[2] Cidade:");
-                        System.out.println("[3] Estado:");
-                        System.out.println("[4] País:");
-                        System.out.println("[5] CEP:");
+                        System.out.println("[1] Logradouro");
+                        System.out.println("[2] Cidade");
+                        System.out.println("[3] Estado");
+                        System.out.println("[4] País");
+                        System.out.println("[5] CEP");
                         System.out.println("[6] Cancelar - Voltar para tela de perfil");
 
                         tipoAlteracaoEndereco = Integer.parseInt(scanner.nextLine());
@@ -124,7 +124,7 @@ public class TelaPerfil  implements Tela {
                                 case 5 -> tipoEndereco = "CEP";
                                 default -> System.err.println("Erro bizarro!");
                             }
-                            System.out.println("Insira o novo ["+tipoEndereco+"]:");
+                            System.out.print("Insira o novo ["+tipoEndereco+"]: ");
                             novoDado = scanner.nextLine();
                             enderecos.get(inputAlteracaoEndereco-1).alterarDado(tipoEndereco.toLowerCase(), novoDado);
                             System.out.println("Endereço alterado com sucesso!");
@@ -201,7 +201,7 @@ public class TelaPerfil  implements Tela {
                     ArrayList<Contato> contatos = new ArrayList<>();
                     while(!contatoInput.equalsIgnoreCase("ENCERRAR CONTATOS")){
                         System.out.println("Insira [ENCERRAR CONTATOS] para parar de adicionar contatos do cliente");
-                        System.out.println("Insira o telefone do contato do cliente:");
+                        System.out.print("Insira o telefone do contato do cliente: ");
                         contatoInput = scanner.nextLine();
 
                         String email;
@@ -214,7 +214,7 @@ public class TelaPerfil  implements Tela {
                                 break;
                             }
                         }else{
-                            System.out.println("Insira o email do Contato do cliente");
+                            System.out.print("Insira o email do Contato do cliente: ");
                             email = scanner.nextLine();
                             contatos.add(new Contato(contatoInput, email));
                             System.out.println("\tContato adicionado!");
@@ -233,7 +233,7 @@ public class TelaPerfil  implements Tela {
                     ArrayList<Endereco> enderecos = new ArrayList<>();
                     while(!enderecoInput.equalsIgnoreCase("ENCERRAR ENDEREÇOS")){
                         System.out.println("Insira [ENCERRAR ENDEREÇOS] para parar de adicionar endereços do cliente");
-                        System.out.println("Insira o Logradouro do Endereço do cliente:");
+                        System.out.print("Insira o Logradouro do Endereço do cliente: ");
                         enderecoInput = scanner.nextLine();
 
                         String cidade, estado, pais, cep;
@@ -246,13 +246,13 @@ public class TelaPerfil  implements Tela {
                                 break;
                             }
                         }else{
-                            System.out.println("Insira a Cidade do Endereço do cliente:");
+                            System.out.print("Insira a Cidade do Endereço do cliente: ");
                             cidade = scanner.nextLine();
-                            System.out.println("Insira o Estado do Endereço do cliente:");
+                            System.out.print("Insira o Estado do Endereço do cliente: ");
                             estado = scanner.nextLine();
-                            System.out.println("Insira o País do Endereço do cliente:");
+                            System.out.print("Insira o País do Endereço do cliente: ");
                             pais = scanner.nextLine();
-                            System.out.println("Insira o CEP do Endereço do cliente:");
+                            System.out.print("Insira o CEP do Endereço do cliente: ");
                             cep = scanner.nextLine();
                             enderecos.add(new Endereco(enderecoInput, cidade, estado, pais, cep));
                             System.out.println("\tEndereço adicionado!");
@@ -267,15 +267,15 @@ public class TelaPerfil  implements Tela {
             case 9 ->{
                 String cpfOuNumero, senhaAntiga, novaSenha;
 
-                System.out.println("Insira o CPF do CLIENTE ou o NÚMERO da CONTA:");
+                System.out.print("Insira o CPF do CLIENTE ou o NÚMERO da CONTA: ");
                 cpfOuNumero = scanner.nextLine();
 
                 if(BancoDeDados.consultarNumeroDaConta(cpfOuNumero) != null || BancoDeDados.consultarExistenciaPorCPF(cpfOuNumero) != null){
-                    System.out.println("Insira a SENHA ANTIGA:");
+                    System.out.print("Insira a SENHA ANTIGA: ");
                     senhaAntiga = scanner.nextLine();
                     Conta conta = (BancoDeDados.consultarNumeroDaConta(cpfOuNumero) != null)? BancoDeDados.consultarNumeroDaConta(cpfOuNumero):BancoDeDados.consultarExistenciaPorCPF(cpfOuNumero);
                     if(conta.verificarSenha(senhaAntiga)){
-                        System.out.println("Insira a nova senha:");
+                        System.out.print("Insira a nova senha: ");
                         novaSenha = scanner.nextLine();
                         conta.alterarSenha(senhaAntiga, novaSenha);
                     }else{
