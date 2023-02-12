@@ -155,7 +155,7 @@ public class TelaPerfil  implements Tela {
 
                         if (inputExclusaoContato > 0 && inputExclusaoContato <= contatos.size()) {
                             System.out.printf("Contato [%d] excluído!", inputExclusaoContato);
-                            login.getCliente().getContatos().remove(inputExclusaoContato-1);
+                            login.getCliente().removerContato(inputExclusaoContato-1);
                         }else{
                             System.out.println("Nenhum contato selecionado!");
                         }
@@ -183,7 +183,7 @@ public class TelaPerfil  implements Tela {
 
                         if (inputExclusaoEndereco > 0 && inputExclusaoEndereco <= enderecos.size()) {
                             System.out.printf("Contato [%d] excluído!", inputExclusaoEndereco);
-                            login.getCliente().getEnderecos().remove(inputExclusaoEndereco-1);
+                            login.getCliente().removerEndereco(inputExclusaoEndereco-1);
                         }else{
                             System.out.println("Nenhum endereço selecionado!");
                         }

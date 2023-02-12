@@ -95,4 +95,12 @@ public class Cliente implements Exibicao {
         }
     }
 
+    public void removerContato(int index){
+        contatos.remove(index);
+    }
+
+    public void removerEndereco(int index){
+        enderecos.remove(index);
+    }
+
 }
