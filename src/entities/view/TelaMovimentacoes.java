@@ -95,7 +95,7 @@ public class TelaMovimentacoes implements Tela {
             case 4 -> {
                 login = Tela.login();
                 if(login != null){
-                    System.out.println("Insira o valor do pagamento:");
+                    System.out.print("Insira o valor do pagamento:");
                     valor = Double.parseDouble(scanner.nextLine());
 
                     Cartao[] cartoes = login.getCartoes();
@@ -104,7 +104,7 @@ public class TelaMovimentacoes implements Tela {
                     System.out.println("Selecione o cartão para efetuar a compra:");
                     for(int i=0;i<cartoes.length;i++){
                         if(cartoes[i] != null){
-                            System.out.printf("Cartão [%d] -> %s", (i+1), (cartoes[i].getTipo() == 1 ? "Débito":"Crédito"));
+                            System.out.printf("Cartão [%d] -> %s: ", (i+1), (cartoes[i].getTipo() == 1 ? "Débito":"Crédito"));
                         }
                     }
                     cartao = cartoes[Integer.parseInt(scanner.nextLine())-1];
