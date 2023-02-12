@@ -42,6 +42,7 @@ public class TelaAdministrador implements Tela {
                         if (BancoDeDados.consultarExistenciaPorCPF(cpfCliente).getCliente().getCpf().equalsIgnoreCase(cpfCliente)) {
                             System.err.println("CPF já cadastrado!");
                             TelaAdministrador.exibirTelaAdministrador();
+                            break;
                         }
                     }
                     System.out.println("\tEtapa [3] de [5]");
