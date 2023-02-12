@@ -132,7 +132,8 @@ public class TelaAdministrador implements Tela {
                         }
                         System.out.println("Insira o CPF do CLIENTE que quer deletar:");
                         cpfCliente = scanner.nextLine();
-                        if(BancoDeDados.consultarExistenciaPorCPF(cpfCliente).getSaldo() > 0){
+                        Conta conta = BancoDeDados.consultarExistenciaPorCPF(cpfCliente);
+                        if(conta != null && conta.getSaldo() > 0){
                             String confirmacao;
                             System.out.println("Esse CLIENTE ainda tem saldo em sua conta, tem certeza dessa operação? [Y/N]");
                             confirmacao = scanner.nextLine();
@@ -173,7 +174,8 @@ public class TelaAdministrador implements Tela {
                         }
                         System.out.println("\nInsira o NÚMERO da CONTA que quer deletar:");
                         numeroConta = scanner.nextLine();
-                        if(BancoDeDados.consultarNumeroDaConta(numeroConta).getSaldo() > 0){
+                        Conta conta = BancoDeDados.consultarNumeroDaConta(numeroConta);
+                        if(conta != null && conta.getSaldo() > 0){
                             String confirmacao;
                             System.out.println("Essa CONTA ainda tem saldo, tem certeza dessa operação? [Y/N]");
                             confirmacao = scanner.nextLine();
