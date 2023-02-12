@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 public class TelaMovimentacoes implements Tela {
     public static void exibirTelaMovimentacoes(){
-        System.out.println("Você está na Tela de Movimentações");
+        System.out.println("\nVocê está na Tela de Movimentações");
         TelaMovimentacoes.tratarInput(TelaMovimentacoes.pedirInput());
     }
 
@@ -23,53 +23,53 @@ public class TelaMovimentacoes implements Tela {
             case 1 -> {
                 login = Tela.login();
                 if(login != null){
-                    System.out.println("Insira o valor do Depósito:");
+                    System.out.print("Insira o valor do Depósito: ");
                     valor = Double.parseDouble(scanner.nextLine());
 
-                    System.out.println("Insira a senha da conta:");
+                    System.out.print("Insira a senha da conta: ");
                     senhaConta = scanner.nextLine();
 
                     if(login.depositar(valor, senhaConta)){
-                        System.out.println("Depósito concluído!");
+                        System.err.println("Depósito concluído!");
                         System.out.printf("Saldo atual: R$ %.2f", login.getSaldo());
                     }else{
                         System.err.println("Depósito não realizado! Senha incorreta!");
                     }
                 }else{
-                    System.out.println("Login mal-sucedido");
+                    System.err.println("Login mal-sucedido");
                 }
                 exibirTelaMovimentacoes();
             }
             case 2 -> {
                 login = Tela.login();
                 if(login != null){
-                    System.out.println("Insira o valor do Saque:");
+                    System.out.print("Insira o valor do Saque: ");
                     valor = Double.parseDouble(scanner.nextLine());
 
-                    System.out.println("Insira a senha da conta:");
+                    System.out.print("Insira a senha da conta: ");
                     senhaConta = scanner.nextLine();
 
                     if(login.sacar(valor, senhaConta)){
-                        System.out.println("Saque concluído!");
+                        System.err.println("Saque concluído!");
                         System.out.printf("Saldo atual: R$ %.2f", login.getSaldo());
                     }else{
                         System.err.println("Saque não realizado! "+(login.verificarSenha(senhaConta)? "Fundos Insuficientes": "Senha incorreta")+"!");
                     }
                 }else{
-                    System.out.println("Login mal-sucedido");
+                    System.err.println("Login mal-sucedido");
                 }
                 exibirTelaMovimentacoes();
             }
             case 3 -> {
                 login = Tela.login();
                 if(login != null){
-                    System.out.print("Insira o valor da transferência:");
+                    System.out.print("Insira o valor da transferência: ");
                     valor = Double.parseDouble(scanner.nextLine());
 
-                    System.out.print("Insira a senha da conta:");
+                    System.out.print("Insira a senha da conta: ");
                     senhaConta = scanner.nextLine();
 
-                    System.out.print("Insira o número da conta que receberá a transferência:");
+                    System.out.print("Insira o número da conta que receberá a transferência: ");
                     String numeroConta = scanner.nextLine();
                     if(login.transferir(BancoDeDados.consultarNumeroDaConta(numeroConta), valor, senhaConta)){
                         System.err.println("Transferência concluída!");
@@ -78,24 +78,24 @@ public class TelaMovimentacoes implements Tela {
                         String resultado;
                         if(BancoDeDados.consultarNumeroDaConta(numeroConta) != null){
                             if(login.verificarSenha(senhaConta)){
-                                resultado = "Saldo insuficiente";
+                                resultado = "Saldo insuficiente!";
                             }else{
                                 resultado = "Senha incorreta";
                             }
                         }else{
                             resultado = "Número da conta inexistente";
                         }
-                        System.err.println("Saque não realizado! "+resultado+"!");
+                        System.err.println(resultado);
                     }
                 }else{
-                    System.out.println("Login mal-sucedido");
+                    System.err.println("Login mal-sucedido");
                 }
                 exibirTelaMovimentacoes();
             }
             case 4 -> {
                 login = Tela.login();
                 if(login != null){
-                    System.out.print("Insira o valor do pagamento:");
+                    System.out.print("Insira o valor do pagamento: ");
                     valor = Double.parseDouble(scanner.nextLine());
 
                     Cartao[] cartoes = login.getCartoes();
@@ -109,10 +109,10 @@ public class TelaMovimentacoes implements Tela {
                     }
                     cartao = cartoes[Integer.parseInt(scanner.nextLine())-1];
 
-                    System.out.println("Insira a senha da conta:");
+                    System.out.print("Insira a senha da conta: ");
                     senhaConta = scanner.nextLine();
                     if(cartao.pagarComCartao(valor, senhaConta)){
-                        System.out.println("Operação realizada com sucesso!");
+                        System.err.println("Operação realizada com sucesso!");
                     }else{
                         if(login.getSaldo() < valor){
                             System.err.println("Saldo indisponível!");
@@ -121,13 +121,13 @@ public class TelaMovimentacoes implements Tela {
                         }
                     }
                 }else{
-                    System.out.println("Login mal-sucedido");
+                    System.err.println("Login mal-sucedido");
                 }
                 exibirTelaMovimentacoes();
             }
             case 5 -> Tela.redirecionarParaTela(1);
             default -> {
-                System.out.println("Opção inválida!");
+                System.err.println("Opção inválida!");
                 exibirTelaMovimentacoes();
             }
         }

@@ -27,7 +27,7 @@ public class TelaCartao implements Tela {
                     for (int i = 0; i < cartoes.length; i++) {
                         if (cartoes[i] != null && cartoes[i].getTipo() == 2) {
                             cartao = i;
-                            System.out.println("\tExibindo dados do cartão ["+(i+1)+"]:");
+                            System.out.println("\t\nExibindo dados do cartão ["+(i+1)+"]:");
                             cartoes[cartao].exibirDadosCartao();
                             cartoes[cartao].exibirCompras((i+1));
                         }
