@@ -29,7 +29,7 @@ public class Endereco implements Alteracao, Exibicao {
                 this.estado = novoDado;
                 return true;
             }
-            case "pais" -> {
+            case "país" -> {
                 this.pais = novoDado;
                 return true;
             }
