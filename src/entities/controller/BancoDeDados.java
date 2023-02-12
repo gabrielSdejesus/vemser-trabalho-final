@@ -72,8 +72,4 @@ public class BancoDeDados implements Exibicao {
         }
         return false;
     }
-
-    public static List<Conta> getContas() {
-        return contas;
-    }
 }
