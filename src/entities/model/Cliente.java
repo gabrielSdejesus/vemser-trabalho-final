@@ -3,6 +3,7 @@ package entities.model;
 import entities.interfaces.Exibicao;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Cliente implements Exibicao {
     private String nome;
@@ -40,7 +41,7 @@ public class Cliente implements Exibicao {
 
     @Override
     public void exibir() {
-        System.out.println("Exibindo informações do cliente");
+        System.out.println("\nExibindo informações do cliente");
         System.out.println("\tNome: "+this.nome);
         System.out.println("\tCpf: "+this.cpf);
         System.out.println("Exibindo todos os contatos:");
@@ -53,6 +54,9 @@ public class Cliente implements Exibicao {
             System.out.printf("\tEndereço [%d]:\n", (i+1));
             enderecos.get(i).exibir();
         }
+        System.out.print("Pressione ENTER para continuar...");
+        Scanner scanner = new Scanner(System.in);
+        scanner.nextLine();
     }
 
     public boolean verificarSenha(String senhaCliente) {
