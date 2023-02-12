@@ -49,12 +49,12 @@ public class Cliente implements Exibicao {
         System.out.println("\tCpf: "+this.cpf);
         System.out.println("Exibindo todos os contatos:");
         for(int i=0;i< contatos.size();i++){
-            System.out.printf("\tContato [%d]:", (i+1));
+            System.out.printf("\tContato [%d]:\n", (i+1));
             contatos.get(i).exibir();
         }
         System.out.println("Exibindo todos os endereços:");
         for(int i=0;i< enderecos.size();i++){
-            System.out.printf("\tEndereço [%d]:", (i+1));
+            System.out.printf("\tEndereço [%d]:\n", (i+1));
             enderecos.get(i).exibir();
         }
     }
