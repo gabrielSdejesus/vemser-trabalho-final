@@ -161,7 +161,7 @@ public class TelaPerfil  implements Tela {
                         System.out.println("[3] Cancelar - Voltar para tela de perfil");
 
                         tipoAlteracaoContato = Integer.parseInt(scanner.nextLine());
-                        if (tipoAlteracaoContato < 1 && inputAlteracaoContato > 3){
+                        if (tipoAlteracaoContato < 1 || tipoAlteracaoContato >= 3){
                             System.out.println("Operação cancelada!");
                         }else{
                             String tipoContato = "";
@@ -198,7 +198,7 @@ public class TelaPerfil  implements Tela {
 
                     inputAlteracaoEndereco = Integer.parseInt(scanner.nextLine());
 
-                    if(inputAlteracaoEndereco > 0 && inputAlteracaoEndereco <= enderecos.size()-1){
+                    if(inputAlteracaoEndereco > 0 && inputAlteracaoEndereco <= enderecos.size()){
 
                         System.out.println("Selecione a alteração que quer fazer no Contato:");
                         System.out.println("[1] Logradouro:");
@@ -206,10 +206,10 @@ public class TelaPerfil  implements Tela {
                         System.out.println("[3] Estado:");
                         System.out.println("[4] País:");
                         System.out.println("[5] CEP:");
-                        System.out.println("[6] Cancelar");
+                        System.out.println("[6] Cancelar - Voltar para tela de perfil");
 
                         tipoAlteracaoEndereco = Integer.parseInt(scanner.nextLine());
-                        if (tipoAlteracaoEndereco > 0 && inputAlteracaoEndereco <= enderecos.size()-1){
+                        if (tipoAlteracaoEndereco < 1 || tipoAlteracaoEndereco >= 6){
                             System.out.println("Operação cancelada!");
                         }else{
                             String tipoEndereco = "";
