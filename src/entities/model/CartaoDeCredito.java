@@ -29,12 +29,6 @@ public class CartaoDeCredito extends Cartao {
         System.out.printf("\t\tLimite: R$%.2f\n", limiteRestante());
     }
 
-    public void setLimite(double novoLimite) {
-        limite = novoLimite;
-    }
-
-    public double getLimite(){return limite;}
-
     public int getTipo(){
         return TIPO;
     }
