@@ -123,31 +123,35 @@ public class TelaAdministrador implements Tela {
                 String cpfCliente;
 
                 if(senhaAdm.equals("ABACAXI")){
-                    System.err.println("Atenção! Deletar o CLIENTE também deletará sua CONTA");
-                    System.out.println("Clientes cadastrados");
-                    for(Conta conta : BancoDeDados.getContas()) {
-                        System.out.printf("\tCliente: %s | CPF: %s | Nº da conta %d\n",
-                                conta.getCliente().getNome(), conta.getCliente().getCpf(), conta.getNumero());
-                    }
-                    System.out.println("Insira o CPF do CLIENTE que quer deletar:");
-                    cpfCliente = scanner.nextLine();
-                    if(BancoDeDados.consultarExistenciaPorCPF(cpfCliente).getSaldo() > 0){
-                        String confirmacao;
-                        System.out.println("Esse CLIENTE ainda tem saldo em sua conta, tem certeza dessa operação? [Y/N]");
-                        confirmacao = scanner.nextLine();
-                        if(confirmacao.equalsIgnoreCase("Y")){
-                            System.out.println("\tContinuando operação!");
-                        }else{
-                            System.err.println("\tOperação encerrada!");
-                            break;
+                    if(BancoDeDados.getContas().size() > 0){
+                        System.err.println("Atenção! Deletar o CLIENTE também deletará sua CONTA");
+                        System.out.println("Clientes cadastrados");
+                        for(Conta conta : BancoDeDados.getContas()) {
+                            System.out.printf("\tCliente: %s | CPF: %s | Nº da conta %d\n",
+                                    conta.getCliente().getNome(), conta.getCliente().getCpf(), conta.getNumero());
                         }
-                    }
+                        System.out.println("Insira o CPF do CLIENTE que quer deletar:");
+                        cpfCliente = scanner.nextLine();
+                        if(BancoDeDados.consultarExistenciaPorCPF(cpfCliente).getSaldo() > 0){
+                            String confirmacao;
+                            System.out.println("Esse CLIENTE ainda tem saldo em sua conta, tem certeza dessa operação? [Y/N]");
+                            confirmacao = scanner.nextLine();
+                            if(confirmacao.equalsIgnoreCase("Y")){
+                                System.out.println("\tContinuando operação!");
+                            }else{
+                                System.err.println("\tOperação encerrada!");
+                                break;
+                            }
+                        }
 
-                    if(BancoDeDados.deletarCliente(cpfCliente)){
-                        System.out.println("CLIENTE e CONTA do CLIENTE deletados com sucesso!");
+                        if(BancoDeDados.deletarCliente(cpfCliente)){
+                            System.out.println("CLIENTE e CONTA do CLIENTE deletados com sucesso!");
+                        }else{
+                            System.err.println("CPF informado não encontrado no Banco De Dados!");
+                            System.err.println("Operação não realizada!");
+                        }
                     }else{
-                        System.err.println("CPF informado não encontrado no Banco De Dados!");
-                        System.err.println("Operação não realizada!");
+                        System.err.println("Não há CLIENTES cadastradas!");
                     }
                 }else{
                     System.err.println("Senha administrativa inválida!");
@@ -160,31 +164,35 @@ public class TelaAdministrador implements Tela {
                 String numeroConta;
 
                 if(senhaAdm.equals("ABACAXI")){
-                    System.err.println("Atenção! Deletar uma CONTA também deletará seu CLIENTE");
-                    System.out.println("Contas cadastradas");
-                    for(Conta conta : BancoDeDados.getContas()) {
-                        System.out.printf("\tCliente: %s | CPF: %s | Nº da conta %d\n",
-                                conta.getCliente().getNome(), conta.getCliente().getCpf(), conta.getNumero());
-                    }
-                    System.out.println("\nInsira o NÚMERO da CONTA que quer deletar:");
-                    numeroConta = scanner.nextLine();
-                    if(BancoDeDados.consultarNumeroDaConta(numeroConta).getSaldo() > 0){
-                        String confirmacao;
-                        System.out.println("Essa CONTA ainda tem saldo, tem certeza dessa operação? [Y/N]");
-                        confirmacao = scanner.nextLine();
-                        if(confirmacao.equalsIgnoreCase("Y")){
-                            System.out.println("\tContinuando operação!");
-                        }else{
-                            System.err.println("\tOperação encerrada!");
-                            break;
+                    if(BancoDeDados.getContas().size() > 0){
+                        System.err.println("Atenção! Deletar uma CONTA também deletará seu CLIENTE");
+                        System.out.println("Contas cadastradas");
+                        for(Conta conta : BancoDeDados.getContas()) {
+                            System.out.printf("\tCliente: %s | CPF: %s | Nº da conta %d\n",
+                                    conta.getCliente().getNome(), conta.getCliente().getCpf(), conta.getNumero());
                         }
-                    }
+                        System.out.println("\nInsira o NÚMERO da CONTA que quer deletar:");
+                        numeroConta = scanner.nextLine();
+                        if(BancoDeDados.consultarNumeroDaConta(numeroConta).getSaldo() > 0){
+                            String confirmacao;
+                            System.out.println("Essa CONTA ainda tem saldo, tem certeza dessa operação? [Y/N]");
+                            confirmacao = scanner.nextLine();
+                            if(confirmacao.equalsIgnoreCase("Y")){
+                                System.out.println("\tContinuando operação!");
+                            }else{
+                                System.err.println("\tOperação encerrada!");
+                                break;
+                            }
+                        }
 
-                    if(BancoDeDados.deletarConta(Integer.parseInt(numeroConta))){
-                        System.out.println("CONTA e CLIENTE deletados com sucesso!");
+                        if(BancoDeDados.deletarConta(Integer.parseInt(numeroConta))){
+                            System.out.println("CONTA e CLIENTE deletados com sucesso!");
+                        }else{
+                            System.err.println("NÚMERO de CONTA informado não encontrado no Banco De Dados!");
+                            System.err.println("Operação não realizada!");
+                        }
                     }else{
-                        System.err.println("NÚMERO de CONTA informado não encontrado no Banco De Dados!");
-                        System.err.println("Operação não realizada!");
+                        System.err.println("Não há CONTAS cadastradas!");
                     }
                 }else{
                     System.err.println("Senha administrativa inválida!");
