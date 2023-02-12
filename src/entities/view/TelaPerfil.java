@@ -149,26 +149,26 @@ public class TelaPerfil  implements Tela {
 
                     System.out.println("Selecione um contato para alterar:");
                     for(int i=0;i<contatos.size();i++){
-                        System.out.printf("[%d] Telefone: %s; Email: %s", (i+1), contatos.get(i).getTelefone(), contatos.get(i).getEmail());
+                        System.out.printf("[%d] Telefone: %s; Email: %s\n", (i+1), contatos.get(i).getTelefone(), contatos.get(i).getEmail());
                     }
-
                     inputAlteracaoContato = Integer.parseInt(scanner.nextLine());
 
-                    if(inputAlteracaoContato > 0 && inputAlteracaoContato <= contatos.size()-1){
+                    if(inputAlteracaoContato > 0 && inputAlteracaoContato <= contatos.size()){
 
                         System.out.println("Selecione a alteração que quer fazer no Contato:");
                         System.out.println("[1] Telefone:");
                         System.out.println("[2] Email:");
-                        System.out.println("[3] Cancelar");
+                        System.out.println("[3] Cancelar - Voltar para tela de perfil");
 
                         tipoAlteracaoContato = Integer.parseInt(scanner.nextLine());
-                        if (tipoAlteracaoContato > 0 && inputAlteracaoContato <= contatos.size()-1){
+                        if (tipoAlteracaoContato < 1 && inputAlteracaoContato > 3){
                             System.out.println("Operação cancelada!");
                         }else{
                             String tipoContato = "";
                             switch(tipoAlteracaoContato){
                                 case 1 -> tipoContato = "Telefone";
                                 case 2 -> tipoContato = "Email";
+                                case 3 -> TelaPerfil.exibirTelaPerfil();
                                 default -> System.err.println("Erro bizarro!");
                             }
                             System.out.println("Insira o novo ["+tipoContato+"]:");
@@ -180,7 +180,7 @@ public class TelaPerfil  implements Tela {
                     }
 
                 }else{
-                    System.out.println("Login mal-sucedido");
+                    System.out.println("Login mal-sucedido\n");
                 }
                 exibirTelaPerfil();
             }
@@ -191,7 +191,7 @@ public class TelaPerfil  implements Tela {
                     int inputAlteracaoEndereco, tipoAlteracaoEndereco;
                     String novoDado;
 
-                    System.out.println("Selecione um contato para alterar:");
+                    System.out.println("Selecione um endereço para alterar:");
                     for(int i=0;i<enderecos.size();i++){
                         System.out.printf("[%d] Logradouro: %s; Cidade: %s; Estado: %s; País: %s; CEP: %s", (i+1), enderecos.get(i).getLogradouro(), enderecos.get(i).getCidade(), enderecos.get(i).getEstado(), enderecos.get(i).getPais(), enderecos.get(i).getCep());
                     }
@@ -230,7 +230,7 @@ public class TelaPerfil  implements Tela {
                     }
 
                 }else{
-                    System.out.println("Login mal-sucedido");
+                    System.out.println("Login mal-sucedido\n");
                 }
                 exibirTelaPerfil();
             }
