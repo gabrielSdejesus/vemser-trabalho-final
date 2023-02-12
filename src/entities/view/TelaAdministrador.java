@@ -9,6 +9,9 @@ import entities.model.Endereco;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.List;
+
+import static entities.controller.BancoDeDados.getContas;
 
 public class TelaAdministrador implements Tela {
     public static void exibirTelaAdministrador(){
@@ -151,7 +154,12 @@ public class TelaAdministrador implements Tela {
 
                 if(senhaAdm.equals("ABACAXI")){
                     System.err.println("Atenção! Deletar uma CONTA também deletará seu CLIENTE");
-                    System.out.println("Insira o NÚMERO da CONTA que quer deletar:");
+                    System.out.println("Contas cadastradas");
+                    for(Conta conta : BancoDeDados.getContas()) {
+                        System.out.printf("\tCliente: %s | CPF: %s | Nº da conta %d",
+                                conta.getCliente().getNome(), conta.getCliente().getCpf(), conta.getNumero());
+                    }
+                    System.out.println("\nInsira o NÚMERO da CONTA que quer deletar:");
                     numeroConta = scanner.nextLine();
                     if(BancoDeDados.consultarNumeroDaConta(numeroConta).getSaldo() > 0){
                         String confirmacao;
