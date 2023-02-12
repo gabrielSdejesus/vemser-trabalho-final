@@ -102,7 +102,6 @@ public class TelaAdministrador implements Tela {
                     }
                     Cliente cliente = new Cliente(nomeCliente, cpfCliente, enderecos, contatos, loginCliente, senhaCliente);
                     Conta conta = new Conta(cliente, 0);
-                    BancoDeDados.adicionarConta(conta);
                     System.out.println("Cliente adicionado com sucesso!");
                     System.out.println("\tNÃO ESQUECA DE GUARDAR OS DADOS DE ACESSO DA CONTA E DO CLIENTE!");
                     System.out.println("\t\tLogin do cliente: "+loginCliente);
