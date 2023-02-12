@@ -143,8 +143,12 @@ public class Conta implements Exibicao {
 
     public void exibirTransferencias() {
         System.out.println("Exibindo todas as transferências da conta ["+this.numero+"]:");
-        for(Transferencia transferencia: transferencias){
-            transferencia.exibir();
+        if(transferencias.size() == 0) {
+            System.out.println("Não existe nenhuma transfencia nesta conta.\n");
+        } else {
+            for(Transferencia transferencia: transferencias){
+                transferencia.exibir();
+            }
         }
     }
 }
