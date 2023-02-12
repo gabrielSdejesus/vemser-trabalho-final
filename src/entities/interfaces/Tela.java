@@ -17,9 +17,9 @@ public interface Tela {
     static Conta login(){
         Scanner scanner = new Scanner(System.in);
         String senhaConta, numeroConta;
-        System.out.println("Insira o número da sua conta:");
+        System.out.print("Insira o número da sua conta: ");
         numeroConta = scanner.nextLine();
-        System.out.println("Insira a senha da sua conta:");
+        System.out.print("Insira a senha da sua conta: ");
         senhaConta = scanner.nextLine();
         Conta conta = BancoDeDados.consultarNumeroDaConta(numeroConta);
         if(conta != null && conta.verificarSenha(senhaConta)){

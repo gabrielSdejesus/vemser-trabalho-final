@@ -20,13 +20,8 @@ public class TelaPerfil  implements Tela {
         Conta login;
         switch(input){
             case 1 ->{
-                String senhaCliente, numeroConta;
-                System.out.print("Insira o número da sua Conta: ");
-                numeroConta = scanner.nextLine();
-                System.out.print("Insira a sua senha de Cliente: ");
-                senhaCliente = scanner.nextLine();
-                Conta conta = BancoDeDados.consultarNumeroDaConta(numeroConta);
-                if(conta != null && conta.getCliente().verificarSenha(senhaCliente)){
+                Conta conta = Tela.login();
+                if(conta != null && conta.getCliente().verificarSenha(conta.getSenha())){
                     conta.getCliente().exibir();
                 }else{
                     System.err.println("Número de Conta ou senha de Cliente incorretos!");
@@ -50,7 +45,7 @@ public class TelaPerfil  implements Tela {
                     int inputAlteracaoContato, tipoAlteracaoContato;
                     String novoDado;
 
-                    System.out.print("Selecione um contato para alterar: ");
+                    System.out.println("Selecione um contato para alterar: ");
                     for(int i=0;i<contatos.size();i++){
                         System.out.printf("[%d] Telefone: %s; Email: %s\n", (i+1), contatos.get(i).getTelefone(), contatos.get(i).getEmail());
                     }
@@ -59,8 +54,8 @@ public class TelaPerfil  implements Tela {
                     if(inputAlteracaoContato > 0 && inputAlteracaoContato <= contatos.size()){
 
                         System.out.println("Selecione a alteração que quer fazer no Contato:");
-                        System.out.println("[1] Telefone:");
-                        System.out.println("[2] Email:");
+                        System.out.println("[1] Telefone");
+                        System.out.println("[2] Email");
                         System.out.println("[3] Cancelar - Voltar para tela de perfil");
 
                         tipoAlteracaoContato = Integer.parseInt(scanner.nextLine());
