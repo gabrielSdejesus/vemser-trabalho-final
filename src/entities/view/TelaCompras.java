@@ -12,7 +12,7 @@ import java.util.Scanner;
 
 public class TelaCompras  implements Tela {
     public static void exibirCompras(){
-        System.out.println("Você está na Tela de Compras");
+        System.out.println("\nVocê está na Tela de Compras");
         TelaCompras.tratarInput(TelaCompras.pedirInput());
     }
 
@@ -46,19 +46,18 @@ public class TelaCompras  implements Tela {
                     System.out.println("Selecione o cartão para efetuar a compra:");
                     for(int i=0;i<cartoes.length;i++){
                         if(cartoes[i] != null){
-                            System.out.printf("Cartão [%d] -> %s", (i+1), (cartoes[i].getTipo() == 1 ? "Débito":"Crédito"));
+                            System.out.printf("Cartão [%d] -> %s\n", (i+1), (cartoes[i].getTipo() == 1 ? "Débito":"Crédito"));
                         }
                     }
                     cartao = cartoes[Integer.parseInt(scanner.nextLine())-1];
 
-
-                    while(!nomeItem.equalsIgnoreCase("ENCERRAR COMPRA")){
+                    Item item = new Item();
+                    do{
                         System.out.printf("Saldo da conta: R$ %.2f", login.getSaldo());
-                        System.out.printf("Valor total da compra: R$ %.2f", valorTotalAtual);
-                        System.out.println("Digite [ENCERRAR COMPRA] para encerrar a adição de itens");
-                        System.out.println("Insira o nome do item a ser adicionado:");
+                        System.out.printf("\nValor total da compra: R$ %.2f", valorTotalAtual);
+                        System.out.println("\n\nInsira o nome do item a ser adicionado ou (digite SAIR para continuar):");
                         nomeItem = scanner.nextLine();
-                        if(nomeItem.equalsIgnoreCase("ENCERRAR COMPRA")){
+                        if(nomeItem.equalsIgnoreCase("SAIR")){
                             break;
                         }else{
                             double valorItem, quantidadeItem;
@@ -66,17 +65,25 @@ public class TelaCompras  implements Tela {
                             valorItem = Double.parseDouble(scanner.nextLine());
                             System.out.println("Insira a quantidade do item:");
                             quantidadeItem = Double.parseDouble(scanner.nextLine());
-                            Item item = new Item(nomeItem, valorItem, quantidadeItem);
+                            item = new Item(nomeItem, valorItem, quantidadeItem);
                             itens.add(item);
                             valorTotalAtual += item.returnPrecoItem();
                         }
+                    }while(!nomeItem.equalsIgnoreCase("SAIR") && !nomeItem.isEmpty() && !nomeItem.isBlank());
+
+                    if(!itens.isEmpty()
+                            && !item.getNomeItem().isEmpty()
+                                && !item.getNomeItem().isBlank()) {
+                        String docVendedor;
+                        System.out.println("Insira o documento do vendedor:");
+                        docVendedor = scanner.nextLine();
+                        cartao.adicionarCompra(new Compra(docVendedor, new Date(), itens));
                     }
-
-                    String docVendedor;
-                    System.out.println("Insira o documento do vendedor:");
-                    docVendedor = scanner.nextLine();
-
-                    cartao.adicionarCompra(new Compra(docVendedor, new Date(), itens));
+                    if(nomeItem.equalsIgnoreCase("SAIR")){
+                        System.err.println("Você saiu da tela de adicionar compras!");
+                    } else {
+                        System.err.println("Os dados dos itens informados estão incorretos!");
+                    }
                 }else {
                     System.out.println("Login mal-sucedido");
                 }

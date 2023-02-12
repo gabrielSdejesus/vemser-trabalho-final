@@ -28,7 +28,7 @@ public class Compra implements Exibicao {
 
     @Override
     public void exibir(){
-        System.out.println("\tDocumento do vendedor: "+docVendedor);
+        System.out.println("\n\tDocumento do vendedor: "+docVendedor);
         System.out.println("\tData da compra: "+data);
         System.out.println("\tItens da compra:");
         for(Item item: itens){
