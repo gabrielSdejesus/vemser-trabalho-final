@@ -21,7 +21,7 @@ public class TelaAdministrador implements Tela {
         String senhaAdm;
         switch(input){
             case 1 ->{
-                System.out.println("Insira a senha Adminsitrativa [ABACAXI]:");
+                System.out.println("Insira a senha Administrativa [ABACAXI]:");
                 senhaAdm = scanner.nextLine();
 
                 if(senhaAdm.equals("ABACAXI")){
@@ -114,7 +114,7 @@ public class TelaAdministrador implements Tela {
                 exibirTelaAdministrador();
             }
             case 2 -> {
-                System.out.println("Insira a senha Adminsitrativa [ABACAXI]:");
+                System.out.println("Insira a senha Administrativa [ABACAXI]:");
                 senhaAdm = scanner.nextLine();
                 String cpfCliente;
 
@@ -145,7 +145,7 @@ public class TelaAdministrador implements Tela {
                 }
             }
             case 3 -> {
-                System.out.println("Insira a senha Adminsitrativa [ABACAXI]:");
+                System.out.println("Insira a senha Administrativa [ABACAXI]:");
                 senhaAdm = scanner.nextLine();
                 String numeroConta;
 
