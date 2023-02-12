@@ -59,6 +59,14 @@ public class Cliente implements Exibicao {
         scanner.nextLine();
     }
 
+    public boolean alterarSenha(String senhaAntiga, String novaSenha){
+        if(verificarSenha(senhaAntiga)){
+            this.senha = novaSenha;
+            return true;
+        }
+        return false;
+    }
+
     public boolean verificarSenha(String senhaCliente) {
         return senhaCliente.equals(senha);
     }

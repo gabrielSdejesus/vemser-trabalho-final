@@ -38,7 +38,7 @@ public interface Tela {
             case 5 -> TelaTransferencias.exibirTransferencias();
             case 6 -> TelaMovimentacoes.exibirTelaMovimentacoes();
             case 7 -> TelaAdministrador.exibirTelaAdministrador();
-            default -> System.err.println("Número da tela incorreta, erro na linha 59 da Inteface Tela");
+            default -> System.err.println("Número da tela incorreta, erro na Inteface Tela");
         }
     }
 }

@@ -96,6 +96,14 @@ public class Conta implements Exibicao {
     public boolean alterarSenha(String senhaAntiga, String novaSenha){
         if(verificarSenha(senhaAntiga)){
             this.senha = novaSenha;
+            for(Cartao cartao: cartoes){
+                if(cartao != null){
+                    cartao.alterarSenhaDoCartao(novaSenha, senhaAntiga);
+                }
+            }
+            if(!cliente.alterarSenha(senhaAntiga, novaSenha)){
+                System.err.println("Problemas ao trocar senha do CLIENTE");
+            }
             BancoDeDados.alterarDadosDaConta(this);
             return true;
         }
