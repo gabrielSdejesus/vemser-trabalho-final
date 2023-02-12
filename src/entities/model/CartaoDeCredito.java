@@ -10,7 +10,7 @@ public class CartaoDeCredito extends Cartao {
         super(conta, 2);
     }
 
-    public boolean pagar(double valor, String senha) {
+    public boolean pagarComCartao(double valor, String senha) {
         if(getConta().verificarSenha(senha)){
             return valor <= limiteRestante();
         }

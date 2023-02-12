@@ -143,6 +143,7 @@ public class TelaAdministrador implements Tela {
                 }else{
                     System.err.println("Senha administrativa inválida!");
                 }
+                exibirTelaAdministrador();
             }
             case 3 -> {
                 System.out.println("Insira a senha Administrativa [ABACAXI]:");
@@ -174,6 +175,7 @@ public class TelaAdministrador implements Tela {
                 }else{
                     System.err.println("Senha administrativa inválida!");
                 }
+                exibirTelaAdministrador();
             }
             case 4 -> Tela.redirecionarParaTela(1);
             default -> {

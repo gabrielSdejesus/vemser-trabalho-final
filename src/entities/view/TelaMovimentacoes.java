@@ -2,8 +2,10 @@ package entities.view;
 
 import entities.controller.BancoDeDados;
 import entities.interfaces.Tela;
+import entities.model.Cartao;
 import entities.model.Conta;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class TelaMovimentacoes implements Tela {
@@ -56,6 +58,7 @@ public class TelaMovimentacoes implements Tela {
                 }else{
                     System.out.println("Login mal-sucedido");
                 }
+                exibirTelaMovimentacoes();
             }
             case 3 -> {
                 login = Tela.login();
@@ -87,8 +90,42 @@ public class TelaMovimentacoes implements Tela {
                 }else{
                     System.out.println("Login mal-sucedido");
                 }
+                exibirTelaMovimentacoes();
             }
-            case 4 -> Tela.redirecionarParaTela(1);
+            case 4 -> {
+                login = Tela.login();
+                if(login != null){
+                    System.out.println("Insira o valor do pagamento:");
+                    valor = Double.parseDouble(scanner.nextLine());
+
+                    Cartao[] cartoes = login.getCartoes();
+                    Cartao cartao;
+
+                    System.out.println("Selecione o cartão para efetuar a compra:");
+                    for(int i=0;i<cartoes.length;i++){
+                        if(cartoes[i] != null){
+                            System.out.printf("Cartão [%d] -> %s", (i+1), (cartoes[i].getTipo() == 1 ? "Débito":"Crédito"));
+                        }
+                    }
+                    cartao = cartoes[Integer.parseInt(scanner.nextLine())-1];
+
+                    System.out.println("Insira a senha da conta:");
+                    senhaConta = scanner.nextLine();
+                    if(cartao.pagarComCartao(valor, senhaConta)){
+                        System.out.println("Operação realizada com sucesso!");
+                    }else{
+                        if(login.getSaldo() < valor){
+                            System.err.println("Saldo indisponível!");
+                        }else{
+                            System.err.println("Senha Incorreta!");
+                        }
+                    }
+                }else{
+                    System.out.println("Login mal-sucedido");
+                }
+                exibirTelaMovimentacoes();
+            }
+            case 5 -> Tela.redirecionarParaTela(1);
             default -> {
                 System.out.println("Opção inválida!");
                 exibirTelaMovimentacoes();
@@ -97,7 +134,7 @@ public class TelaMovimentacoes implements Tela {
     }
 
     public static int pedirInput() {
-        System.out.println("[1] -> Depositar\n[2] -> Sacar\n[3] -> Transferir\n[4] -> Voltar para a Tela Principal");
+            System.out.println("[1] -> DEPOSITAR\n[2] -> SACAR\n[3] -> TRANSFERIR\n[4] -> PAGAR uma conta externa\n[5] -> Voltar para a Tela Principal");
         return Integer.parseInt(new Scanner(System.in).nextLine());
     }
 }

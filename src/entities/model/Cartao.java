@@ -36,21 +36,19 @@ public abstract class Cartao {
     }
 
     public void adicionarCompra(Compra compra) {
-        if(pagarComCartao(compra.returnValorTotal(), this.senha, compra)){
+        if(pagarComCartao(compra.returnValorTotal(), this.senha)){
             compras.add(compra);
         }else{
             System.err.println("Compra não realizada, saldo indisponível!");
         }
     }
 
-    public boolean pagarComCartao(double valor, String senha, Compra compra){
-        if(conta.getSaldo() >= valor
-                && valor > 0
-                    && compra.returnValorTotal() == valor) {
+    public boolean pagarComCartao(double valor, String senha){
+        if(conta.getSaldo() >= valor && valor > 0) {
             conta.sacar(valor, senha);
             return true;
         }
-        return  false;
+        return false;
     }
 
     public void exibirDadosCartao() {

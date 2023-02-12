@@ -26,10 +26,6 @@ public class Cliente implements Exibicao {
         this.conta = conta;
     }
 
-    public boolean criarConta() {
-        return true;
-    }
-
     public String getNome() {
         return nome;
     }

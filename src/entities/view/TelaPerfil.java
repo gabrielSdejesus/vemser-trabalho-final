@@ -227,6 +227,7 @@ public class TelaPerfil  implements Tela {
                 }else{
                     System.out.println("Login mal-sucedido\n");
                 }
+                exibirTelaPerfil();
             }
             case 8 -> {
                 login = Tela.login();
@@ -264,8 +265,32 @@ public class TelaPerfil  implements Tela {
                 }else{
                     System.out.println("Login mal-sucedido\n");
                 }
+                exibirTelaPerfil();
             }
-            case 9 -> Tela.redirecionarParaTela(1);
+            case 9 ->{
+                String cpfOuNumero, senhaAntiga, novaSenha;
+
+                System.out.println("Insira o CPF do CLIENTE ou o NÚMERO da CONTA:");
+                cpfOuNumero = scanner.nextLine();
+
+                if(BancoDeDados.consultarNumeroDaConta(cpfOuNumero) != null || BancoDeDados.consultarExistenciaPorCPF(cpfOuNumero) != null){
+                    System.out.println("Insira a SENHA ANTIGA:");
+                    senhaAntiga = scanner.nextLine();
+                    Conta conta = (BancoDeDados.consultarNumeroDaConta(cpfOuNumero) != null)? BancoDeDados.consultarNumeroDaConta(cpfOuNumero):BancoDeDados.consultarExistenciaPorCPF(cpfOuNumero);
+                    if(conta.verificarSenha(senhaAntiga)){
+                        System.out.println("Insira a nova senha:");
+                        novaSenha = scanner.nextLine();
+                        conta.alterarSenha(senhaAntiga, novaSenha);
+                    }else{
+                        System.err.println("Senha incorreta!");
+                        System.err.println("Se não lembra a sua SENHA fale com os ADMINISTRADORES do BANCO para resolver seu problema!");
+                    }
+                }else{
+                    System.err.println("CPF do CLIENTE ou NÚMERO da CONTA incorreto!");
+                }
+                exibirTelaPerfil();
+            }
+            case 10 -> Tela.redirecionarParaTela(1);
             default -> {
                 System.out.println("Opção inválida!");
                 exibirTelaPerfil();
@@ -274,7 +299,7 @@ public class TelaPerfil  implements Tela {
     }
 
     public static int pedirInput() {
-        System.out.println("[1] -> Insira seus dados de LOGIN para exibir seus dados de CLIENTE\n[2] -> Insira seus dados de LOGIN para exibir os dados da sua CONTA\n[3] -> Alterar CONTATO do CLIENTE\n[4] -> Alterar ENDEREÇO do CLIENTE\n[5] -> Deletar CONTATO do CLIENTE\n[6] -> Deletar ENDEREÇO do CLIENTE\n[7] -> Cadastrar novo CONTATO em CLIENTE\n[8] -> Cadastrar novo ENDEREÇO em CLIENTE\n[9] -> Voltar para a Tela Principal");
+        System.out.println("[1] -> Insira seus dados de LOGIN para exibir seus dados de CLIENTE\n[2] -> Insira seus dados de LOGIN para exibir os dados da sua CONTA\n[3] -> Alterar CONTATO do CLIENTE\n[4] -> Alterar ENDEREÇO do CLIENTE\n[5] -> Deletar CONTATO do CLIENTE\n[6] -> Deletar ENDEREÇO do CLIENTE\n[7] -> Cadastrar novo CONTATO em CLIENTE\n[8] -> Cadastrar novo ENDEREÇO em CLIENTE\n[9] -> Alterar SENHA\n[10] -> Voltar para a Tela Principal");
         return Integer.parseInt(new Scanner(System.in).nextLine());
     }
 }
