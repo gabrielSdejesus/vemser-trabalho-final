@@ -18,7 +18,6 @@ public class TelaPrincipal  implements Tela {
             case 4 -> Tela.redirecionarParaTela(5);
             case 5 -> Tela.redirecionarParaTela(6);
             case 6 -> Tela.redirecionarParaTela(7);
-            case 7 -> Tela.redirecionarParaTela(8);
             default -> {
                 System.out.println("Programa encerrado!");
             }
@@ -26,7 +25,7 @@ public class TelaPrincipal  implements Tela {
     }
 
     public static int pedirInput() {
-        System.out.println("[1] -> Ir para Tela De Compras\n[2] -> Ir para Tela do Extrato do Cartão de Crédito\n[3] -> Ir para Tela do Extrato do Cartão de Débito\n[4] -> Ir para Tela de Perfil\n[5] -> Ir para Tela de Transferências\n[6] -> Ir para Tela de Movimentações\n[7] -> Ir para Tela do Administrador\n[8] -> Encerrar o programa");
+        System.out.println("[1] -> Ir para Tela De Compras\n[2] -> Ir para Tela do Cartão\n[3] -> Ir para Tela de Perfil\n[4] -> Ir para Tela de Transferências\n[5] -> Ir para Tela de Movimentações\n[6] -> Ir para Tela do Administrador\n[7] -> Encerrar o programa");
         return Integer.parseInt(new Scanner(System.in).nextLine());
     }
 }

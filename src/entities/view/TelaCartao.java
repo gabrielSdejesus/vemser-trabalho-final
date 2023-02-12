@@ -2,14 +2,16 @@ package entities.view;
 
 import entities.interfaces.Tela;
 import entities.model.Cartao;
+import entities.model.CartaoDeCredito;
+import entities.model.CartaoDeDebito;
 import entities.model.Conta;
 
 import java.util.Scanner;
 
 public class TelaCartao implements Tela {
     public static void exibirTelaCartao(){
-        System.out.println("Você está na Tela de Extrato de Cartao de Crédito");
-        TelaExtratoCartaoCredito.tratarInput(TelaExtratoCartaoCredito.pedirInput());
+        System.out.println("Você está na Tela de Cartão");
+        TelaCartao.tratarInput(TelaCartao.pedirInput());
     }
 
     public static void tratarInput(int input) {
@@ -25,15 +27,13 @@ public class TelaCartao implements Tela {
                     for (int i = 0; i < cartoes.length; i++) {
                         if (cartoes[i] != null && cartoes[i].getTipo() == 2) {
                             cartao = i;
-                            break;
+                            System.out.println("\tExibindo dados do cartão ["+(i+1)+"]:");
+                            cartoes[cartao].exibirDadosCartao();
+                            cartoes[cartao].exibirCompras();
                         }
                     }
-
-                    if (cartao != -1) {
-                        cartoes[cartao].exibirDadosCartao();
-                        cartoes[cartao].exibirCompras();
-                    } else {
-                        System.out.println("Você não possui nenhum cartão de crédito");
+                    if (cartao == -1) {
+                        System.out.println("\tVocê não possui nenhum cartão de crédito");
                     }
                 } else {
                     System.out.println("Login mal-sucedido");
@@ -44,20 +44,18 @@ public class TelaCartao implements Tela {
                 login = Tela.login();
                 if(login != null){
                     Cartao[] cartoes = login.getCartoes();
-                    Cartao cartao = null;
+                    int cartao = -1;
 
-                    for(Cartao c: cartoes){
-                        if(c != null && c.getTipo() == 1){
-                            cartao = c;
-                            break;
+                    for (int i = 0; i < cartoes.length; i++) {
+                        if (cartoes[i] != null && cartoes[i].getTipo() == 1) {
+                            cartao = i;
+                            System.out.println("\tExibindo dados do cartão ["+(i+1)+"]:");
+                            cartoes[cartao].exibirDadosCartao();
+                            cartoes[cartao].exibirCompras();
                         }
                     }
-
-                    if(cartao != null){
-                        cartao.exibirDadosCartao();
-                        cartao.exibirCompras();
-                    }else{
-                        System.out.println("Você não possui nenhum cartão de débito");
+                    if (cartao == -1) {
+                        System.out.println("\tVocê não possui nenhum cartão de débito");
                     }
                 }else {
                     System.out.println("Login mal-sucedido");
@@ -67,8 +65,14 @@ public class TelaCartao implements Tela {
             case 3 -> {
                 login = Tela.login();
                 if (login != null) {
-                    if(login.getCartoes().length == 2){
-                        System.err.println("Você não pode ADICIONAR mais CARTÕES só é possível ter no MÁXIMO 2 CARTÕES");
+                    int contador = 0;
+                    for(Cartao cartao: login.getCartoes()){
+                        if(cartao != null){
+                            contador++;
+                        }
+                    }
+                    if(contador == 2){
+                        System.err.println("Você não pode ADICIONAR mais CARTÕES, só é possível ter no MÁXIMO 2 CARTÕES");
                     }else{
                         int tipoCartao;
 
@@ -79,10 +83,36 @@ public class TelaCartao implements Tela {
 
                         tipoCartao = Integer.parseInt(scanner.nextLine());
 
-                        if (tipoCartao < 1 || tipoCartao > 3){
+                        String senha;
+
+                        if (tipoCartao < 1 || tipoCartao >= 3){
                             System.out.println("Operação cancelada!");
                         }else{
-
+                            System.out.println("Digite novamente sua senha:");
+                            senha = scanner.nextLine();
+                            switch(tipoCartao){
+                                case 1 -> {
+                                    CartaoDeCredito cartaoDeCredito = new CartaoDeCredito(login);
+                                    if(login.adicionarCartao(cartaoDeCredito, senha)){
+                                        System.out.println("Novo CARTÃO de CRÉDITO adicionado com sucesso!");
+                                        System.out.println("\tDados do CARTÃO:");
+                                        cartaoDeCredito.exibirDadosCartao();
+                                    }else{
+                                        System.err.println("Senha incorreta!");
+                                    }
+                                }
+                                case 2 -> {
+                                    CartaoDeDebito cartaoDeDebito = new CartaoDeDebito(login);
+                                    if(login.adicionarCartao(cartaoDeDebito, senha)){
+                                        System.out.println("Novo CARTÃO de DÉBITO adicionado com sucesso!");
+                                        System.out.println("\tDados do CARTÃO:");
+                                        cartaoDeDebito.exibirDadosCartao();
+                                    }else{
+                                        System.err.println("Senha incorreta!");
+                                    }
+                                }
+                                default -> System.err.println("Erro bizarro!");
+                            }
                         }
                     }
                 }else{
@@ -93,7 +123,36 @@ public class TelaCartao implements Tela {
             case 4 -> {
                 login = Tela.login();
                 if (login != null) {
+                    int contador = 0;
+                    for(Cartao cartao: login.getCartoes()){
+                        if(cartao != null){
+                            contador++;
+                        }
+                    }
+                    if(contador == 1){
+                        System.err.println("Você não pode REMOVER mais CARTÕES, é NECESSÁRIO ter no MÍNIMO 1 CARTÃO");
+                    }else{
+                        Cartao[] cartoes = login.getCartoes();
+                        int cartao;
 
+                        System.out.println("Selecione o CARTÃO para REMOVER:");
+                        for(int i=0;i<cartoes.length;i++){
+                            if(cartoes[i] != null){
+                                System.out.printf("Cartão [%d] -> %s\n", (i+1), (cartoes[i].getTipo() == 1 ? "Débito":"Crédito"));
+                            }
+                        }
+                        cartao = Integer.parseInt(scanner.nextLine())-1;
+
+                        String senha;
+                        System.out.println("Digite novamente sua senha:");
+                        senha = scanner.nextLine();
+
+                        if(login.removerCartao(cartao, senha)){
+                            System.out.println("CARTÃO removido com sucesso!");
+                        }else{
+                            System.err.println("Senha incorreta!");
+                        }
+                    }
                 }else{
                     System.out.println("Login mal-sucedido");
                 }

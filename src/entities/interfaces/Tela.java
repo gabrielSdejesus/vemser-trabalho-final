@@ -31,33 +31,14 @@ public interface Tela {
     }
     static void redirecionarParaTela(int tela){
         switch(tela){
-            case 1 -> {
-                TelaPrincipal.exibirTelaPrincipal();
-            }
-            case 2 -> {
-                TelaCompras.exibirCompras();
-            }
-            case 3 -> {
-                TelaExtratoCartaoCredito.exibirTelaExtratoCartaoCredito();
-            }
-            case 4 -> {
-                TelaExtratoCartaoDebito.exibirTelaExtratoCartaoDebito();
-            }
-            case 5 -> {
-                TelaPerfil.exibirTelaPerfil();
-            }
-            case 6 -> {
-                TelaTransferencias.exibirTransferencias();
-            }
-            case 7 -> {
-                TelaMovimentacoes.exibirTelaMovimentacoes();
-            }
-            case 8 -> {
-                TelaAdministrador.exibirTelaAdministrador();
-            }
-            default -> {
-                System.err.println("Número da tela incorreta, erro na linha 59 da Inteface Tela");
-            }
+            case 1 -> TelaPrincipal.exibirTelaPrincipal();
+            case 2 -> TelaCompras.exibirCompras();
+            case 3 -> TelaCartao.exibirTelaCartao();
+            case 4 -> TelaPerfil.exibirTelaPerfil();
+            case 5 -> TelaTransferencias.exibirTransferencias();
+            case 6 -> TelaMovimentacoes.exibirTelaMovimentacoes();
+            case 7 -> TelaAdministrador.exibirTelaAdministrador();
+            default -> System.err.println("Número da tela incorreta, erro na linha 59 da Inteface Tela");
         }
-    };
+    }
 }
