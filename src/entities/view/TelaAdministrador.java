@@ -124,6 +124,11 @@ public class TelaAdministrador implements Tela {
 
                 if(senhaAdm.equals("ABACAXI")){
                     System.err.println("Atenção! Deletar o CLIENTE também deletará sua CONTA");
+                    System.out.println("Clientes cadastrados");
+                    for(Conta conta : BancoDeDados.getContas()) {
+                        System.out.printf("\tCliente: %s | CPF: %s | Nº da conta %d\n",
+                                conta.getCliente().getNome(), conta.getCliente().getCpf(), conta.getNumero());
+                    }
                     System.out.println("Insira o CPF do CLIENTE que quer deletar:");
                     cpfCliente = scanner.nextLine();
                     if(BancoDeDados.consultarExistenciaPorCPF(cpfCliente).getSaldo() > 0){
