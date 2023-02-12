@@ -74,4 +74,21 @@ public class Cliente implements Exibicao {
     public ArrayList<Endereco> getEnderecos(){
         return enderecos;
     }
+
+    public void addContatos(ArrayList<Contato> contatos){
+        for(Contato contato: contatos){
+            if(contato != null){
+                this.contatos.add(contato);
+            }
+        }
+    }
+
+    public void addEnderecos(ArrayList<Endereco> enderecos){
+        for(Endereco endereco: enderecos){
+            if(endereco != null){
+                this.enderecos.add(endereco);
+            }
+        }
+    }
+
 }
