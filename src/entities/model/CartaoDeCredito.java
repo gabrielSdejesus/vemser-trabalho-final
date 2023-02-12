@@ -7,7 +7,7 @@ public class CartaoDeCredito extends Cartao {
     private final int TIPO = 2;
 
     public CartaoDeCredito(Conta conta) {
-        super(conta);
+        super(conta, 2);
     }
 
     public boolean pagar(double valor, String senha) {
