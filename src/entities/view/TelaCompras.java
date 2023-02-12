@@ -1,10 +1,7 @@
 package entities.view;
 
 import entities.interfaces.Tela;
-import entities.model.Cartao;
-import entities.model.Compra;
-import entities.model.Conta;
-import entities.model.Item;
+import entities.model.*;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,13 +20,15 @@ public class TelaCompras  implements Tela {
             case 1 ->{
                 login = Tela.login();
                 if(login != null){
+                    int i = 1;
                     for(Cartao cartao:login.getCartoes()){
                         if (cartao != null){
-                            cartao.exibirCompras();
+                            cartao.exibirCompras(i);
+                            i++;
                         }
                     }
                 }else{
-                    System.out.println("Login mal-sucedido");
+                    System.err.println("Login mal-sucedido");
                 }
                 exibirCompras();
             }
@@ -37,7 +36,7 @@ public class TelaCompras  implements Tela {
                 login = Tela.login();
                 if(login != null){
                     Cartao[] cartoes = login.getCartoes();
-                    Cartao cartao;
+                    Cartao cartao = null;
                     ArrayList<Item> itens = new ArrayList<>();
                     String nomeItem = "";
 
@@ -49,27 +48,40 @@ public class TelaCompras  implements Tela {
                             System.out.printf("Cartão [%d] -> %s\n", (i+1), (cartoes[i].getTipo() == 1 ? "Débito":"Crédito"));
                         }
                     }
-                    cartao = cartoes[Integer.parseInt(scanner.nextLine())-1];
 
+                    int i = Integer.parseInt(scanner.nextLine());
+                    i--;
                     Item item = new Item();
-                    do{
-                        System.out.printf("Saldo da conta: R$ %.2f", login.getSaldo());
-                        System.out.printf("\nValor total da compra: R$ %.2f", valorTotalAtual);
-                        System.out.println("\n\nInsira o nome do item a ser adicionado ou (digite SAIR para continuar):");
-                        nomeItem = scanner.nextLine();
-                        if(nomeItem.equalsIgnoreCase("SAIR")){
-                            break;
-                        }else{
-                            double valorItem, quantidadeItem;
-                            System.out.println("Insira o valor do item:");
-                            valorItem = Double.parseDouble(scanner.nextLine());
-                            System.out.println("Insira a quantidade do item:");
-                            quantidadeItem = Double.parseDouble(scanner.nextLine());
-                            item = new Item(nomeItem, valorItem, quantidadeItem);
-                            itens.add(item);
-                            valorTotalAtual += item.returnPrecoItem();
-                        }
-                    }while(!nomeItem.equalsIgnoreCase("SAIR") && !nomeItem.isEmpty() && !nomeItem.isBlank());
+                    if(i < login.getCartoes().length
+                            && i >= 0
+                                && cartoes[i] != null) {
+                        cartao = cartoes[i];
+
+                        do {
+                            if(cartao.getTipo() == 1) {
+                                System.out.printf("Saldo da conta: R$ %.2f", login.getSaldo());
+                            }
+
+                            if(cartao.getTipo() == 2){
+                                System.out.printf("\nLimite disponível: R$ %.2f", ((CartaoDeCredito) cartao).limiteRestante());
+                            }
+
+                            System.out.printf("\nValor total da compra: R$ %.2f", valorTotalAtual);
+                            System.out.println("\n\nInsira o nome do item a ser adicionado ou (digite SAIR para continuar):");
+                            nomeItem = scanner.nextLine();
+                            if (nomeItem.equalsIgnoreCase("SAIR")) {
+                                break;
+                            } else {
+                                double valorItem, quantidadeItem;
+                                System.out.println("Insira o valor do item:");
+                                valorItem = Double.parseDouble(scanner.nextLine());
+                                System.out.println("Insira a quantidade do item:");
+                                quantidadeItem = Double.parseDouble(scanner.nextLine());
+                                item = new Item(nomeItem, valorItem, quantidadeItem);
+                                itens.add(item);
+                                valorTotalAtual += item.returnPrecoItem();
+                            }
+                        } while (!nomeItem.equalsIgnoreCase("SAIR") && !nomeItem.isEmpty() && !nomeItem.isBlank());
 
                     if(!itens.isEmpty()
                             && !item.getNomeItem().isEmpty()
@@ -77,14 +89,21 @@ public class TelaCompras  implements Tela {
                         String docVendedor;
                         System.out.println("Insira o documento do vendedor:");
                         docVendedor = scanner.nextLine();
-                        cartao.adicionarCompra(new Compra(docVendedor, new Date(), itens));
+                        if(cartao.getTipo() == 1) {
+                            cartao.adicionarCompra(new Compra(docVendedor, new Date(), itens));
+                        } else {
+                            ((CartaoDeCredito)cartao).adicionarCompra(new Compra(docVendedor, new Date(), itens));
+                        }
                     }
-                    if(nomeItem.equalsIgnoreCase("SAIR")){
-                        System.err.println("Você saiu da tela de adicionar compras!");
+                        if(nomeItem.equalsIgnoreCase("SAIR")){
+                            System.err.println("Você saiu da tela de adicionar compras!");
+                            } else {
+                                System.err.println("Os dados dos itens informados estão incorretos!");
+                            }
                     } else {
-                        System.err.println("Os dados dos itens informados estão incorretos!");
+                        System.err.println("Este número não representa nenhum cartão.");
                     }
-                }else {
+                } else {
                     System.out.println("Login mal-sucedido");
                 }
                 exibirCompras();

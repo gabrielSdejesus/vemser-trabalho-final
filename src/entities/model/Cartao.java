@@ -56,7 +56,7 @@ public abstract class Cartao {
         System.out.println("\t\tCódigo de Segurança: "+codigoSeguranca);
         System.out.println("\t\tNúmero: "+numero);
         System.out.println("\t\tVencimento: "+vencimento);
-        System.out.println("\t\tTipo: " + (getTipo() == 1? "Débito": "Crédito"));
+        System.out.println("\t\tTipo: " + (getTipo() == 1? "Débito\n": "Crédito"));
     }
 
     public void alterarSenhaDoCartao(String novaSenha, String senhaAntiga) {
@@ -71,8 +71,8 @@ public abstract class Cartao {
         return conta;
     }
 
-    public void exibirCompras() {
-        System.out.println("\nExibindo compras do cartão [" + getTipo() +"] de " + (getTipo() == 1? "Débito": "Crédito"));
+    public void exibirCompras(int i) {
+        System.out.println("\nExibindo compras do cartão [" + i +"] de " + (getTipo() == 1? "Débito": "Crédito"));
         if(!compras.isEmpty()) {
             for (Compra compra : compras) {
                 compra.exibir();

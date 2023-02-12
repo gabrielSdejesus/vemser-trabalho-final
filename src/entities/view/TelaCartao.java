@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 public class TelaCartao implements Tela {
     public static void exibirTelaCartao(){
-        System.out.println("Você está na Tela de Cartão");
+        System.out.println("\nVocê está na Tela de Cartão");
         TelaCartao.tratarInput(TelaCartao.pedirInput());
     }
 
@@ -29,11 +29,11 @@ public class TelaCartao implements Tela {
                             cartao = i;
                             System.out.println("\tExibindo dados do cartão ["+(i+1)+"]:");
                             cartoes[cartao].exibirDadosCartao();
-                            cartoes[cartao].exibirCompras();
+                            cartoes[cartao].exibirCompras((i+1));
                         }
                     }
                     if (cartao == -1) {
-                        System.out.println("\tVocê não possui nenhum cartão de crédito");
+                        System.out.println("\tVocê não possui nenhum cartão de crédito\n");
                     }
                 } else {
                     System.out.println("Login mal-sucedido");
@@ -51,7 +51,7 @@ public class TelaCartao implements Tela {
                             cartao = i;
                             System.out.println("\tExibindo dados do cartão ["+(i+1)+"]:");
                             cartoes[cartao].exibirDadosCartao();
-                            cartoes[cartao].exibirCompras();
+                            cartoes[cartao].exibirCompras((i));
                         }
                     }
                     if (cartao == -1) {
@@ -116,7 +116,7 @@ public class TelaCartao implements Tela {
                         }
                     }
                 }else{
-                    System.out.println("Login mal-sucedido");
+                    System.err.println("Login mal-sucedido");
                 }
                 exibirTelaCartao();
             }
@@ -148,7 +148,7 @@ public class TelaCartao implements Tela {
                         senha = scanner.nextLine();
 
                         if(login.removerCartao(cartao, senha)){
-                            System.out.println("CARTÃO removido com sucesso!");
+                            System.err.println("CARTÃO removido com sucesso!");
                         }else{
                             System.err.println("Senha incorreta!");
                         }
