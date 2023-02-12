@@ -17,7 +17,7 @@ public class Conta implements Exibicao {
     private Cartao[] cartoes = new Cartao[2];
     private List<Transferencia> transferencias = new ArrayList<>();
 
-    public Conta (Cliente cliente, double saldoInicial) {
+    public Conta (Cliente cliente, double saldoInicial, String senha) {
         if(saldoInicial >= 0
                 && !BancoDeDados.consultarExistenciaPorCPF(cliente)){
 
@@ -30,7 +30,7 @@ public class Conta implements Exibicao {
             this.numero = numero;
             this.agencia = new Random().nextInt(1000,2000);
             this.saldo = saldoInicial;
-            this.senha = cliente.getSenha();
+            this.senha = senha;
             this.cartoes[0] = new CartaoDeDebito(this);
             BancoDeDados.adicionarConta(this);
         }

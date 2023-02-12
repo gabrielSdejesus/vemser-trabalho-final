@@ -35,10 +35,6 @@ public class Cliente implements Exibicao {
         return cpf;
     }
 
-    public String getSenha() {
-        return senha;
-    }
-
     @Override
     public void exibir() {
         System.out.println("\nExibindo informações do cliente");
