@@ -95,7 +95,7 @@ public class TelaPerfil  implements Tela {
 
                     System.out.println("Selecione um endereço para alterar:");
                     for(int i=0;i<enderecos.size();i++){
-                        System.out.printf("[%d] Logradouro: %s; Cidade: %s; Estado: %s; País: %s; CEP: %s", (i+1), enderecos.get(i).getLogradouro(), enderecos.get(i).getCidade(), enderecos.get(i).getEstado(), enderecos.get(i).getPais(), enderecos.get(i).getCep());
+                        System.out.printf("[%d] Logradouro: %s; Cidade: %s; Estado: %s; País: %s; CEP: %s\n", (i+1), enderecos.get(i).getLogradouro(), enderecos.get(i).getCidade(), enderecos.get(i).getEstado(), enderecos.get(i).getPais(), enderecos.get(i).getCep());
                     }
 
                     inputAlteracaoEndereco = Integer.parseInt(scanner.nextLine());
