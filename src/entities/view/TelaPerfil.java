@@ -24,8 +24,7 @@ public class TelaPerfil  implements Tela {
                 if(conta != null && conta.getCliente().verificarSenha(conta.getSenha())){
                     conta.getCliente().exibir();
                 }else{
-                    System.err.println("Número de Conta ou senha de Cliente incorretos!");
-                    System.out.println("Login mal-sucedido");
+                    System.err.println("Login mal-sucedido");
                 }
                 exibirTelaPerfil();
             }
@@ -34,7 +33,7 @@ public class TelaPerfil  implements Tela {
                 if(login != null){
                     login.exibir();
                 }else{
-                    System.out.println("Login mal-sucedido");
+                    System.err.println("Login mal-sucedido");
                 }
                 exibirTelaPerfil();
             }
@@ -78,7 +77,7 @@ public class TelaPerfil  implements Tela {
                     }
 
                 }else{
-                    System.out.println("Login mal-sucedido\n");
+                    System.err.println("Login mal-sucedido\n");
                 }
                 exibirTelaPerfil();
             }
@@ -185,7 +184,7 @@ public class TelaPerfil  implements Tela {
                         System.out.println("Você tem apenas [1] endereço e não pode exluí-lo!");
                     }
                 }else{
-                    System.out.println("Login mal-sucedido\n");
+                    System.err.println("Login mal-sucedido\n");
                 }
                 exibirTelaPerfil();
             }
@@ -217,7 +216,7 @@ public class TelaPerfil  implements Tela {
                     }
                     login.getCliente().addContatos(contatos);
                 }else{
-                    System.out.println("Login mal-sucedido\n");
+                    System.err.println("Login mal-sucedido\n");
                 }
                 exibirTelaPerfil();
             }
@@ -255,7 +254,7 @@ public class TelaPerfil  implements Tela {
                     }
                     login.getCliente().addEnderecos(enderecos);
                 }else{
-                    System.out.println("Login mal-sucedido\n");
+                    System.err.println("Login mal-sucedido\n");
                 }
                 exibirTelaPerfil();
             }

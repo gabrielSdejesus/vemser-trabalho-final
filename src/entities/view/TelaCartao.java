@@ -36,7 +36,7 @@ public class TelaCartao implements Tela {
                         System.out.println("\tVocê não possui nenhum cartão de crédito\n");
                     }
                 } else {
-                    System.out.println("Login mal-sucedido");
+                    System.err.println("Login mal-sucedido");
                 }
                 exibirTelaCartao();
             }
@@ -58,7 +58,7 @@ public class TelaCartao implements Tela {
                         System.out.println("\tVocê não possui nenhum cartão de débito");
                     }
                 }else {
-                    System.out.println("Login mal-sucedido");
+                    System.err.println("Login mal-sucedido");
                 }
                 exibirTelaCartao();
             }
@@ -154,7 +154,7 @@ public class TelaCartao implements Tela {
                         }
                     }
                 }else{
-                    System.out.println("Login mal-sucedido");
+                    System.err.println("Login mal-sucedido");
                 }
                 exibirTelaCartao();
             }
