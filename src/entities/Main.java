@@ -18,7 +18,6 @@ public class Main {
         Cliente cliente = new Cliente("Gabriel","07800145612"
                 ,enderecos,contatos,"123");
         Conta conta = new Conta(cliente, 5000, "123");
-        BancoDeDados.adicionarConta(conta);
         System.out.println("Número da conta: " + conta.getNumero());
         TelaPrincipal.exibirTelaPrincipal();
     }
