@@ -75,7 +75,7 @@ public class TelaPerfil  implements Tela {
                             }
                             System.out.println("Insira o novo ["+tipoContato+"]:");
                             novoDado = scanner.nextLine();
-                            contatos.get(inputAlteracaoContato-1).alterarDado(tipoContato, novoDado);
+                            contatos.get(inputAlteracaoContato-1).alterarDado(tipoContato.toLowerCase(), novoDado);
                         }
                     }else{
                         System.out.println("Nenhum contato selecionado!");
@@ -125,7 +125,7 @@ public class TelaPerfil  implements Tela {
                             }
                             System.out.println("Insira o novo ["+tipoEndereco+"]:");
                             novoDado = scanner.nextLine();
-                            enderecos.get(inputAlteracaoEndereco-1).alterarDado(tipoEndereco, novoDado);
+                            enderecos.get(inputAlteracaoEndereco-1).alterarDado(tipoEndereco.toLowerCase(), novoDado);
                         }
                     }else{
                         System.out.println("Nenhum endereço selecionado!");

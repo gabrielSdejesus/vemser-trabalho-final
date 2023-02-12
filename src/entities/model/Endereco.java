@@ -38,7 +38,7 @@ public class Endereco implements Alteracao, Exibicao {
                 return true;
             }
             default -> {
-                System.err.println("Tipo inválido, erro na linha 40 do Endereço");
+                System.err.println("Tipo inválido, erro no alterarDado do Endereço");
                 return false;
             }
         }

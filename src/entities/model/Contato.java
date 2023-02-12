@@ -25,7 +25,7 @@ public class Contato implements Alteracao, Exibicao {
                 return true;
             }
             default -> {
-                System.err.println("Tipo inválido, erro na linha 25 do Contato");
+                System.err.println("Tipo inválido, erro no alterarDado do contato");
                 return false;
             }
         }
