@@ -32,7 +32,7 @@ public class TelaTransferencias implements Tela {
     }
 
     public static int pedirInput() {
-        System.out.println("[1] -> Insira seus dados de login para ver suas transferências\n[2] -> Voltar para a Tela Principal");
+        System.out.println("[1] -> Insira seus dados de login para VISUALIZAR suas TRANSFERÊNCIAS\n[2] -> Voltar para a Tela Principal");
         return Integer.parseInt(new Scanner(System.in).nextLine());
     }
 }
