@@ -158,7 +158,7 @@ public class TelaAdministrador implements Tela {
                     System.err.println("Atenção! Deletar uma CONTA também deletará seu CLIENTE");
                     System.out.println("Contas cadastradas");
                     for(Conta conta : BancoDeDados.getContas()) {
-                        System.out.printf("\tCliente: %s | CPF: %s | Nº da conta %d",
+                        System.out.printf("\tCliente: %s | CPF: %s | Nº da conta %d\n",
                                 conta.getCliente().getNome(), conta.getCliente().getCpf(), conta.getNumero());
                     }
                     System.out.println("\nInsira o NÚMERO da CONTA que quer deletar:");
