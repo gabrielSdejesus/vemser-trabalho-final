@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 public class TelaMovimentacoes implements Tela {
     public static void exibirTelaMovimentacoes(){
-        System.out.println("Você está na Tela de Transferências");
+        System.out.println("Você está na Tela de Movimentações");
         TelaMovimentacoes.tratarInput(TelaMovimentacoes.pedirInput());
     }
 
