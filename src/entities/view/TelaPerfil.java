@@ -24,15 +24,13 @@ public class TelaPerfil  implements Tela {
                 String senhaCliente, numeroConta, loginCliente;
                 System.out.println("Insira o número da sua Conta:");
                 numeroConta = scanner.nextLine();
-                System.out.println("Insira o seu login de Cliente:");
-                loginCliente = scanner.nextLine();
                 System.out.println("Insira a sua senha de Cliente:");
                 senhaCliente = scanner.nextLine();
                 Conta conta = BancoDeDados.consultarNumeroDaConta(numeroConta);
-                if(conta != null && conta.getCliente().verificarLogin(loginCliente) && conta.getCliente().verificarSenha(senhaCliente)){
+                if(conta != null && conta.getCliente().verificarSenha(senhaCliente)){
                     conta.getCliente().exibir();
                 }else{
-                    System.err.println("Número de Conta, login de Cliente ou senha de Cliente incorretos!");
+                    System.err.println("Número de Conta ou senha de Cliente incorretos!");
                     System.out.println("Login mal-sucedido");
                 }
                 exibirTelaPerfil();

@@ -16,7 +16,7 @@ public class Main {
         ArrayList<Contato> contatos = new ArrayList<>();
         contatos.add(new Contato("7165478932","GABRIEL@GMAIL.COM"));
         Cliente cliente = new Cliente("Gabriel","07800145612"
-                ,enderecos,contatos,"GABRIEL","123");
+                ,enderecos,contatos,"123");
         Conta conta = new Conta(cliente, 5000, "123");
         BancoDeDados.adicionarConta(conta);
         System.out.println("Número da conta: " + conta.getNumero());

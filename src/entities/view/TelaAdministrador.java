@@ -28,28 +28,24 @@ public class TelaAdministrador implements Tela {
                 senhaAdm = scanner.nextLine();
 
                 if(senhaAdm.equals("ABACAXI")){
-                    String nomeCliente, cpfCliente, loginCliente, senhaCliente;
+                    String nomeCliente, cpfCliente, senhaCliente;
 
-                    System.out.println("\tEtapa [1] de [6]");
+                    System.out.println("\tEtapa [1] de [5]");
                     System.out.println("Insira o Nome do cliente:");
                     nomeCliente = scanner.nextLine();
 
-                    System.out.println("\tEtapa [2] de [6]");
+                    System.out.println("\tEtapa [2] de [5]");
                     System.out.println("Insira o CPF do cliente:");
                     cpfCliente = scanner.nextLine();
 
-                    System.out.println("\tEtapa [3] de [6]");
-                    System.out.println("Insira o Login do cliente:");
-                    loginCliente = scanner.nextLine();
-
-                    System.out.println("\tEtapa [4] de [6]");
+                    System.out.println("\tEtapa [3] de [5]");
                     System.out.println("Insira a Senha do cliente:");
                     senhaCliente = scanner.nextLine();
 
                     ArrayList<Contato> contatos = new ArrayList<>();
                     String contatoInput = "";
 
-                    System.out.println("\tEtapa [5] de [6]");
+                    System.out.println("\tEtapa [4] de [5]");
                     while(!contatoInput.equalsIgnoreCase("ENCERRAR CONTATOS")){
                         System.out.println("Insira [ENCERRAR CONTATOS] para parar de adicionar contatos do cliente");
                         System.out.println("Insira o telefone do contato do cliente:");
@@ -75,7 +71,7 @@ public class TelaAdministrador implements Tela {
                     ArrayList<Endereco> enderecos = new ArrayList<>();
                     String enderecoInput = "";
 
-                    System.out.println("\tEtapa [6] de [6]");
+                    System.out.println("\tEtapa [5] de [5]");
                     while(!enderecoInput.equalsIgnoreCase("ENCERRAR ENDEREÇOS")){
                         System.out.println("Insira [ENCERRAR ENDEREÇOS] para parar de adicionar endereços do cliente");
                         System.out.println("Insira o Logradouro do Endereço do cliente:");
@@ -103,13 +99,12 @@ public class TelaAdministrador implements Tela {
                             System.out.println("\tEndereço adicionado!");
                         }
                     }
-                    Cliente cliente = new Cliente(nomeCliente, cpfCliente, enderecos, contatos, loginCliente, senhaCliente);
+                    Cliente cliente = new Cliente(nomeCliente, cpfCliente, enderecos, contatos, senhaCliente);
                     Conta conta = new Conta(cliente, 0, senhaCliente);
                     System.out.println("Cliente adicionado com sucesso!");
                     System.out.println("\tNÃO ESQUECA DE GUARDAR OS DADOS DE ACESSO DA CONTA E DO CLIENTE!");
-                    System.out.println("\t\tLogin do cliente: "+loginCliente);
-                    System.out.println("\t\tSenha do cliente: "+senhaCliente);
                     System.out.println("\t\tNúmero da conta do cliente: "+conta.getNumero());
+                    System.out.println("\t\tSenha do cliente: "+senhaCliente);
                 }else{
                     System.err.println("Senha administrativa inválida!");
                 }

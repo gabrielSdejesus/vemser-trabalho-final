@@ -10,16 +10,14 @@ public class Cliente implements Exibicao {
     private String cpf;
     private ArrayList<Endereco> enderecos;
     private ArrayList<Contato> contatos;
-    private String login;
     private String senha;
     private Conta conta;
 
-    public Cliente(String nome, String cpf, ArrayList<Endereco> enderecos, ArrayList<Contato> contatos, String login, String senha) {
+    public Cliente(String nome, String cpf, ArrayList<Endereco> enderecos, ArrayList<Contato> contatos, String senha) {
         this.nome = nome;
         this.cpf = cpf;
         this.enderecos = enderecos;
         this.contatos = contatos;
-        this.login = login;
         this.senha = senha;
     }
 
@@ -65,10 +63,6 @@ public class Cliente implements Exibicao {
 
     public boolean verificarSenha(String senhaCliente) {
         return senhaCliente.equals(senha);
-    }
-
-    public boolean verificarLogin(String loginCliente) {
-        return loginCliente.equals(login);
     }
 
     public ArrayList<Contato> getContatos(){
