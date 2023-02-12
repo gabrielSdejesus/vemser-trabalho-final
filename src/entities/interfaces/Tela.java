@@ -30,6 +30,7 @@ public interface Tela {
         return null;
     }
     static void redirecionarParaTela(int tela){
+        System.out.println("\n");
         switch(tela){
             case 1 -> TelaPrincipal.exibirTelaPrincipal();
             case 2 -> TelaCompras.exibirCompras();
