@@ -67,14 +67,13 @@ public class TelaPerfil  implements Tela {
                         System.out.println("[3] Cancelar - Voltar para tela de perfil");
 
                         tipoAlteracaoContato = Integer.parseInt(scanner.nextLine());
-                        if (tipoAlteracaoContato < 1 || tipoAlteracaoContato > 3){
+                        if (tipoAlteracaoContato < 1 || tipoAlteracaoContato >= 3){
                             System.out.println("Operação cancelada!");
                         }else{
                             String tipoContato = "";
                             switch(tipoAlteracaoContato){
                                 case 1 -> tipoContato = "Telefone";
                                 case 2 -> tipoContato = "Email";
-                                case 3 -> TelaPerfil.exibirTelaPerfil();
                                 default -> System.err.println("Erro bizarro!");
                             }
                             System.out.println("Insira o novo ["+tipoContato+"]:");
@@ -115,7 +114,7 @@ public class TelaPerfil  implements Tela {
                         System.out.println("[6] Cancelar - Voltar para tela de perfil");
 
                         tipoAlteracaoEndereco = Integer.parseInt(scanner.nextLine());
-                        if (tipoAlteracaoEndereco < 1 || tipoAlteracaoEndereco > 6){
+                        if (tipoAlteracaoEndereco < 1 || tipoAlteracaoEndereco >= 6){
                             System.out.println("Operação cancelada!");
                         }else{
                             String tipoEndereco = "";
@@ -125,7 +124,6 @@ public class TelaPerfil  implements Tela {
                                 case 3 -> tipoEndereco = "Estado";
                                 case 4 -> tipoEndereco = "País";
                                 case 5 -> tipoEndereco = "CEP";
-                                case 6 -> TelaPerfil.exibirTelaPerfil();
                                 default -> System.err.println("Erro bizarro!");
                             }
                             System.out.println("Insira o novo ["+tipoEndereco+"]:");
