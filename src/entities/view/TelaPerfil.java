@@ -46,101 +46,7 @@ public class TelaPerfil  implements Tela {
                 }
                 exibirTelaPerfil();
             }
-            case 3 ->{
-                String senhaAdm;
-                System.out.println("Insira a senha Adminsitrativa [ABACAXI]:");
-                senhaAdm = scanner.nextLine();
-
-                if(senhaAdm.equals("ABACAXI")){
-                    String nomeCliente, cpfCliente, loginCliente, senhaCliente;
-
-                    System.out.println("\tEtapa [1] de [6]");
-                    System.out.println("Insira o Nome do cliente:");
-                    nomeCliente = scanner.nextLine();
-
-                    System.out.println("\tEtapa [2] de [6]");
-                    System.out.println("Insira o CPF do cliente:");
-                    cpfCliente = scanner.nextLine();
-
-                    System.out.println("\tEtapa [3] de [6]");
-                    System.out.println("Insira o Login do cliente:");
-                    loginCliente = scanner.nextLine();
-
-                    System.out.println("\tEtapa [4] de [6]");
-                    System.out.println("Insira a Senha do cliente:");
-                    senhaCliente = scanner.nextLine();
-
-                    ArrayList<Contato> contatos = new ArrayList<>();
-                    String contatoInput = "";
-
-                    System.out.println("\tEtapa [5] de [6]");
-                    while(!contatoInput.equalsIgnoreCase("ENCERRAR CONTATOS")){
-                        System.out.println("Insira [ENCERRAR CONTATOS] para parar de adicionar contatos do cliente");
-                        System.out.println("Insira o telefone do contato do cliente:");
-                        contatoInput = scanner.nextLine();
-
-                        String email;
-
-                        if(contatoInput.equalsIgnoreCase("ENCERRAR CONTATOS")){
-                            if (contatos.size()<1){
-                                System.out.println("Você deve adicionar ao menos um Contato!");
-                                contatoInput = "";
-                            }else{
-                                break;
-                            }
-                        }else{
-                            System.out.println("Insira o email do Contato do cliente");
-                            email = scanner.nextLine();
-                            contatos.add(new Contato(contatoInput, email));
-                            System.out.println("\tContato adicionado!");
-                        }
-                    }
-
-                    ArrayList<Endereco> enderecos = new ArrayList<>();
-                    String enderecoInput = "";
-
-                    System.out.println("\tEtapa [6] de [6]");
-                    while(!enderecoInput.equalsIgnoreCase("ENCERRAR ENDEREÇOS")){
-                        System.out.println("Insira [ENCERRAR ENDEREÇOS] para parar de adicionar endereços do cliente");
-                        System.out.println("Insira o Logradouro do Endereço do cliente:");
-                        enderecoInput = scanner.nextLine();
-
-                        String cidade, estado, pais, cep;
-
-                        if(enderecoInput.equalsIgnoreCase("ENCERRAR ENDEREÇOS")){
-                            if (enderecos.size()<1){
-                                System.out.println("Você deve adicionar ao menos um Endereço!");
-                                enderecoInput = "";
-                            }else{
-                                break;
-                            }
-                        }else{
-                            System.out.println("Insira a Cidade do Endereço do cliente:");
-                            cidade = scanner.nextLine();
-                            System.out.println("Insira o Estado do Endereço do cliente:");
-                            estado = scanner.nextLine();
-                            System.out.println("Insira o País do Endereço do cliente:");
-                            pais = scanner.nextLine();
-                            System.out.println("Insira o CEP do Endereço do cliente:");
-                            cep = scanner.nextLine();
-                            enderecos.add(new Endereco(enderecoInput, cidade, estado, pais, cep));
-                            System.out.println("\tEndereço adicionado!");
-                        }
-                    }
-                    Cliente cliente = new Cliente(nomeCliente, cpfCliente, enderecos, contatos, loginCliente, senhaCliente);
-                    Conta conta = new Conta(cliente, 0);
-                    BancoDeDados.adicionarConta(conta);
-                    System.out.println("Cliente adicionado com sucesso!");
-                    System.out.println("\tNÃO ESQUECA DE GUARDAR OS DADOS DE ACESSO DA CONTA E DO CLIENTE!");
-                    System.out.println("\t\tLogin do cliente: "+loginCliente);
-                    System.out.println("\t\tSenha do cliente: "+senhaCliente);
-                    System.out.println("\t\tNúmero da conta do cliente: "+conta.getNumero());
-                }else{
-                    System.err.println("Número de conta ou senha inválida");
-                }
-                exibirTelaPerfil();
-            }
-            case 4 -> {
+            case 3 -> {
                 login = Tela.login();
                 if(login != null){
                     ArrayList<Contato> contatos = login.getCliente().getContatos();
@@ -184,7 +90,7 @@ public class TelaPerfil  implements Tela {
                 }
                 exibirTelaPerfil();
             }
-            case 5 -> {
+            case 4 -> {
                 login = Tela.login();
                 if(login != null){
                     ArrayList<Endereco> enderecos = login.getCliente().getEnderecos();
@@ -235,7 +141,7 @@ public class TelaPerfil  implements Tela {
                 }
                 exibirTelaPerfil();
             }
-            case 6 -> {
+            case 5 -> {
                 login = Tela.login();
                 if(login != null) {
                     ArrayList<Contato> contatos = login.getCliente().getContatos();
@@ -263,7 +169,7 @@ public class TelaPerfil  implements Tela {
                 }
                 exibirTelaPerfil();
             }
-            case 7 -> {
+            case 6 -> {
                 login = Tela.login();
                 if(login != null) {
                     ArrayList<Endereco> enderecos = login.getCliente().getEnderecos();
@@ -291,7 +197,7 @@ public class TelaPerfil  implements Tela {
                 }
                 exibirTelaPerfil();
             }
-            case 8 -> {
+            case 7 -> {
                 login = Tela.login();
                 if(login != null) {
                     String contatoInput = "";
@@ -322,7 +228,7 @@ public class TelaPerfil  implements Tela {
                     System.out.println("Login mal-sucedido\n");
                 }
             }
-            case 9 -> {
+            case 8 -> {
                 login = Tela.login();
                 if(login != null) {
                     String enderecoInput = "";
@@ -359,7 +265,7 @@ public class TelaPerfil  implements Tela {
                     System.out.println("Login mal-sucedido\n");
                 }
             }
-            case 10 -> Tela.redirecionarParaTela(1);
+            case 9 -> Tela.redirecionarParaTela(1);
             default -> {
                 System.out.println("Opção inválida!");
                 exibirTelaPerfil();
@@ -368,7 +274,7 @@ public class TelaPerfil  implements Tela {
     }
 
     public static int pedirInput() {
-        System.out.println("[1] -> Insira seus dados de LOGIN para exibir seus dados de CLIENTE\n[2] -> Insira seus dados de LOGIN para exibir os dados da sua CONTA\n[3] -> Cadastrar um novo CLIENTE com CONTA\n[4] -> Alterar CONTATO do CLIENTE\n[5] -> Alterar ENDEREÇO do CLIENTE\n[6] -> Deletar CONTATO do CLIENTE\n[7] -> Deletar ENDEREÇO do CLIENTE\n[8] -> Cadastrar novo CONTATO em CLIENTE\n[9] -> Cadastrar novo ENDEREÇO em CLIENTE\n[10] -> Voltar para a Tela Principal");
+        System.out.println("[1] -> Insira seus dados de LOGIN para exibir seus dados de CLIENTE\n[2] -> Insira seus dados de LOGIN para exibir os dados da sua CONTA\n[3] -> Alterar CONTATO do CLIENTE\n[4] -> Alterar ENDEREÇO do CLIENTE\n[5] -> Deletar CONTATO do CLIENTE\n[6] -> Deletar ENDEREÇO do CLIENTE\n[7] -> Cadastrar novo CONTATO em CLIENTE\n[8] -> Cadastrar novo ENDEREÇO em CLIENTE\n[9] -> Voltar para a Tela Principal");
         return Integer.parseInt(new Scanner(System.in).nextLine());
     }
 }

@@ -29,6 +29,10 @@ public class BancoDeDados implements Exibicao {
         return contas.stream().anyMatch(conta -> conta.getCliente().getCpf().equals(cliente.getCpf()));
     }
 
+    public static Conta consultarExistenciaPorCPF(String cpf){
+        return contas.stream().filter(conta -> conta.getCliente().getCpf().equalsIgnoreCase(cpf)).findFirst().orElse(null);
+    }
+
     public static boolean consultarNumeroDaConta(int numero){
         return contas.stream().anyMatch(conta -> conta.getNumero() == numero);
     }
@@ -48,6 +52,25 @@ public class BancoDeDados implements Exibicao {
         for(Conta c: contas){
             c.exibir();
         }
+    }
+
+    public static boolean deletarCliente(String cpf){
+        for(int i=0;i<contas.size();i++){
+            if(contas.get(i).getCliente().getCpf().equalsIgnoreCase(cpf)){
+                contas.remove(i);
+                return true;
+            }
+        }
+        return false;
+    }
+    public static boolean deletarConta(int numeroConta) {
+        for(int i=0;i<contas.size();i++){
+            if(contas.get(i).getNumero() == numeroConta){
+                contas.remove(i);
+                return true;
+            }
+        }
+        return false;
     }
 
     public static List<Conta> getContas() {
