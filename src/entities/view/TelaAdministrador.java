@@ -38,6 +38,12 @@ public class TelaAdministrador implements Tela {
                     System.out.println("Insira o CPF do cliente:");
                     cpfCliente = scanner.nextLine();
 
+                    if(BancoDeDados.consultarExistenciaPorCPF(cpfCliente) != null) {
+                        if (BancoDeDados.consultarExistenciaPorCPF(cpfCliente).getCliente().getCpf().equalsIgnoreCase(cpfCliente)) {
+                            System.err.println("CPF já cadastrado!");
+                            TelaAdministrador.exibirTelaAdministrador();
+                        }
+                    }
                     System.out.println("\tEtapa [3] de [5]");
                     System.out.println("Insira a Senha do cliente:");
                     senhaCliente = scanner.nextLine();
@@ -46,14 +52,14 @@ public class TelaAdministrador implements Tela {
                     String contatoInput = "";
 
                     System.out.println("\tEtapa [4] de [5]");
-                    while(!contatoInput.equalsIgnoreCase("ENCERRAR CONTATOS")){
-                        System.out.println("Insira [ENCERRAR CONTATOS] para parar de adicionar contatos do cliente");
+                    while(!contatoInput.equalsIgnoreCase("SAIR")){
+                        System.out.println("Insira [SAIR] para parar de adicionar contatos do cliente");
                         System.out.println("Insira o telefone do contato do cliente:");
                         contatoInput = scanner.nextLine();
 
                         String email;
 
-                        if(contatoInput.equalsIgnoreCase("ENCERRAR CONTATOS")){
+                        if(contatoInput.equalsIgnoreCase("SAIR")){
                             if (contatos.size()<1){
                                 System.out.println("Você deve adicionar ao menos um Contato!");
                                 contatoInput = "";
@@ -64,7 +70,7 @@ public class TelaAdministrador implements Tela {
                             System.out.println("Insira o email do Contato do cliente");
                             email = scanner.nextLine();
                             contatos.add(new Contato(contatoInput, email));
-                            System.out.println("\tContato adicionado!");
+                            System.out.println("\tContato adicionado!\n");
                         }
                     }
 
@@ -72,14 +78,14 @@ public class TelaAdministrador implements Tela {
                     String enderecoInput = "";
 
                     System.out.println("\tEtapa [5] de [5]");
-                    while(!enderecoInput.equalsIgnoreCase("ENCERRAR ENDEREÇOS")){
-                        System.out.println("Insira [ENCERRAR ENDEREÇOS] para parar de adicionar endereços do cliente");
+                    while(!enderecoInput.equalsIgnoreCase("SAIR")){
+                        System.out.println("Insira [SAIR] para parar de adicionar endereços do cliente");
                         System.out.println("Insira o Logradouro do Endereço do cliente:");
                         enderecoInput = scanner.nextLine();
 
                         String cidade, estado, pais, cep;
 
-                        if(enderecoInput.equalsIgnoreCase("ENCERRAR ENDEREÇOS")){
+                        if(enderecoInput.equalsIgnoreCase("SAIR")){
                             if (enderecos.size()<1){
                                 System.out.println("Você deve adicionar ao menos um Endereço!");
                                 enderecoInput = "";
@@ -96,17 +102,17 @@ public class TelaAdministrador implements Tela {
                             System.out.println("Insira o CEP do Endereço do cliente:");
                             cep = scanner.nextLine();
                             enderecos.add(new Endereco(enderecoInput, cidade, estado, pais, cep));
-                            System.out.println("\tEndereço adicionado!");
+                            System.out.println("\tEndereço adicionado!\n");
                         }
                     }
                     Cliente cliente = new Cliente(nomeCliente, cpfCliente, enderecos, contatos, senhaCliente);
                     Conta conta = new Conta(cliente, 0, senhaCliente);
-                    System.out.println("Cliente adicionado com sucesso!");
+                    System.out.println("\nCliente adicionado com sucesso!");
                     System.out.println("\tNÃO ESQUECA DE GUARDAR OS DADOS DE ACESSO DA CONTA E DO CLIENTE!");
                     System.out.println("\t\tNúmero da conta do cliente: "+conta.getNumero());
-                    System.out.println("\t\tSenha do cliente: "+senhaCliente);
+                    System.out.println("\t\tSenha do cliente: "+senhaCliente + "\n");
                 }else{
-                    System.err.println("Senha administrativa inválida!");
+                    System.err.println("Senha administrativa inválida!\n");
                 }
                 exibirTelaAdministrador();
             }
