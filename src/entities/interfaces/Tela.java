@@ -1,0 +1,45 @@
+package entities.interfaces;
+
+import entities.controller.BancoDeDados;
+import entities.model.Conta;
+import entities.view.*;
+
+import java.util.Scanner;
+
+public interface Tela {
+    static void tratarInput(int input){
+        // cada classe que implementa essa inteface deve refazer esse método da sua forma
+    }
+    static int pedirInput(){
+        // cada classe que implementa essa inteface deve refazer esse método da sua forma
+        return 0;
+    }
+    static Conta login(){
+        Scanner scanner = new Scanner(System.in);
+        String senhaConta, numeroConta;
+        System.out.print("Insira o número da sua conta: ");
+        numeroConta = scanner.nextLine();
+        System.out.print("Insira a senha da sua conta: ");
+        senhaConta = scanner.nextLine();
+        Conta conta = BancoDeDados.consultarNumeroDaConta(numeroConta);
+        if(conta != null && conta.verificarSenha(senhaConta)){
+            return conta;
+        }else{
+            System.err.println("Número de conta ou senha inválida");
+        }
+        return null;
+    }
+    static void redirecionarParaTela(int tela){
+        System.out.println("\n");
+        switch(tela){
+            case 1 -> TelaPrincipal.exibirTelaPrincipal();
+            case 2 -> TelaCompras.exibirCompras();
+            case 3 -> TelaCartao.exibirTelaCartao();
+            case 4 -> TelaPerfil.exibirTelaPerfil();
+            case 5 -> TelaTransferencias.exibirTransferencias();
+            case 6 -> TelaMovimentacoes.exibirTelaMovimentacoes();
+            case 7 -> TelaAdministrador.exibirTelaAdministrador();
+            default -> System.err.println("Número da tela incorreta, erro na Inteface Tela");
+        }
+    }
+}
