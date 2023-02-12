@@ -2,7 +2,6 @@ package entities.view;
 
 import entities.controller.BancoDeDados;
 import entities.interfaces.Tela;
-import entities.model.Cliente;
 import entities.model.Conta;
 import entities.model.Contato;
 import entities.model.Endereco;
@@ -21,7 +20,7 @@ public class TelaPerfil  implements Tela {
         Conta login;
         switch(input){
             case 1 ->{
-                String senhaCliente, numeroConta, loginCliente;
+                String senhaCliente, numeroConta;
                 System.out.println("Insira o número da sua Conta:");
                 numeroConta = scanner.nextLine();
                 System.out.println("Insira a sua senha de Cliente:");
