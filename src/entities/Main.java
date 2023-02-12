@@ -1,5 +1,6 @@
 package entities;
 
+import entities.controller.BancoDeDados;
 import entities.model.Cliente;
 import entities.model.Conta;
 import entities.model.Contato;
@@ -17,6 +18,7 @@ public class Main {
         Cliente cliente = new Cliente("Gabriel","07800145612"
                 ,enderecos,contatos,"GABRIEL","123");
         Conta conta = new Conta(cliente, 5000, "123");
+        BancoDeDados.adicionarConta(conta);
         System.out.println("Número da conta: " + conta.getNumero());
         TelaPrincipal.exibirTelaPrincipal();
     }

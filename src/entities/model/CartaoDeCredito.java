@@ -24,6 +24,11 @@ public class CartaoDeCredito extends Cartao {
                .sum());
     }
 
+    public void exibirDadosCartao() {
+        super.exibirDadosCartao();
+        System.out.printf("\t\tLimite: %.2f\n", limiteRestante());
+    }
+
     public void setLimite(double novoLimite) {
         limite = novoLimite;
     }
