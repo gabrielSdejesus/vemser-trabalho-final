@@ -36,9 +36,9 @@ public class TelaCompras  implements Tela {
                 login = Tela.login();
                 if(login != null){
                     Cartao[] cartoes = login.getCartoes();
-                    Cartao cartao = null;
+                    Cartao cartao;
                     ArrayList<Item> itens = new ArrayList<>();
-                    String nomeItem = "";
+                    String nomeItem;
 
                     double valorTotalAtual = 0;
 
@@ -70,6 +70,11 @@ public class TelaCompras  implements Tela {
                             System.out.println("\n\nInsira o nome do item a ser adicionado ou (digite SAIR para continuar):");
                             nomeItem = scanner.nextLine();
                             if (nomeItem.equalsIgnoreCase("SAIR")) {
+                                if(itens.size() > 0){
+                                    System.out.println("\nCompra Adicionada com sucesso!");
+                                }else{
+                                    System.out.println("\nCompra não realizada!");
+                                }
                                 break;
                             } else {
                                 double valorItem, quantidadeItem;
@@ -77,29 +82,28 @@ public class TelaCompras  implements Tela {
                                 valorItem = Double.parseDouble(scanner.nextLine());
                                 System.out.println("Insira a quantidade do item:");
                                 quantidadeItem = Double.parseDouble(scanner.nextLine());
-                                item = new Item(nomeItem, valorItem, quantidadeItem);
-                                itens.add(item);
-                                valorTotalAtual += item.returnPrecoItem();
+                                if(quantidadeItem > 0 && valorItem > 0){
+                                    item = new Item(nomeItem, valorItem, quantidadeItem);
+                                    itens.add(item);
+                                    valorTotalAtual += item.returnPrecoItem();
+                                }else{
+                                    System.err.println("Item não adicionado!");
+                                    System.err.println("Valor/Quantidade do item inválidos!");
+                                }
                             }
                         } while (!nomeItem.equalsIgnoreCase("SAIR") && !nomeItem.isEmpty() && !nomeItem.isBlank());
 
-                    if(!itens.isEmpty()
-                            && !item.getNomeItem().isEmpty()
-                                && !item.getNomeItem().isBlank()) {
-                        String docVendedor;
-                        System.out.println("Insira o documento do vendedor:");
-                        docVendedor = scanner.nextLine();
-                        if(cartao.getTipo() == 1) {
+                        if(!itens.isEmpty()
+                                && !item.getNomeItem().isEmpty()
+                                    && !item.getNomeItem().isBlank()) {
+                            String docVendedor;
+                            System.out.println("Insira o documento do vendedor:");
+                            docVendedor = scanner.nextLine();
+                            ////
                             cartao.adicionarCompra(new Compra(docVendedor, new Date(), itens));
-                        } else {
-                            ((CartaoDeCredito)cartao).adicionarCompra(new Compra(docVendedor, new Date(), itens));
+                            System.out.println("INFOS CARTAO: ");
+                            cartao.exibirDadosCartao();
                         }
-                    }
-                        if(nomeItem.equalsIgnoreCase("SAIR")){
-                            System.err.println("Você saiu da tela de adicionar compras!");
-                            } else {
-                                System.err.println("Os dados dos itens informados estão incorretos!");
-                            }
                     } else {
                         System.err.println("Este número não representa nenhum cartão.");
                     }

@@ -86,9 +86,14 @@ public class Conta implements Exibicao {
     public boolean removerCartao(int indice, String senha){
         if((indice == 0 || indice == 1)
                 && verificarSenha(senha)) {
-            this.cartoes[indice] = null;
-            BancoDeDados.alterarDadosDaConta(this);
-            return true;
+            if(cartoes[indice].getTipo() == 2){
+                CartaoDeCredito cartaoDeCredito = (CartaoDeCredito) cartoes[indice];
+                return cartaoDeCredito.limiteRestante() == cartaoDeCredito.getLimite();
+            }else{
+                this.cartoes[indice] = null;
+                BancoDeDados.alterarDadosDaConta(this);
+                return true;
+            }
         }
         return false;
     }

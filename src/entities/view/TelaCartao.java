@@ -150,7 +150,11 @@ public class TelaCartao implements Tela {
                         if(login.removerCartao(cartao, senha)){
                             System.err.println("CARTÃO removido com sucesso!");
                         }else{
-                            System.err.println("Senha incorreta!");
+                            if(login.verificarSenha(senha)){
+                                System.err.println("CARTÃO de CRÉDITO usado, pague a fatura para poder excluí-lo!");
+                            }else{
+                                System.err.println("Senha incorreta!");
+                            }
                         }
                     }
                 }else{
