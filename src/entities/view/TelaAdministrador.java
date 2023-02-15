@@ -21,13 +21,9 @@ public class TelaAdministrador implements Tela {
 
     public static void tratarInput(int input) {
         Scanner scanner = new Scanner(System.in);
-        String senhaAdm;
         switch(input){
             case 1 ->{
-                System.out.println("Insira a senha Administrativa [ABACAXI]:");
-                senhaAdm = scanner.nextLine();
-
-                if(senhaAdm.equals("ABACAXI")){
+                if(Tela.loginAdm()){
                     String nomeCliente, cpfCliente, senhaCliente;
 
                     System.out.println("\tEtapa [1] de [5]");
@@ -118,11 +114,9 @@ public class TelaAdministrador implements Tela {
                 exibirTelaAdministrador();
             }
             case 2 -> {
-                System.out.println("Insira a senha Administrativa [ABACAXI]:");
-                senhaAdm = scanner.nextLine();
                 String cpfCliente;
 
-                if(senhaAdm.equals("ABACAXI")){
+                if(Tela.loginAdm()){
                     if(BancoDeDados.getContas().size() > 0){
                         System.err.println("Atenção! Deletar o CLIENTE também deletará sua CONTA");
                         System.out.println("Clientes cadastrados");
@@ -160,11 +154,9 @@ public class TelaAdministrador implements Tela {
                 exibirTelaAdministrador();
             }
             case 3 -> {
-                System.out.println("Insira a senha Administrativa [ABACAXI]:");
-                senhaAdm = scanner.nextLine();
                 String numeroConta;
 
-                if(senhaAdm.equals("ABACAXI")){
+                if(Tela.loginAdm()){
                     if(BancoDeDados.getContas().size() > 0){
                         System.err.println("Atenção! Deletar uma CONTA também deletará seu CLIENTE");
                         System.out.println("Contas cadastradas");

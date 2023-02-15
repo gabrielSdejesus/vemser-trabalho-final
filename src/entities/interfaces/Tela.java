@@ -29,6 +29,15 @@ public interface Tela {
         }
         return null;
     }
+
+    static boolean loginAdm(){
+        Scanner scanner = new Scanner(System.in);
+        String senhaAdm;
+        System.out.println("Insira a senha Administrativa [ABACAXI]:");
+        senhaAdm = scanner.nextLine();
+        return senhaAdm.equals("ABACAXI");
+    }
+
     static void redirecionarParaTela(int tela){
         System.out.println("\n");
         switch(tela){
