@@ -94,7 +94,6 @@ public class ClienteService extends Service{
         System.out.println("\tNÃO ESQUECA DE GUARDAR OS DADOS DE ACESSO DA CONTA E DO CLIENTE!");
         System.out.println("\t\tNúmero da conta do cliente: "+conta.getNumero());
         System.out.println("\t\tSenha do cliente: "+senhaCliente + "\n");
-        SCANNER.close();
     }
 
     public static void deletarCliente(){
@@ -126,7 +125,6 @@ public class ClienteService extends Service{
                 System.err.println("CPF informado não encontrado no Banco De Dados!");
                 System.err.println("Operação não realizada!");
             }
-            SCANNER.close();
         }else{
             System.err.println("Não há CLIENTES cadastradas!");
         }
@@ -139,7 +137,6 @@ public class ClienteService extends Service{
         if(conta.verificarSenha(senhaConta)){
             conta.getCliente().exibir();
         }
-        SCANNER.close();
     }
 
     public static void alterarContato(Conta conta){
@@ -178,7 +175,6 @@ public class ClienteService extends Service{
         }else{
             System.out.println("Nenhum contato selecionado!");
         }
-        SCANNER.close();
     }
 
     public static void alterarEndereco(Conta conta){
@@ -224,7 +220,6 @@ public class ClienteService extends Service{
         }else{
             System.out.println("Nenhum endereço selecionado!");
         }
-        SCANNER.close();
     }
 
     public static void deletarContato(Conta conta){
@@ -245,7 +240,6 @@ public class ClienteService extends Service{
             }else{
                 System.out.println("Nenhum contato selecionado!");
             }
-            SCANNER.close();
         }else{
             System.out.println("Você tem apenas [1] contato e não pode excluí-lo!");
         }
@@ -269,7 +263,6 @@ public class ClienteService extends Service{
             }else{
                 System.out.println("Nenhum endereço selecionado!");
             }
-            SCANNER.close();
         }else{
             System.out.println("Você tem apenas [1] endereço e não pode exluí-lo!");
         }
@@ -300,7 +293,6 @@ public class ClienteService extends Service{
             }
         }
         conta.getCliente().addContatos(contatos);
-        SCANNER.close();
     }
 
     public static void adicionarEndereco(Conta conta){
@@ -334,6 +326,5 @@ public class ClienteService extends Service{
             }
         }
         conta.getCliente().addEnderecos(enderecos);
-        SCANNER.close();
     }
 }

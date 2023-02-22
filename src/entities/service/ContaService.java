@@ -37,7 +37,6 @@ public class ContaService extends Service{
         }else{
             System.err.println("Não há CONTAS cadastradas!");
         }
-        SCANNER.close();
     }
 
     public static void exibirConta(Conta conta){
@@ -47,7 +46,6 @@ public class ContaService extends Service{
         if(conta.verificarSenha(senhaConta)){
             conta.exibir();
         }
-        SCANNER.close();
     }
 
     public static void depositar(Conta conta){
@@ -65,7 +63,6 @@ public class ContaService extends Service{
         }else{
             System.err.println("Depósito não realizado! Senha incorreta!");
         }
-        SCANNER.close();
     }
 
     public static void sacar(Conta conta){
@@ -83,7 +80,6 @@ public class ContaService extends Service{
         }else{
             System.err.println("Saque não realizado! "+(conta.verificarSenha(senhaConta)? "Fundos Insuficientes": "Senha incorreta")+"!");
         }
-        SCANNER.close();
     }
 
     public static void transferir(Conta conta){
@@ -113,7 +109,6 @@ public class ContaService extends Service{
             }
             System.err.println(resultado);
         }
-        SCANNER.close();
     }
 
     public static void pagarConta(Conta conta){
@@ -144,7 +139,6 @@ public class ContaService extends Service{
                 System.err.println("Senha Incorreta!");
             }
         }
-        SCANNER.close();
     }
 
     public static void alterarSenha(){
@@ -168,6 +162,5 @@ public class ContaService extends Service{
         }else{
             System.err.println("CPF do CLIENTE ou NÚMERO da CONTA incorreto!");
         }
-        SCANNER.close();
     }
 }
