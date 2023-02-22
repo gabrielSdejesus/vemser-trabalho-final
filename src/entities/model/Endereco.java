@@ -3,10 +3,19 @@ package entities.model;
 import entities.interfaces.Alteracao;
 import entities.interfaces.Exibicao;
 
-public class Endereco implements Alteracao, Exibicao {
-    private String logradouro, cidade, estado, pais, cep;
+public class Endereco {
 
-    public Endereco(String logradouro, String cidade, String estado, String pais, String cep) {
+    private Integer idEndereco;
+    private Integer idCliente;
+    private String logradouro;
+    private String cidade;
+    private String estado;
+    private String pais;
+    private String cep;
+
+    public Endereco(Integer idEndereco, Integer idCliente, String logradouro, String cidade, String estado, String pais, String cep) {
+        this.idEndereco = idEndereco;
+        this.idCliente = idCliente;
         this.logradouro = logradouro;
         this.cidade = cidade;
         this.estado = estado;
@@ -14,73 +23,59 @@ public class Endereco implements Alteracao, Exibicao {
         this.cep = cep;
     }
 
-    @Override
-    public boolean alterarDado(String tipo, String novoDado) {
-        switch(tipo){
-            case "logradouro" -> {
-                this.logradouro = novoDado;
-                return true;
-            }
-            case "cidade" -> {
-                this.cidade = novoDado;
-                return true;
-            }
-            case "estado" -> {
-                this.estado = novoDado;
-                return true;
-            }
-            case "país" -> {
-                this.pais = novoDado;
-                return true;
-            }
-            case "cep" -> {
-                this.cep = novoDado;
-                return true;
-            }
-            default -> {
-                System.err.println("Tipo inválido, erro no alterarDado do Endereço");
-                return false;
-            }
-        }
+    public Integer getIdEndereco() {
+        return idEndereco;
     }
 
-    @Override
-    public void exibir() {
-        System.out.println("\t\tLogradouro: "+this.logradouro);
-        System.out.println("\t\tCidade: "+this.cidade);
-        System.out.println("\t\tEstado: "+this.estado);
-        System.out.println("\t\tPaís: "+this.pais);
-        System.out.println("\t\tCEP: "+this.cep);
+    public void setIdEndereco(Integer idEndereco) {
+        this.idEndereco = idEndereco;
+    }
+
+    public Integer getIdCliente() {
+        return idCliente;
+    }
+
+    public void setIdCliente(Integer idCliente) {
+        this.idCliente = idCliente;
     }
 
     public String getLogradouro() {
         return logradouro;
     }
 
+    public void setLogradouro(String logradouro) {
+        this.logradouro = logradouro;
+    }
+
     public String getCidade() {
         return cidade;
+    }
+
+    public void setCidade(String cidade) {
+        this.cidade = cidade;
     }
 
     public String getEstado() {
         return estado;
     }
 
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
     public String getPais() {
         return pais;
+    }
+
+    public void setPais(String pais) {
+        this.pais = pais;
     }
 
     public String getCep() {
         return cep;
     }
 
-    @Override
-    public String toString() {
-        return "Endereco{" +
-                "logradouro='" + logradouro + '\'' +
-                ", cidade='" + cidade + '\'' +
-                ", estado='" + estado + '\'' +
-                ", pais='" + pais + '\'' +
-                ", cep='" + cep + '\'' +
-                '}';
+    public void setCep(String cep) {
+        this.cep = cep;
     }
 }
