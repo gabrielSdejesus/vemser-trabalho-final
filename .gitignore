@@ -4,6 +4,7 @@
 .mtj.tmp/
 *.class
 *.jar
+!ojdbc8.jar
 *.war
 *.ear
 *.nar
