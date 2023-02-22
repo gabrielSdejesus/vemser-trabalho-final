@@ -1,13 +1,12 @@
 package entities.view;
 
-import entities.interfaces.Tela;
 import entities.model.*;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
 
-public class TelaCompras  implements Tela {
+public class TelaCompras extends Tela {
     public static void exibirCompras(){
         System.out.println("\nVocê está na Tela de Compras");
         TelaCompras.tratarInput(TelaCompras.pedirInput());

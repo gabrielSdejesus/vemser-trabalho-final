@@ -4,6 +4,7 @@ import entities.controller.BancoDeDados;
 import entities.interfaces.Exibicao;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -163,5 +164,18 @@ public class Conta implements Exibicao {
                 transferencia.exibir();
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Conta{" +
+                "cliente=" + cliente +
+                ", senha='" + senha + '\'' +
+                ", numero=" + numero +
+                ", agencia=" + agencia +
+                ", saldo=" + saldo +
+                ", cartoes=" + Arrays.toString(cartoes) +
+                ", transferencias=" + transferencias +
+                '}';
     }
 }

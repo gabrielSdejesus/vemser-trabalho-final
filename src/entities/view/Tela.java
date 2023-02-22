@@ -1,4 +1,4 @@
-package entities.interfaces;
+package entities.view;
 
 import entities.controller.BancoDeDados;
 import entities.model.Conta;
@@ -6,14 +6,7 @@ import entities.view.*;
 
 import java.util.Scanner;
 
-public interface Tela {
-    static void tratarInput(int input){
-        // cada classe que implementa essa inteface deve refazer esse método da sua forma
-    }
-    static int pedirInput(){
-        // cada classe que implementa essa inteface deve refazer esse método da sua forma
-        return 0;
-    }
+public abstract class Tela {
     static Conta login(){
         Scanner scanner = new Scanner(System.in);
         String senhaConta, numeroConta;

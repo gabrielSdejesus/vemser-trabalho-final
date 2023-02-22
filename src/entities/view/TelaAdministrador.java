@@ -1,7 +1,6 @@
 package entities.view;
 
 import entities.controller.BancoDeDados;
-import entities.interfaces.Tela;
 import entities.model.Cliente;
 import entities.model.Conta;
 import entities.model.Contato;
@@ -9,11 +8,8 @@ import entities.model.Endereco;
 
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.List;
 
-import static entities.controller.BancoDeDados.getContas;
-
-public class TelaAdministrador implements Tela {
+public class TelaAdministrador extends Tela {
     public static void exibirTelaAdministrador(){
         System.out.println("Você está na Tela de Administrador");
         TelaAdministrador.tratarInput(TelaAdministrador.pedirInput());

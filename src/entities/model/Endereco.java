@@ -72,4 +72,15 @@ public class Endereco implements Alteracao, Exibicao {
     public String getCep() {
         return cep;
     }
+
+    @Override
+    public String toString() {
+        return "Endereco{" +
+                "logradouro='" + logradouro + '\'' +
+                ", cidade='" + cidade + '\'' +
+                ", estado='" + estado + '\'' +
+                ", pais='" + pais + '\'' +
+                ", cep='" + cep + '\'' +
+                '}';
+    }
 }

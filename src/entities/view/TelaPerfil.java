@@ -1,7 +1,6 @@
 package entities.view;
 
 import entities.controller.BancoDeDados;
-import entities.interfaces.Tela;
 import entities.model.Conta;
 import entities.model.Contato;
 import entities.model.Endereco;
@@ -9,7 +8,7 @@ import entities.model.Endereco;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class TelaPerfil  implements Tela {
+public class TelaPerfil extends Tela {
     public static void exibirTelaPerfil(){
         System.out.println("Você está na Tela de Perfil");
         TelaPerfil.tratarInput(TelaPerfil.pedirInput());

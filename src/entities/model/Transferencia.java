@@ -19,4 +19,13 @@ public class Transferencia implements Exibicao {
         System.out.println("\tNúmero da conta que recebeu: "+contaRecebeu.getNumero());
         System.out.printf("\tValor da transação R$ %.2f: \n", valor);
     }
+
+    @Override
+    public String toString() {
+        return "Transferencia{" +
+                "contaRecebeu=" + contaRecebeu +
+                ", contaPagou=" + contaPagou +
+                ", valor=" + valor +
+                '}';
+    }
 }

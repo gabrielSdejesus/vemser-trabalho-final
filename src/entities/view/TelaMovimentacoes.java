@@ -1,14 +1,12 @@
 package entities.view;
 
 import entities.controller.BancoDeDados;
-import entities.interfaces.Tela;
 import entities.model.Cartao;
 import entities.model.Conta;
 
-import java.util.ArrayList;
 import java.util.Scanner;
 
-public class TelaMovimentacoes implements Tela {
+public class TelaMovimentacoes extends Tela {
     public static void exibirTelaMovimentacoes(){
         System.out.println("\nVocê está na Tela de Movimentações");
         TelaMovimentacoes.tratarInput(TelaMovimentacoes.pedirInput());

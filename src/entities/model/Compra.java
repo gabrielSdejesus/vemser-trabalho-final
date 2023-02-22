@@ -40,4 +40,12 @@ public class Compra implements Exibicao {
         return data.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
+    @Override
+    public String toString() {
+        return "Compra{" +
+                "docVendedor='" + docVendedor + '\'' +
+                ", data=" + data +
+                ", itens=" + itens +
+                '}';
+    }
 }

@@ -27,4 +27,13 @@ public class Item implements Exibicao {
     public String getNomeItem() {
         return nomeItem;
     }
+
+    @Override
+    public String toString() {
+        return "Item{" +
+                "nomeItem='" + nomeItem + '\'' +
+                ", valor=" + valor +
+                ", quantidade=" + quantidade +
+                '}';
+    }
 }

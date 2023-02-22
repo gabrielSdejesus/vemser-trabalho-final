@@ -44,4 +44,12 @@ public class Contato implements Alteracao, Exibicao {
     public String getEmail() {
         return email;
     }
+
+    @Override
+    public String toString() {
+        return "Contato{" +
+                "telefone='" + telefone + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
 }

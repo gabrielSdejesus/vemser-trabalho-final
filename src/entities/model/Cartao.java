@@ -85,4 +85,18 @@ public abstract class Cartao {
     public int getTipo(){
         return tipo;
     }
+
+    @Override
+    public String toString() {
+        return "Cartao{" +
+                "dataExpedicao=" + dataExpedicao +
+                ", codigoSeguranca=" + codigoSeguranca +
+                ", tipo=" + tipo +
+                ", numero=" + numero +
+                ", senha='" + senha + '\'' +
+                ", vencimento=" + vencimento +
+                ", conta=" + conta +
+                ", compras=" + compras +
+                '}';
+    }
 }

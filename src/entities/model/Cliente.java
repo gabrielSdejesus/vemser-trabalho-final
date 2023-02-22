@@ -97,4 +97,15 @@ public class Cliente implements Exibicao {
         enderecos.remove(index);
     }
 
+    @Override
+    public String toString() {
+        return "Cliente{" +
+                "nome='" + nome + '\'' +
+                ", cpf='" + cpf + '\'' +
+                ", enderecos=" + enderecos +
+                ", contatos=" + contatos +
+                ", senha='" + senha + '\'' +
+                ", conta=" + conta +
+                '}';
+    }
 }
