@@ -3,16 +3,15 @@ package entities.view;
 import entities.model.Conta;
 import entities.service.CartaoService;
 
-import java.util.Scanner;
 
 public class TelaCartao extends Tela {
     public static void exibirTelaCartao(){
         System.out.println("\nVocê está na Tela de Cartão");
-        TelaCartao.tratarInput(TelaCartao.pedirInput());
+        TelaCartao.tratarInput();
     }
 
-    public static void tratarInput(int input) {
-        Scanner scanner = new Scanner(System.in);
+    public static void tratarInput() {
+        int input = pedirInput("[1] -> Cadastrar um novo CLIENTE com CONTA\n[2] -> Deletar CLIENTE\n[3] -> Deletar CONTA\n[4] -> Voltar para a Tela Principal");
         Conta login;
         switch(input){
             case 1 -> {
@@ -57,10 +56,5 @@ public class TelaCartao extends Tela {
                 exibirTelaCartao();
             }
         }
-    }
-
-    public static int pedirInput() {
-        System.out.println("[1] -> Exibir seu extrato do CARTÃO de CRÉDITO\n[2] -> Exibir seu extrato do CARTÃO de DÉBITO\n[3] -> ADICIONAR CARTÃO\n[4] -> EXCLUIR CARTÃO\n[5] -> Voltar para a Tela Principal");
-        return Integer.parseInt(new Scanner(System.in).nextLine());
     }
 }

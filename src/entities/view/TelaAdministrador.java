@@ -3,16 +3,14 @@ package entities.view;
 import entities.service.ClienteService;
 import entities.service.ContaService;
 
-import java.util.Scanner;
-
 public class TelaAdministrador extends Tela {
     public static void exibirTelaAdministrador(){
         System.out.println("Você está na Tela de Administrador");
-        TelaAdministrador.tratarInput(TelaAdministrador.pedirInput());
+        TelaAdministrador.tratarInput();
     }
 
-    public static void tratarInput(int input) {
-        Scanner scanner = new Scanner(System.in);
+    public static void tratarInput() {
+        int input = pedirInput("[1] -> Cadastrar um novo CLIENTE com CONTA\n[2] -> Deletar CLIENTE\n[3] -> Deletar CONTA\n[4] -> Voltar para a Tela Principal");
         switch(input){
             case 1 ->{
                 if(Tela.loginAdm()){
@@ -44,10 +42,5 @@ public class TelaAdministrador extends Tela {
                 exibirTelaAdministrador();
             }
         }
-    }
-
-    public static int pedirInput() {
-        System.out.println("[1] -> Cadastrar um novo CLIENTE com CONTA\n[2] -> Deletar CLIENTE\n[3] -> Deletar CONTA\n[4] -> Voltar para a Tela Principal");
-        return Integer.parseInt(new Scanner(System.in).nextLine());
     }
 }

@@ -2,7 +2,6 @@ package entities.view;
 
 import entities.controller.BancoDeDados;
 import entities.model.Conta;
-import entities.view.*;
 
 import java.util.Scanner;
 
@@ -43,5 +42,10 @@ public abstract class Tela {
             case 7 -> TelaAdministrador.exibirTelaAdministrador();
             default -> System.err.println("Número da tela incorreta, erro na Inteface Tela");
         }
+    }
+
+    protected static int pedirInput(String message){
+        System.out.println(message);
+        return Integer.parseInt(new Scanner(System.in).nextLine());
     }
 }

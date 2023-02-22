@@ -4,15 +4,14 @@ import entities.model.Conta;
 import entities.service.ClienteService;
 import entities.service.ContaService;
 
-import java.util.Scanner;
-
 public class TelaPerfil extends Tela {
     public static void exibirTelaPerfil(){
         System.out.println("Você está na Tela de Perfil");
-        TelaPerfil.tratarInput(TelaPerfil.pedirInput());
+        TelaPerfil.tratarInput();
     }
 
-    public static void tratarInput(int input) {
+    public static void tratarInput() {
+        int input = pedirInput("[1] -> Insira seus dados de LOGIN para exibir seus dados de CLIENTE\n[2] -> Insira seus dados de LOGIN para exibir os dados da sua CONTA\n[3] -> Alterar CONTATO do CLIENTE\n[4] -> Alterar ENDEREÇO do CLIENTE\n[5] -> Deletar CONTATO do CLIENTE\n[6] -> Deletar ENDEREÇO do CLIENTE\n[7] -> Cadastrar novo CONTATO em CLIENTE\n[8] -> Cadastrar novo ENDEREÇO em CLIENTE\n[9] -> Alterar SENHA\n[10] -> Voltar para a Tela Principal");
         Conta login;
         switch(input){
             case 1 ->{
@@ -97,10 +96,5 @@ public class TelaPerfil extends Tela {
                 exibirTelaPerfil();
             }
         }
-    }
-
-    public static int pedirInput() {
-        System.out.println("[1] -> Insira seus dados de LOGIN para exibir seus dados de CLIENTE\n[2] -> Insira seus dados de LOGIN para exibir os dados da sua CONTA\n[3] -> Alterar CONTATO do CLIENTE\n[4] -> Alterar ENDEREÇO do CLIENTE\n[5] -> Deletar CONTATO do CLIENTE\n[6] -> Deletar ENDEREÇO do CLIENTE\n[7] -> Cadastrar novo CONTATO em CLIENTE\n[8] -> Cadastrar novo ENDEREÇO em CLIENTE\n[9] -> Alterar SENHA\n[10] -> Voltar para a Tela Principal");
-        return Integer.parseInt(new Scanner(System.in).nextLine());
     }
 }

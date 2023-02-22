@@ -2,15 +2,15 @@ package entities.view;
 
 import entities.model.*;
 import entities.service.CompraService;
-import java.util.Scanner;
 
 public class TelaCompras extends Tela {
     public static void exibirCompras(){
         System.out.println("\nVocê está na Tela de Compras");
-        TelaCompras.tratarInput(TelaCompras.pedirInput());
+        TelaCompras.tratarInput();
     }
 
-    public static void tratarInput(int input) {
+    public static void tratarInput() {
+        int input = pedirInput("[1] -> Exibir compras da sua conta\n[2] -> Adicionar uma compra\n[3] -> Voltar para a Tela Principal");
         Conta login;
         switch(input){
             case 1 ->{
@@ -37,10 +37,5 @@ public class TelaCompras extends Tela {
                 exibirCompras();
             }
         }
-    }
-
-    public static int pedirInput() {
-        System.out.println("[1] -> Exibir compras da sua conta\n[2] -> Adicionar uma compra\n[3] -> Voltar para a Tela Principal");
-        return Integer.parseInt(new Scanner(System.in).nextLine());
     }
 }

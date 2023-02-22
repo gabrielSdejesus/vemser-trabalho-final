@@ -3,15 +3,14 @@ package entities.view;
 import entities.model.Conta;
 import entities.service.ContaService;
 
-import java.util.Scanner;
-
 public class TelaMovimentacoes extends Tela {
     public static void exibirTelaMovimentacoes(){
         System.out.println("\nVocê está na Tela de Movimentações");
-        TelaMovimentacoes.tratarInput(TelaMovimentacoes.pedirInput());
+        TelaMovimentacoes.tratarInput();
     }
 
-    public static void tratarInput(int input) {
+    public static void tratarInput() {
+        int input = pedirInput("[1] -> DEPOSITAR\n[2] -> SACAR\n[3] -> TRANSFERIR\n[4] -> PAGAR uma conta externa\n[5] -> Voltar para a Tela Principal");
         Conta login;
         switch(input){
             case 1 -> {
@@ -56,10 +55,5 @@ public class TelaMovimentacoes extends Tela {
                 exibirTelaMovimentacoes();
             }
         }
-    }
-
-    public static int pedirInput() {
-            System.out.println("[1] -> DEPOSITAR\n[2] -> SACAR\n[3] -> TRANSFERIR\n[4] -> PAGAR uma conta externa\n[5] -> Voltar para a Tela Principal");
-        return Integer.parseInt(new Scanner(System.in).nextLine());
     }
 }
