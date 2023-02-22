@@ -1,6 +1,7 @@
 package entities.view;
 
 import entities.model.Conta;
+import entities.service.TransferenciaService;
 
 import java.util.Scanner;
 
@@ -16,7 +17,7 @@ public class TelaTransferencias extends Tela {
             case 1 ->{
                 login = Tela.login();
                 if(login != null){
-                    login.exibirTransferencias();
+                    TransferenciaService.exibirTransferencias(login);
                 }else{
                     System.err.println("Login mal-sucedido");
                 }
