@@ -1,13 +1,9 @@
 package entities.view;
 
-import entities.controller.BancoDeDados;
 import entities.model.Conta;
-import entities.model.Contato;
-import entities.model.Endereco;
 import entities.service.ClienteService;
 import entities.service.ContaService;
 
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class TelaPerfil extends Tela {
@@ -17,7 +13,6 @@ public class TelaPerfil extends Tela {
     }
 
     public static void tratarInput(int input) {
-        Scanner scanner = new Scanner(System.in);
         Conta login;
         switch(input){
             case 1 ->{

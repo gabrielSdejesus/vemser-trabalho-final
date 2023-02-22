@@ -21,7 +21,6 @@ public class CartaoService extends Service{
         if (cartao == -1) {
             System.out.println("\tVocê não possui nenhum cartão de "+((tipo == 1)? "DÉBITO":"CRÉDITO")+"\n");
         }
-        SCANNER.close();
     }
 
     public static void cadastrarCartao(Conta conta){
@@ -75,7 +74,6 @@ public class CartaoService extends Service{
                 }
             }
         }
-        SCANNER.close();
     }
     public static void deletarCartao(Conta conta){
         int contador = 0;
@@ -112,6 +110,5 @@ public class CartaoService extends Service{
                 }
             }
         }
-        SCANNER.close();
     }
 }

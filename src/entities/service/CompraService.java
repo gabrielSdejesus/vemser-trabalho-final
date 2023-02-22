@@ -14,7 +14,6 @@ public class CompraService extends Service{
                 i++;
             }
         }
-        SCANNER.close();
     }
 
     public static void adicionarCompra(Conta conta){
@@ -90,6 +89,5 @@ public class CompraService extends Service{
         } else {
             System.err.println("Este número não representa nenhum cartão.");
         }
-        SCANNER.close();
     }
 }
