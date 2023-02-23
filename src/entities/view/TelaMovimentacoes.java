@@ -43,7 +43,7 @@ public class TelaMovimentacoes extends Tela {
             case 4 -> {
                 login = Tela.login();
                 if(login != null){
-                    ContaService.pagarConta(login);
+                    ContaService.pagar(login);
                 }else{
                     System.err.println("Login mal-sucedido");
                 }

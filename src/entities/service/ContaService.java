@@ -111,7 +111,7 @@ public class ContaService extends Service{
         }
     }
 
-    public static void pagarConta(Conta conta){
+    public static void pagar(Conta conta){
         double valor;
         String senhaConta;
         System.out.print("Insira o valor do pagamento: ");
