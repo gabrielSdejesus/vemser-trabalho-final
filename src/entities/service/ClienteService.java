@@ -9,6 +9,12 @@ import entities.view.TelaAdministrador;
 import java.util.ArrayList;
 
 public class ClienteService extends Service{
+    private ClienteRepository clienteRepository;
+
+    public ClienteService() {
+        this.clienteRepository = new ClienteRepository();
+    }
+
     public static void cadastrarCliente(){
         String nomeCliente, cpfCliente, senhaCliente;
 
