@@ -1,19 +1,19 @@
 package entities.repository;
 
 import entities.exception.BancoDeDadosException;
-import entities.model.Cliente;
-import entities.model.Endereco;
+import entities.model.Conta;
+import entities.model.Transferencia;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EnderecoRepository implements Repository<Integer, Endereco> {
+public class TransferenciaRepository implements Repository<Integer, Transferencia> {
 
     @Override
     public Integer getProximoId(Connection connection) throws BancoDeDadosException {
         try {
-            String sql = "SELECT SEQ_ENDERECO.NEXTVAL mysequence from DUAL";
+            String sql = "SELECT SEQ_TRANSFERENCIA.NEXTVAL mysequence from DUAL";
             Statement stmt = connection.createStatement();
             ResultSet res = stmt.executeQuery(sql);
 
@@ -28,33 +28,30 @@ public class EnderecoRepository implements Repository<Integer, Endereco> {
     }
 
     @Override
-    public Endereco adicionar(Endereco endereco) throws BancoDeDadosException {
+    public Transferencia adicionar(Transferencia transferencia) throws BancoDeDadosException {
         Connection con = null;
         try {
             con = ConexaoBancoDeDados.getConnection();
 
             Integer proximoId = this.getProximoId(con);
-            endereco.setIdEndereco(proximoId);
+            transferencia.setIdTransferencia(proximoId);
 
             String sql = """
-                    INSERT INTO endereco\n
-                    (id_endereco, id_cliente, cidade, logradouro, estado, pais, cep)\n
+                    INSERT INTO TRANSFERENCIA\n
+                    (id_transferencia, numero_conta_enviou, numero_conta_recebeu, valor)\n
                     VALUES(?,?,?,?,?,?,?)
                     """;
 
             PreparedStatement stmt = con.prepareStatement(sql);
 
-            stmt.setInt(1, endereco.getIdEndereco());
-            stmt.setInt(2, endereco.getCliente().getIdCliente());
-            stmt.setString(3, endereco.getCidade());
-            stmt.setString(4, endereco.getLogradouro());
-            stmt.setString(5, endereco.getEstado());
-            stmt.setString(6, endereco.getPais());
-            stmt.setString(7, endereco.getCep());
+            stmt.setInt(1, transferencia.getIdTransferencia());
+            stmt.setInt(2, transferencia.getContaEnviou().getNumeroConta());
+            stmt.setInt(3, transferencia.getContaRecebeu().getNumeroConta());
+            stmt.setDouble(4, transferencia.getValor());
 
             int res = stmt.executeUpdate();
-            System.out.println("adicionarEndereco.res=" + res);
-            return endereco;
+            System.out.println("adicionarTransferencia.res=" + res);
+            return transferencia;
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
         } finally {
@@ -74,14 +71,14 @@ public class EnderecoRepository implements Repository<Integer, Endereco> {
         try {
             con = ConexaoBancoDeDados.getConnection();
 
-            String sql = "DELETE FROM endereco WHERE id_endereco = ?";
+            String sql = "DELETE FROM TRANSFERENCIA WHERE id_transferencia = ?";
 
             PreparedStatement stmt = con.prepareStatement(sql);
 
             stmt.setInt(1, id);
 
             int res = stmt.executeUpdate();
-            System.out.println("removerEnderecoPorId.res=" + res);
+            System.out.println("removerTransferenciaPorId.res=" + res);
 
             return res > 0;
         } catch (SQLException e) {
@@ -99,72 +96,52 @@ public class EnderecoRepository implements Repository<Integer, Endereco> {
     }
 
     @Override
-    public boolean editar(Integer id, Endereco endereco) throws BancoDeDadosException {
+    public boolean editar(Integer id, Transferencia transferencia) throws BancoDeDadosException {
         Connection con = null;
         try {
             con = ConexaoBancoDeDados.getConnection();
 
             StringBuilder sql = new StringBuilder();
-            sql.append("UPDATE endereco SET \n");
-            Cliente cliente = endereco.getCliente();
-            if (cliente != null) {
-                if (cliente.getIdCliente() > 0) {
-                    sql.append(" id_cliente = ?,");
+            sql.append("UPDATE TRANSFERENCIA SET \n");
+            Conta conta = transferencia.getContaEnviou();
+            if (conta != null) {
+                if (conta.getNumeroConta() > 0) {
+                    sql.append(" numero_conta_enviou = ?,");
                 }
             }
 
-            if (endereco.getCidade() != null){
-                sql.append(" cidade = ?,");
+            if (transferencia.getContaRecebeu() != null){
+                sql.append(" numero_conta_recebeu = ?,");
             }
 
-            if (endereco.getLogradouro() != null) {
-                sql.append(" logradouro = ?,");
-            }
-
-            if (endereco.getEstado() != null) {
-                sql.append(" estado = ?,");
-            }
-
-            if (endereco.getPais() != null) {
-                sql.append(" pais = ?,");
-            }
-
-            if (endereco.getCep() != null) {
-                sql.append(" cep = ?,");
+            if (transferencia.getValor() != null) {
+                sql.append(" valor = ?,");
             }
 
             sql.deleteCharAt(sql.length() - 1); //remove o ultimo ','
-            sql.append(" WHERE id_endereco = ? ");
+            sql.append(" WHERE id_transferencia = ? ");
 
             PreparedStatement stmt = con.prepareStatement(sql.toString());
 
             int index = 1;
-            if (cliente != null) {
-                if (cliente.getIdCliente() > 0) {
-                    stmt.setInt(index++, cliente.getIdCliente());
+            if (conta != null) {
+                if (conta.getNumeroConta() > 0) {
+                    stmt.setInt(index++, conta.getNumeroConta());
                 }
             }
 
-            if (endereco.getLogradouro() != null) {
-                stmt.setString(index++, endereco.getLogradouro());
+            if (transferencia.getContaRecebeu() != null) {
+                stmt.setInt(index++, transferencia.getContaRecebeu().getNumeroConta());
             }
 
-            if (endereco.getEstado() != null) {
-                stmt.setString(index++, endereco.getEstado());
-            }
-
-            if (endereco.getPais() != null) {
-                stmt.setString(index++, endereco.getPais());
-            }
-
-            if (endereco.getCep() != null) {
-                stmt.setString(index++, endereco.getCep());
+            if (transferencia.getValor() != null) {
+                stmt.setDouble(index++, transferencia.getValor());
             }
 
             stmt.setInt(index, id);
 
             int res = stmt.executeUpdate();
-            System.out.println("editarEndereco.res=" + res);
+            System.out.println("editarTransferencia.res=" + res);
 
             return res > 0;
         } catch (SQLException e) {
@@ -181,25 +158,25 @@ public class EnderecoRepository implements Repository<Integer, Endereco> {
     }
 
     @Override
-    public List<Endereco> listar() throws BancoDeDadosException {
-        List<Endereco> enderecos = new ArrayList<>();
+    public List<Transferencia> listar() throws BancoDeDadosException {
+        List<Transferencia> transferencias = new ArrayList<>();
         Connection con = null;
         try {
             con = ConexaoBancoDeDados.getConnection();
             Statement stmt = con.createStatement();
 
             String sql = """
-                        SELECT c.nome, e.*  FROM endereco e\n 
-                        INNER JOIN cliente c ON e.id_cliente = c.id_cliente\n
+                        SELECT c.numero_conta, t.*  FROM TRANSFERENCIA t\n 
+                        INNER JOIN CONTA c ON t.numero_conta_enviou = c.numero_conta\n
                     """;
 
             ResultSet res = stmt.executeQuery(sql);
 
             while (res.next()) {
-                Endereco endereco = getEnderecoFromResultSet(res);
-                enderecos.add(endereco);
+                Transferencia transferencia = getTransferenciaFromResultSet(res);
+                transferencias.add(transferencia);
             }
-            return enderecos;
+            return transferencias;
         } catch (SQLException e) {
             e.printStackTrace();
             throw new BancoDeDadosException(e.getCause());
@@ -214,28 +191,28 @@ public class EnderecoRepository implements Repository<Integer, Endereco> {
         }
     }
 
-    public List<Endereco> listarEnderecosPorPessoa(Integer idEndereco) throws BancoDeDadosException {
-        List<Endereco> enderecos = new ArrayList<>();
+    public List<Transferencia> listarTransferenciasPorPessoa(Integer idTransferencia) throws BancoDeDadosException {
+        List<Transferencia> transferencias = new ArrayList<>();
         Connection con = null;
         try {
             con = ConexaoBancoDeDados.getConnection();
 
             String sql = """
-                        SELECT c.nome, e.*  FROM endereco e\n 
-                        INNER JOIN cliente c ON e.id_cliente = c.id_cliente\n
-                        WHERE e.id_endereco = ?
+                        SELECT c.nome, t.*  FROM TRANSFERENCIA t\n 
+                        INNER JOIN CONTA c ON t.numero_conta_enviou = c.numero_conta\n
+                        WHERE t.id_transferencia = ?
                     """;
 
             PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setInt(1, idEndereco);
+            stmt.setInt(1, idTransferencia);
 
             ResultSet res = stmt.executeQuery();
 
             while (res.next()) {
-                Endereco endereco = getEnderecoFromResultSet(res);
-                enderecos.add(endereco);
+                Transferencia transferencia = getTransferenciaFromResultSet(res);
+                transferencias.add(transferencia);
             }
-            return enderecos;
+            return transferencias;
         } catch (SQLException e) {
             e.printStackTrace();
             throw new BancoDeDadosException(e.getCause());
@@ -250,17 +227,16 @@ public class EnderecoRepository implements Repository<Integer, Endereco> {
         }
     }
 
-    private Endereco getEnderecoFromResultSet(ResultSet res) throws SQLException {
-        Endereco endereco = new Endereco();
-        endereco.setIdEndereco(res.getInt("id_endereco"));
-        Cliente cliente = new Cliente();
-        cliente.setNome(res.getString("nome"));
-        endereco.setCliente(cliente);
-        endereco.setCep(res.getString("cep"));
-        endereco.setCidade(res.getString("cidade"));
-        endereco.setEstado(res.getString("estado"));
-        endereco.setPais(res.getString("pais"));
-        endereco.setLogradouro(res.getString("logradouro"));
-        return endereco;
+    private Transferencia getTransferenciaFromResultSet(ResultSet res) throws SQLException {
+        Transferencia transferencia = new Transferencia();
+        transferencia.setIdTransferencia(res.getInt("id_transferencia"));
+        Conta contaEnviou = new Conta();
+        contaEnviou.setNumeroConta(res.getInt("numero_conta_enviou"));
+        Conta contaRecebeu = new Conta();
+        contaRecebeu.setNumeroConta(res.getInt("numero_conta_recebeu"));
+        transferencia.setContaEnviou(contaEnviou);
+        transferencia.setContaRecebeu(contaRecebeu);
+        transferencia.setValor(res.getDouble("valor"));
+        return transferencia;
     }
 }
