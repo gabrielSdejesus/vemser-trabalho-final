@@ -146,6 +146,22 @@ public class ContaService extends Service{
         return null;
     }
 
+    public Conta retornarClientePorConta(String numeroConta, String senhaConta){
+        Conta conta;
+        Integer numero = Integer.parseInt(numeroConta);
+        try{
+            conta = this.contaRepository.consultarPorNumeroConta(numero);
+            if(conta != null && conta.getSenha().equals(senhaConta)){
+                return conta;
+            }else{
+                return null;
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
     /* public static void deletarConta(){
         String numeroConta;
