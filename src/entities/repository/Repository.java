@@ -1,7 +1,6 @@
 package entities.repository;
 
 import entities.exception.BancoDeDadosException;
-import entities.model.Endereco;
 
 import java.sql.Connection;
 import java.sql.SQLException;

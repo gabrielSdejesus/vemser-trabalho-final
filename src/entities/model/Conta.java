@@ -2,12 +2,12 @@ package entities.model;
 
 public class Conta {
 
-    int numeroConta;
-    Cliente idCliente;
-    String senha;
-    int agencia;
-    double Saldo;
-    double chequeEspecial;
+    private int numeroConta;
+    private Cliente idCliente;
+    private String senha;
+    private int agencia;
+    private double Saldo;
+    private double chequeEspecial;
 
     public int getNumeroConta() {
         return numeroConta;
