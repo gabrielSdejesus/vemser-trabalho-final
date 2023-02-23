@@ -195,7 +195,7 @@ public class ContatoRepository implements Repository<Integer, Contato>{
             con = ConexaoBancoDeDados.getConnection();
 
             String sql = """
-                        SELECT *  FROM contato c\n 
+                        SELECT c2.nome, c.* FROM contato c\n 
                         INNER JOIN cliente c2 ON c.id_cliente = c2.id_cliente\n
                         WHERE c.id_cliente = ?
                     """;
