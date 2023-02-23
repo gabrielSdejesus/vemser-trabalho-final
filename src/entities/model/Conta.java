@@ -3,7 +3,7 @@ package entities.model;
 public class Conta {
 
     private int numeroConta;
-    private Cliente idCliente;
+    private Cliente cliente;
     private String senha;
     private int agencia;
     private double Saldo;
@@ -18,11 +18,11 @@ public class Conta {
     }
 
     public Cliente getIdCliente() {
-        return idCliente;
+        return cliente;
     }
 
-    public void setIdCliente(Cliente idCliente) {
-        this.idCliente = idCliente;
+    public void setIdCliente(Cliente cliente) {
+        this.cliente = cliente;
     }
 
     public String getSenha() {
