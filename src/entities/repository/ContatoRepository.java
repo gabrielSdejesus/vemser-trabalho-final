@@ -126,11 +126,6 @@ public class ContatoRepository implements Repository<Integer, Contato>{
             PreparedStatement stmt = con.prepareStatement(sql.toString());
 
             int index = 1;
-            if (cliente != null) {
-                if (cliente.getIdCliente() > 0) {
-                    stmt.setInt(index++, cliente.getIdCliente());
-                }
-            }
 
             if (contato.getTelefone() != null) {
                 stmt.setString(index++, contato.getTelefone());

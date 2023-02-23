@@ -129,19 +129,15 @@ public class EnderecoRepository implements Repository<Integer, Endereco> {
             }
 
             sql.deleteCharAt(sql.length() - 1); //remove o ultimo ','
-            if (cliente != null) {
-                if (cliente.getIdCliente() > 0) {
-                    sql.append(" WHERE id_endereco = ? ");
-                }
-            }
+            sql.append(" WHERE id_cliente = ? ");
+
 
             PreparedStatement stmt = con.prepareStatement(sql.toString());
 
             int index = 1;
-            if (cliente != null) {
-                if (cliente.getIdCliente() > 0) {
-                    stmt.setInt(index++, cliente.getIdCliente());
-                }
+
+            if(endereco.getCidade() != null){
+                stmt.setString(index++, endereco.getCidade());
             }
 
             if (endereco.getLogradouro() != null) {
@@ -222,7 +218,7 @@ public class EnderecoRepository implements Repository<Integer, Endereco> {
             String sql = """
                         SELECT c.nome, e.*  FROM endereco e\n 
                         INNER JOIN cliente c ON e.id_cliente = c.id_cliente\n
-                        WHERE e.id_endereco = ?
+                        WHERE e.id_cliente = ?
                     """;
 
             PreparedStatement stmt = con.prepareStatement(sql);

@@ -116,39 +116,28 @@ public class ItemRepository implements Repository<Integer, Item>{
 
             StringBuilder sql = new StringBuilder();
             sql.append("UPDATE item SET \n");
-            Cliente cliente = contato.getCliente();
-            if (cliente != null) {
-                if (cliente.getIdCliente() > 0) {
-                    sql.append(" id_cliente = ?,");
-                }
+
+            if(item.getNome() != null){
+                sql.append(" nome = ?,");
             }
 
-            if(contato.getTelefone() != null){
-                sql.append(" telefone = ?,");
-            }
-
-            if(contato.getEmail() != null){
-                sql.append(" email = ?,");
+            if(item.getValor() != null){
+                sql.append(" valor = ?,");
             }
 
             sql.deleteCharAt(sql.length() - 1); //remove o ultimo ','
-            sql.append(" WHERE id_contato = ? ");
+            sql.append(" WHERE id_item = ? ");
 
             PreparedStatement stmt = con.prepareStatement(sql.toString());
 
             int index = 1;
-            if (cliente != null) {
-                if (cliente.getIdCliente() > 0) {
-                    stmt.setInt(index++, cliente.getIdCliente());
-                }
+
+            if (item.getNome() != null) {
+                stmt.setString(index++, item.getNome());
             }
 
-            if (contato.getTelefone() != null) {
-                stmt.setString(index++, contato.getTelefone());
-            }
-
-            if (contato.getEmail() != null) {
-                stmt.setString(index++, contato.getEmail());
+            if (item.getValor() != null) {
+                stmt.setDouble(index++, item.getValor());
             }
 
             stmt.setInt(index++, id);
