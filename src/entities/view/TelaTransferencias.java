@@ -8,10 +8,11 @@ import java.util.Scanner;
 public class TelaTransferencias extends Tela {
     public static void exibirTransferencias(){
         System.out.println("Você está na Tela de Transferências");
-        TelaTransferencias.tratarInput(TelaTransferencias.pedirInput());
+        TelaTransferencias.tratarInput();
     }
 
-    public static void tratarInput(int input) {
+    public static void tratarInput() {
+        int input = TelaTransferencias.pedirInput("[1] -> Insira seus dados de login para VISUALIZAR suas TRANSFERÊNCIAS\n[2] -> Voltar para a Tela Principal")
         TransferenciaService transferenciaService = new TransferenciaService();
         Conta login;
         switch(input){
@@ -30,10 +31,5 @@ public class TelaTransferencias extends Tela {
                 exibirTransferencias();
             }
         }
-    }
-
-    public static int pedirInput() {
-        System.out.println("[1] -> Insira seus dados de login para VISUALIZAR suas TRANSFERÊNCIAS\n[2] -> Voltar para a Tela Principal");
-        return Integer.parseInt(new Scanner(System.in).nextLine());
     }
 }

@@ -12,6 +12,7 @@ public class TelaAdministrador extends Tela {
     public static void tratarInput() {
         int input = pedirInput("[1] -> Cadastrar um novo CLIENTE com CONTA\n[2] -> Deletar CLIENTE\n[3] -> Deletar CONTA\n[4] -> Voltar para a Tela Principal");
         ClienteService clienteService = new ClienteService();
+        ContaService contaService = new ContaService();
         switch(input){
             case 1 ->{
                 if(Tela.loginAdm()){
@@ -31,7 +32,7 @@ public class TelaAdministrador extends Tela {
             }
             case 3 -> {
                 if(Tela.loginAdm()){
-                    clienteService.deletarConta();
+                    contaService.deletarConta();
                 }else{
                     System.err.println("Senha administrativa inválida!");
                 }

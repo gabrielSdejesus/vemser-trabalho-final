@@ -11,10 +11,11 @@ import java.util.Scanner;
 public class TelaCartao extends Tela {
     public static void exibirTelaCartao(){
         System.out.println("\nVocê está na Tela de Cartão");
-        TelaCartao.tratarInput(TelaCartao.pedirInput());
+        TelaCartao.tratarInput();
     }
 
-    public static void tratarInput(int input) {
+    public static void tratarInput() {
+        int input = TelaCartao.pedirInput("[1] -> Exibir seu extrato do CARTÃO de CRÉDITO\n[2] -> Exibir seu extrato do CARTÃO de DÉBITO\n[3] -> ADICIONAR CARTÃO\n[4] -> EXCLUIR CARTÃO\n[5] -> Voltar para a Tela Principal");
         Scanner scanner = new Scanner(System.in);
         Conta login;
         switch(input){
@@ -168,10 +169,5 @@ public class TelaCartao extends Tela {
                 exibirTelaCartao();
             }
         }
-    }
-
-    public static int pedirInput() {
-        System.out.println("[1] -> Exibir seu extrato do CARTÃO de CRÉDITO\n[2] -> Exibir seu extrato do CARTÃO de DÉBITO\n[3] -> ADICIONAR CARTÃO\n[4] -> EXCLUIR CARTÃO\n[5] -> Voltar para a Tela Principal");
-        return Integer.parseInt(new Scanner(System.in).nextLine());
     }
 }
