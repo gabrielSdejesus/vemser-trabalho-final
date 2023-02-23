@@ -1,23 +1,25 @@
 package entities.model;
 
+import java.util.Arrays;
+
 public enum TipoCartao {
-    DEBITO(1), CREDITO(2);
+    DEBITO(1),
+    CREDITO(2);
 
-    private int value;
+    private Integer tipo;
 
-    TipoCartao(int value) {
-        this.value = value;
+    TipoCartao(Integer tipo) {
+        this.tipo = tipo;
     }
 
-    public int getValue() {
-        return value;
+    public Integer getTipo() {
+        return tipo;
     }
 
-    public static TipoCartao getTipoCartao(int value) {
-        for(TipoCartao tp : TipoCartao.values()) {
-            if(tp.value == value)
-                return tp;
-        }
-        return null;
+    public static TipoCartao getTipoCartao(Integer tipo) {
+        return Arrays.stream(TipoCartao.values())
+                .filter(tp -> tp.getTipo().equals(tipo))
+                .findFirst()
+                .get();
     }
 }
