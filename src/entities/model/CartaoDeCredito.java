@@ -8,7 +8,7 @@ public class CartaoDeCredito extends Cartao {
     public CartaoDeCredito() {
     }
 
-    public CartaoDeCredito(Integer idCartao, Conta conta, Integer numeroCartao, LocalDate dataExpedicao, Integer codigoSeguranca, LocalDate vencimento, double limite) {
+    public CartaoDeCredito(Integer idCartao, Conta conta, String numeroCartao, LocalDate dataExpedicao, Integer codigoSeguranca, LocalDate vencimento, double limite) {
         super(idCartao, conta, numeroCartao, dataExpedicao, codigoSeguranca, TipoCartao.CREDITO.getValue(), vencimento);
         this.limite = limite;
     }
