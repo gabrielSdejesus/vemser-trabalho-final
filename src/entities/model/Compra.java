@@ -16,7 +16,6 @@ public class Compra {
     }
 
     public Compra(Integer idCompra, Cartao cartao, String docVendedor, LocalDate data) {
-        this.idCompra = idCompra;
         this.cartao = cartao;
         this.docVendedor = docVendedor;
         this.data = data;

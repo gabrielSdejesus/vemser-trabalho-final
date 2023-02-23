@@ -5,14 +5,15 @@ public class Item {
     private Integer idItem;
     private String nome;
     private Double valor;
+    private Integer quantidade;
 
     public Item() {
     }
 
-    public Item(Integer idItem, String nome, Double valor) {
-        this.idItem = idItem;
+    public Item(Integer idItem, String nome, Double valor, Integer quantidade) {
         this.nome = nome;
         this.valor = valor;
+        this.quantidade = quantidade;
     }
 
     public Integer getIdItem() {
@@ -39,12 +40,21 @@ public class Item {
         this.valor = valor;
     }
 
+    public Integer getQuantidade() {
+        return quantidade;
+    }
+
+    public void setQuantidade(Integer quantidade) {
+        this.quantidade = quantidade;
+    }
+
     @Override
     public String toString() {
         return "Item{" +
                 "idItem=" + idItem +
                 ", nome='" + nome + '\'' +
                 ", valor=" + valor +
+                ", quantidade=" + quantidade +
                 '}';
     }
 }

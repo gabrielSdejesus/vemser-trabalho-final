@@ -11,7 +11,6 @@ public class Contato {
     }
 
     public Contato(Integer idContato, Cliente cliente, String telefone, String email) {
-        this.idContato = idContato;
         this.cliente = cliente;
         this.telefone = telefone;
         this.email = email;

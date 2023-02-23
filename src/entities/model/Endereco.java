@@ -13,7 +13,6 @@ public class Endereco {
     public Endereco(){};
 
     public Endereco(Integer idEndereco, Cliente cliente, String logradouro, String cidade, String estado, String pais, String cep) {
-        this.idEndereco = idEndereco;
         this.cliente = cliente;
         this.logradouro = logradouro;
         this.cidade = cidade;
