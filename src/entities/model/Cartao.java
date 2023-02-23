@@ -8,13 +8,13 @@ public abstract class Cartao {
     private Conta conta;
     private LocalDate dataExpedicao;
     private Integer codigoSeguranca;
-    private Integer tipo;
+    private TipoCartao tipo;
     private LocalDate vencimento;
 
     public Cartao() {
     }
 
-    public Cartao(String numeroCartao, Conta conta, LocalDate dataExpedicao, Integer codigoSeguranca, Integer tipo, LocalDate vencimento) {
+    public Cartao(String numeroCartao, Conta conta, LocalDate dataExpedicao, Integer codigoSeguranca, TipoCartao tipo, LocalDate vencimento) {
         this.numeroCartao = numeroCartao;
         this.conta = conta;
         this.dataExpedicao = dataExpedicao;
@@ -55,11 +55,11 @@ public abstract class Cartao {
         this.codigoSeguranca = codigoSeguranca;
     }
 
-    public Integer getTipo() {
+    public TipoCartao getTipo() {
         return tipo;
     }
 
-    public void setTipo(Integer tipo) {
+    public void setTipo(TipoCartao tipo) {
         this.tipo = tipo;
     }
 
@@ -69,17 +69,5 @@ public abstract class Cartao {
 
     public void setVencimento(LocalDate vencimento) {
         this.vencimento = vencimento;
-    }
-
-    @Override
-    public String toString() {
-        return "Cartao{" +
-                "numeroCartao='" + numeroCartao + '\'' +
-                ", conta=" + conta +
-                ", dataExpedicao=" + dataExpedicao +
-                ", codigoSeguranca=" + codigoSeguranca +
-                ", tipo=" + tipo +
-                ", vencimento=" + vencimento +
-                '}';
     }
 }
