@@ -196,6 +196,45 @@ public class CompraRepository implements Repository<Integer, Compra>{
         }
     }
 
+    public List<Compra> listarPorCartao(String numeroCartao) throws BancoDeDadosException {
+        List<Compra> compras = new ArrayList<>();
+        Connection con = null;
+        try {
+            con = ConexaoBancoDeDados.getConnection();
+
+            String sql = """
+                        SELECT c.*, c4.NOME, c3.NUMERO_CONTA FROM COMPRA c\n 
+                        INNER JOIN CARTAO c2 ON c.NUMERO_CARTAO = c2.NUMERO_CARTAO\n
+                        INNER JOIN CONTA c3 ON c3.NUMERO_CONTA  = c2.NUMERO_CONTA\n
+                        INNER JOIN CLIENTE c4 ON c4.ID_CLIENTE  = c3.ID_CLIENTE
+                        WHERE c.NUMERO_CARTAO = ?
+                    """;
+
+            // Executa-se a consulta
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setString(1, numeroCartao);
+
+            ResultSet res = stmt.executeQuery();
+
+            while (res.next()) {
+                Compra compra = getCompraFromResultSet(res);
+                compras.add(compra);
+            }
+            return compras;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new BancoDeDadosException(e.getCause());
+        } finally {
+            try {
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     private Compra getCompraFromResultSet(ResultSet res) throws SQLException {
         Compra compra = new Compra();
         compra.setIdCompra(res.getInt("id_compra"));

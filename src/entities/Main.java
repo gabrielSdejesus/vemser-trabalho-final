@@ -1,8 +1,10 @@
 package entities;
 
 import entities.exception.BancoDeDadosException;
-import entities.model.*;
-import entities.repository.CompraRepository;
+import entities.model.Cliente;
+import entities.model.Conta;
+import entities.model.Contato;
+import entities.model.Endereco;
 import entities.repository.ContatoRepository;
 import entities.repository.EnderecoRepository;
 
@@ -12,10 +14,5 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) throws BancoDeDadosException {
 
-        CompraRepository cp = new CompraRepository();
-
-        List<Compra> listCompra = cp.listar();
-
-        listCompra.forEach(System.out::println);
     }
 }
