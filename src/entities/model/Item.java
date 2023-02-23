@@ -11,12 +11,6 @@ public class Item {
     public Item() {
     }
 
-    public Item(Integer idItem, String nome, Double valor, Integer quantidade) {
-        this.nome = nome;
-        this.valor = valor;
-        this.quantidade = quantidade;
-    }
-
     public Integer getIdItem() {
         return idItem;
     }
@@ -61,6 +55,7 @@ public class Item {
     public String toString() {
         return "Item{" +
                 "idItem=" + idItem +
+                ", idCompra=" + compra.getIdCompra() +
                 ", nome='" + nome + '\'' +
                 ", valor=" + valor +
                 ", quantidade=" + quantidade +

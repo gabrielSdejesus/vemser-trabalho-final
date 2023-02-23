@@ -2,6 +2,7 @@ package entities.repository;
 
 import entities.exception.BancoDeDadosException;
 import entities.model.Cliente;
+import entities.model.Compra;
 import entities.model.Item;
 
 import java.sql.*;
@@ -166,17 +167,14 @@ public class ItemRepository implements Repository<Integer, Item>{
         Connection con = null;
         try {
             con = ConexaoBancoDeDados.getConnection();
+            Statement stmt = con.createStatement();
 
             String sql = """
-                    SELECT i.*, ci.QUANTIDADE, c.NUMERO_CARTAO, c.DOC_VENDEDOR,\n
-                    ci.QUANTIDADE * i.VALOR AS VALOR_TOTAL FROM COMPRA c\n
-                    INNER JOIN COMPRA_ITEM ci ON ci.ID_COMPRA = c.ID_COMPRA\n
-                    INNER JOIN ITEM i ON ci.ID_ITEM = i.ID_ITEM WHERE ci.ID_COMPRA = ?
+                    SELECT * FROM ITEM
                     """;
 
-            PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setInt(1, );
             // Executa-se a consulta
+            ResultSet res = stmt.executeQuery(sql);
 
             while (res.next()) {
                 Item item = getItemFromResultSet(res);
@@ -199,9 +197,12 @@ public class ItemRepository implements Repository<Integer, Item>{
 
     private Item getItemFromResultSet(ResultSet res) throws SQLException {
         Item item = new Item();
+        item.setIdItem(res.getInt("id_item"));
         item.setNome(res.getString("nome"));
-        item.setValor(res.getDouble(""));
-        Cliente cliente = new Cliente();
+        item.setValor(res.getDouble("valor"));
+        Compra compra = new Compra();
+        compra.setIdCompra(res.getInt("ID_COMPRA"));
+        item.setCompra(compra);
         return item;
     }
 }
