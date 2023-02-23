@@ -1,14 +1,10 @@
 package entities.model;
 
+import java.time.LocalDate;
+
 public class CartaoDeDebito extends Cartao {
-    private final int TIPO = 1;
 
-    public CartaoDeDebito(Conta conta) {
-        super(conta, 1);
+    public CartaoDeDebito(Integer idCartao, Conta conta, Integer numeroCartao, LocalDate dataExpedicao, Integer codigoSeguranca, LocalDate vencimento) {
+        super(idCartao, conta, numeroCartao, dataExpedicao, codigoSeguranca, TipoCartao.DEBITO.getValue(), vencimento);
     }
-
-    public int getTipo(){
-        return TIPO;
-    }
-
 }
