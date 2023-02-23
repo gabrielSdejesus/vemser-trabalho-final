@@ -12,12 +12,13 @@ public class TelaTransferencias implements Tela {
     }
 
     public static void tratarInput(int input) {
+        TransferenciaService transferenciaService = new TransferenciaService();
         Conta login;
         switch(input){
             case 1 ->{
                 login = Tela.login();
                 if(login != null){
-                    login.exibirTransferencias();
+                    transferenciaService.exibirTransferencias(login);
                 }else{
                     System.err.println("Login mal-sucedido");
                 }

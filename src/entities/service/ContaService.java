@@ -5,6 +5,8 @@ import entities.model.Cliente;
 import entities.model.Conta;
 import entities.repository.ContaRepository;
 
+import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Pattern;
@@ -25,7 +27,7 @@ public class ContaService extends Service{
             String senha;
 
             try {
-                if(contaRepository.consultarPorNumeroConta(numeroConta).size() == 0) {
+                if(contaRepository.consultarPorNumeroConta(numeroConta) != null) {
 
                     while (true) {
                         System.out.print("Insira o nome do cliente: ");
@@ -55,7 +57,7 @@ public class ContaService extends Service{
                     Conta conta = new Conta(
                             numeroConta,
                             agencia,
-                            new Cliente(clienteRepository.getProximoId, nomeCliente, cpfCliente),
+                            new Cliente(clienteRepository.getProximoId(), nomeCliente, cpfCliente),
                             senha
                     );
 
@@ -128,7 +130,21 @@ public class ContaService extends Service{
     }
 
 
-
+    public Conta retornarConta(String numeroConta, String senhaConta){
+        Conta conta;
+        Integer numero = Integer.parseInt(numeroConta);
+        try{
+            conta = this.contaRepository.consultarPorNumeroConta(numero);
+            if(conta != null && conta.getSenha().equals(senhaConta)){
+                return conta;
+            }else{
+                return null;
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 
     /* public static void deletarConta(){

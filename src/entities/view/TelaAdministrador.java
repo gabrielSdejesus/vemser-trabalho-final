@@ -11,10 +11,11 @@ public class TelaAdministrador extends Tela {
 
     public static void tratarInput() {
         int input = pedirInput("[1] -> Cadastrar um novo CLIENTE com CONTA\n[2] -> Deletar CLIENTE\n[3] -> Deletar CONTA\n[4] -> Voltar para a Tela Principal");
+        ClienteService clienteService = new ClienteService();
         switch(input){
             case 1 ->{
                 if(Tela.loginAdm()){
-                    ClienteService.cadastrarCliente();
+                    clienteService.cadastrarCliente();
                 }else{
                     System.err.println("Senha administrativa inválida!\n");
                 }
@@ -22,7 +23,7 @@ public class TelaAdministrador extends Tela {
             }
             case 2 -> {
                 if(Tela.loginAdm()){
-                    ClienteService.deletarCliente();
+                    clienteService.deletarCliente();
                 }else{
                     System.err.println("Senha administrativa inválida!");
                 }
@@ -30,7 +31,7 @@ public class TelaAdministrador extends Tela {
             }
             case 3 -> {
                 if(Tela.loginAdm()){
-                    ContaService.deletarConta();
+                    clienteService.deletarConta();
                 }else{
                     System.err.println("Senha administrativa inválida!");
                 }

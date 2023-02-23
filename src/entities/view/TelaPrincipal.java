@@ -1,10 +1,8 @@
 package entities.view;
 
-import entities.interfaces.Tela;
-
 import java.util.Scanner;
 
-public class TelaPrincipal  implements Tela {
+public class TelaPrincipal extends Tela {
     public static void exibirTelaPrincipal(){
         System.out.println("Você está na Tela Principal");
         TelaPrincipal.tratarInput(TelaPrincipal.pedirInput());

@@ -11,12 +11,13 @@ public class TelaCompras extends Tela {
 
     public static void tratarInput() {
         int input = pedirInput("[1] -> Exibir compras da sua conta\n[2] -> Adicionar uma compra\n[3] -> Voltar para a Tela Principal");
+        CompraService compraService = new CompraService();
         Conta login;
         switch(input){
             case 1 ->{
                 login = Tela.login();
                 if(login != null){
-                    CompraService.exibirCompras(login);
+                    compraService.exibirCompras(login);
                 }else{
                     System.err.println("Login mal-sucedido");
                 }
@@ -25,7 +26,7 @@ public class TelaCompras extends Tela {
             case 2 -> {
                 login = Tela.login();
                 if(login != null){
-                    CompraService.adicionarCompra(login);
+                    compraService.adicionarCompra(login);
                 } else {
                     System.out.println("Login mal-sucedido");
                 }

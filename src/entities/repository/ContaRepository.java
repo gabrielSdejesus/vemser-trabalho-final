@@ -179,8 +179,7 @@ public class ContaRepository implements Repository<Integer, Conta> {
         }
     }
 
-    public List<Conta> consultarPorNumeroConta(Integer numeroConta) throws BancoDeDadosException {
-        List<Conta> contas = new ArrayList<>();
+    public Conta consultarPorNumeroConta(Integer numeroConta) throws BancoDeDadosException {
         Connection con = null;
         try {
             con = ConexaoBancoDeDados.getConnection();
@@ -189,12 +188,7 @@ public class ContaRepository implements Repository<Integer, Conta> {
             stmt.setInt(1, numeroConta);
 
             ResultSet res = stmt.executeQuery(sql);
-
-            while (res.next()) {
-                Conta conta = getContaFromResultSet(res);
-                contas.add(conta);
-            }
-            return contas;
+            return getContaFromResultSet(res);
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
         } finally {

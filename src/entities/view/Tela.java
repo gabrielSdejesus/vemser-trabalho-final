@@ -1,6 +1,7 @@
 package entities.view;
 
 import entities.model.Conta;
+import entities.service.ContaService;
 
 import java.util.Scanner;
 
@@ -12,8 +13,9 @@ public abstract class Tela {
         numeroConta = scanner.nextLine();
         System.out.print("Insira a senha da sua conta: ");
         senhaConta = scanner.nextLine();
-        Conta conta = BancoDeDados.consultarNumeroDaConta(numeroConta);
-        if(conta != null && conta.verificarSenha(senhaConta)){
+        ContaService contaService = new ContaService();
+        Conta conta = contaService.retornarConta(numeroConta, senhaConta);
+        if(conta != null){
             return conta;
         }else{
             System.err.println("Número de conta ou senha inválida");
