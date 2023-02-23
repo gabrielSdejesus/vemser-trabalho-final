@@ -1,29 +1,18 @@
 package entities.model;
 
-import entities.interfaces.Exibicao;
-
-import java.util.ArrayList;
-import java.util.Scanner;
-
 public class Cliente {
 
-    private Integer idCliente;
+    private int idCliente;
     private String cpf;
     private String nome;
 
     public Cliente(){};
 
-    public Cliente(Integer idCliente, String cpf, String nome) {
-        this.idCliente = idCliente;
-        this.cpf = cpf;
-        this.nome = nome;
-    }
-
-    public Integer getIdCliente() {
+    public int getIdCliente() {
         return idCliente;
     }
 
-    public void setIdCliente(Integer idCliente) {
+    public void setIdCliente(int idCliente) {
         this.idCliente = idCliente;
     }
 
