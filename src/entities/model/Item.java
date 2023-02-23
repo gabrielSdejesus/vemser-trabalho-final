@@ -3,6 +3,7 @@ package entities.model;
 public class Item {
 
     private Integer idItem;
+    private Compra compra;
     private String nome;
     private Double valor;
     private Integer quantidade;
@@ -22,6 +23,14 @@ public class Item {
 
     public void setIdItem(Integer idItem) {
         this.idItem = idItem;
+    }
+
+    public Compra getCompra() {
+        return compra;
+    }
+
+    public void setCompra(Compra compra) {
+        this.compra = compra;
     }
 
     public String getNome() {
