@@ -28,7 +28,7 @@ public class Conta {
         this.numeroConta = numeroConta;
     }
 
-    public Cliente getIdCliente() {
+    public Cliente getCliente() {
         return cliente;
     }
 
@@ -70,6 +70,6 @@ public class Conta {
 
     @Override
     public String toString() {
-        return "Cliente: " + getIdCliente().getNome() + " | " + "Numero da conta: " + getNumeroConta() + " | " + "Agencia: " + getAgencia();
+        return "Cliente: " + getCliente().getNome() + " | " + "Numero da conta: " + getNumeroConta() + " | " + "Agencia: " + getAgencia();
     }
 }

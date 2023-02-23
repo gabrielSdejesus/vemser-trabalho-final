@@ -61,7 +61,7 @@ public class ContaService extends Service{
                             senha
                     );
 
-                    clienteRepository.adicionar(conta.getIdCliente());
+                    clienteRepository.adicionar(conta.getCliente());
                     contaRepository.adicionar(conta);
 
                 }

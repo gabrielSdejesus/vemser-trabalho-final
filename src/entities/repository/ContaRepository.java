@@ -46,7 +46,7 @@ public class ContaRepository implements Repository<Integer, Conta> {
             PreparedStatement stmt = con.prepareStatement(sql);
 
             stmt.setInt(1, conta.getNumeroConta());
-            stmt.setInt(2, conta.getIdCliente().getIdCliente());
+            stmt.setInt(2, conta.getCliente().getIdCliente());
             stmt.setString(3, conta.getSenha());
             stmt.setInt(4, conta.getAgencia());
             stmt.setDouble(4, conta.getSaldo());
@@ -183,7 +183,7 @@ public class ContaRepository implements Repository<Integer, Conta> {
         Connection con = null;
         try {
             con = ConexaoBancoDeDados.getConnection();
-            String sql = "SELECT numero_conta FROM CONTA WHERE numero_conta = ?";
+            String sql = "SELECT * FROM CONTA WHERE numero_conta = ?";
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setInt(1, numeroConta);
 

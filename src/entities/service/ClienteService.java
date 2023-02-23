@@ -9,7 +9,13 @@ import entities.view.TelaAdministrador;
 import java.util.ArrayList;
 
 public class ClienteService extends Service{
-    public static void cadastrarCliente(){
+    private ClienteRepository clienteRepository;
+
+    public ClienteService() {
+        this.clienteRepository = new ClienteRepository();
+    }
+
+    public void cadastrarCliente(){
         String nomeCliente, cpfCliente, senhaCliente;
 
         System.out.println("\tEtapa [1] de [5]");
@@ -95,7 +101,7 @@ public class ClienteService extends Service{
         System.out.println("\t\tSenha do cliente: "+senhaCliente + "\n");
     }
 
-    public static void deletarCliente(){
+    public void deletarCliente(){
         String cpfCliente;
         if(BancoDeDados.getContas().size() > 0){
             System.err.println("Atenção! Deletar o CLIENTE também deletará sua CONTA");
@@ -129,7 +135,7 @@ public class ClienteService extends Service{
         }
     }
 
-    public static void exibirCliente(Conta conta){
+    public void exibirCliente(Conta conta){
         String senhaConta;
         System.out.println("Insira a senha da sua conta:");
         senhaConta = SCANNER.nextLine();
@@ -138,7 +144,7 @@ public class ClienteService extends Service{
         }
     }
 
-    public static void alterarContatoCliente(Conta conta){
+    public void alterarContatoCliente(Conta conta){
         ArrayList<Contato> contatos = conta.getCliente().getContatos();
         int inputAlteracaoContato, tipoAlteracaoContato;
         String novoDado;
@@ -176,7 +182,7 @@ public class ClienteService extends Service{
         }
     }
 
-    public static void alterarEnderecoCliente(Conta conta){
+    public void alterarEnderecoCliente(Conta conta){
         ArrayList<Endereco> enderecos = conta.getCliente().getEnderecos();
         int inputAlteracaoEndereco, tipoAlteracaoEndereco;
         String novoDado;
@@ -221,7 +227,7 @@ public class ClienteService extends Service{
         }
     }
 
-    public static void deletarContatoCliente(Conta conta){
+    public void deletarContatoCliente(Conta conta){
         ArrayList<Contato> contatos = conta.getCliente().getContatos();
         int inputExclusaoContato;
 
@@ -244,7 +250,7 @@ public class ClienteService extends Service{
         }
     }
 
-    public static void deletarEnderecoCliente(Conta conta){
+    public void deletarEnderecoCliente(Conta conta){
         ArrayList<Endereco> enderecos = conta.getCliente().getEnderecos();
         int inputExclusaoEndereco;
 
@@ -267,7 +273,7 @@ public class ClienteService extends Service{
         }
     }
 
-    public static void adicionarContatoCliente(Conta conta){
+    public void adicionarContatoCliente(Conta conta){
         String contatoInput = "";
         ArrayList<Contato> contatos = new ArrayList<>();
         while(!contatoInput.equalsIgnoreCase("ENCERRAR CONTATOS")){
@@ -294,7 +300,7 @@ public class ClienteService extends Service{
         conta.getCliente().addContatos(contatos);
     }
 
-    public static void adicionarEnderecoCliente(Conta conta){
+    public void adicionarEnderecoCliente(Conta conta){
         String enderecoInput = "";
         ArrayList<Endereco> enderecos = new ArrayList<>();
         while(!enderecoInput.equalsIgnoreCase("ENCERRAR ENDEREÇOS")){
@@ -320,7 +326,19 @@ public class ClienteService extends Service{
                 pais = SCANNER.nextLine();
                 System.out.print("Insira o CEP do Endereço do cliente: ");
                 cep = SCANNER.nextLine();
-                enderecos.add(new Endereco(enderecoInput, cidade, estado, pais, cep));
+
+                Cliente cliente = new Cliente();
+                cliente.setIdCliente(conta.getCliente().getIdCliente());
+                Endereco endereco = new Endereco();
+                endereco.setCliente();
+                endereco.setCep();
+                endereco.setCidade();
+                endereco.setEstado();
+                endereco.setEstado();
+                endereco.setLogradouro();
+                endereco.setPais();
+
+                enderecos.add();
                 System.out.println("\tEndereço adicionado!");
             }
         }
