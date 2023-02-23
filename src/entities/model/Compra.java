@@ -58,7 +58,7 @@ public class Compra {
         return "Compra{" +
                 "idCompra=" + idCompra +
                 ", nDoCartao=" + cartao.getNumeroCartao() +
-                ", nomeDoCliente= " + cartao.getConta().getIdCliente().getNome() +
+                ", nomeDoCliente= " + cartao.getConta().getCliente().getNome() +
                 ", docVendedor='" + docVendedor + '\'' +
                 ", data=" + data +
                 '}';

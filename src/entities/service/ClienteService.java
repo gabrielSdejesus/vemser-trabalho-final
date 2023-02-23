@@ -327,8 +327,10 @@ public class ClienteService extends Service{
                 System.out.print("Insira o CEP do Endereço do cliente: ");
                 cep = SCANNER.nextLine();
 
+                Cliente cliente = new Cliente();
+                cliente.setIdCliente(conta.getCliente().getIdCliente());
                 Endereco endereco = new Endereco();
-                endereco.setCliente(conta.getIdCliente());
+                endereco.setCliente();
                 endereco.setCep();
                 endereco.setCidade();
                 endereco.setEstado();
