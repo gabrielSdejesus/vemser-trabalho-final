@@ -1,7 +1,5 @@
 package entities.model;
 
-import entities.interfaces.Exibicao;
-
 public class Item {
 
     private Integer idItem;

@@ -108,7 +108,7 @@ public class EnderecoRepository implements Repository<Integer, Endereco> {
             sql.append("UPDATE Endereco SET \n");
             Cliente cliente = endereco.getCliente();
             if (cliente != null) {
-                if (cliente.getIdCliente() != null) {
+                if (cliente.getIdCliente() > 0) {
                     sql.append(" id_cliente = ?,");
                 }
             }
@@ -140,7 +140,7 @@ public class EnderecoRepository implements Repository<Integer, Endereco> {
 
             int index = 1;
             if (cliente != null) {
-                if (cliente.getIdCliente() != null) {
+                if (cliente.getIdCliente() > 0) {
                     stmt.setInt(index++, cliente.getIdCliente());
                 }
             }

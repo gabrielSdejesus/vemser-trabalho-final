@@ -1,11 +1,6 @@
 package entities.model;
 
-import entities.controller.BancoDeDados;
-
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 public abstract class Cartao {
     private Integer idCartao;

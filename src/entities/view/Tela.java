@@ -1,6 +1,5 @@
 package entities.view;
 
-import entities.controller.BancoDeDados;
 import entities.model.Conta;
 
 import java.util.Scanner;

@@ -1,6 +1,5 @@
 package entities.service;
 
-import entities.controller.BancoDeDados;
 import entities.model.Cartao;
 import entities.model.Conta;
 

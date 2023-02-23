@@ -1,8 +1,5 @@
 package entities.model;
 
-import entities.interfaces.Alteracao;
-import entities.interfaces.Exibicao;
-
 public class Contato {
 
     private Integer idContato;
