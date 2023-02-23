@@ -77,10 +77,22 @@ public class ContaRepository implements Repository<Integer, Conta> {
         try {
             con = ConexaoBancoDeDados.getConnection();
 
-            String sql = "DELETE FROM CONTA WHERE NUMERO_CONTA = ?";
+            String sql = "DELETE FROM cartao WHERE NUMERO_CONTA = ?";
             PreparedStatement stmt = con.prepareStatement(sql);
-
+            stmt.setInt(1, numeroConta);
             int res = stmt.executeUpdate();
+
+            sql = "DELETE FROM transferencia WHERE NUMERO_CONTA_ENVIOU = ? OR NUMERO_CONTA_RECEBEU = ?";
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, numeroConta);
+            stmt.setInt(2, numeroConta);
+            res = stmt.executeUpdate();
+
+            sql = "DELETE FROM conta WHERE NUMERO_CONTA = ?";
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, numeroConta);
+            res = stmt.executeUpdate();
+
             System.out.println("removerContaPorNumeroConta.res=" + res);
             return res > 0;
         } catch (SQLException e) {
@@ -147,8 +159,7 @@ public class ContaRepository implements Repository<Integer, Conta> {
             con = ConexaoBancoDeDados.getConnection();
             Statement stmt = con.createStatement();
 
-            String sql = "SELECT c.\"numero_conta\", c.\"agencia\", c2.\"nome\"  FROM FINANCEIRO.\"Conta\" c " +
-                    "INNER JOIN \"Cliente\" c2 ON c2.\"id_cliente\" = c.\"id_cliente\"";
+            String sql = "SELECT * FROM CONTA c INNER JOIN CLIENTE c2 ON c.ID_CLIENTE = c2.ID_CLIENTE";
 
             ResultSet res = stmt.executeQuery(sql);
 
@@ -171,12 +182,21 @@ public class ContaRepository implements Repository<Integer, Conta> {
     }
 
     private Conta getContaFromResultSet(ResultSet res) throws SQLException {
+
         Conta conta = new Conta();
-        conta.setNumeroConta(res.getInt("numero_conta"));
-        conta.setAgencia(res.getInt("agencia"));
+        conta.setNumeroConta(res.getInt("NUMERO_CONTA"));
+        conta.setSenha(res.getString("SENHA"));
+        conta.setAgencia(res.getInt("AGENCIA"));
+        conta.setSaldo(res.getDouble("SALDO"));
+        conta.setChequeEspecial(res.getDouble("CHEQUE_ESPECIAL"));
+
         Cliente cliente = new Cliente();
-        cliente.setNome(res.getString("nome"));
+        cliente.setIdCliente(res.getInt("ID_CLIENTE"));
+        cliente.setCpf(res.getString("CPF_CLIENTE"));
+        cliente.setNome(res.getString("NOME"));
+
         conta.setIdCliente(cliente);
+
         return conta;
     }
 

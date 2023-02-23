@@ -1,10 +1,29 @@
 package entities.service;
 
+import entities.exception.BancoDeDadosException;
 import entities.model.Cartao;
 import entities.model.Conta;
+import entities.repository.ContaRepository;
+
+import java.util.List;
 
 public class ContaService extends Service{
-    public static void deletarConta(){
+
+    private ContaRepository contaRepository;
+
+    public ContaService() { this.contaRepository = new ContaRepository(); };
+
+    public void listar() {
+        try {
+            contaRepository.listar().forEach(System.out::println);
+        } catch (BancoDeDadosException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+    /* public static void deletarConta(){
         String numeroConta;
         if(BancoDeDados.getContas().size() > 0){
             System.err.println("Atenção! Deletar uma CONTA também deletará seu CLIENTE");
@@ -161,5 +180,5 @@ public class ContaService extends Service{
         }else{
             System.err.println("CPF do CLIENTE ou NÚMERO da CONTA incorreto!");
         }
-    }
+    }*/
 }
