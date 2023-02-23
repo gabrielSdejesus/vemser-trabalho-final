@@ -13,6 +13,7 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws BancoDeDadosException {
+        //Gabriel eu vou lhe pegar, lá ele
 
         EnderecoRepository ep = new EnderecoRepository();
 
