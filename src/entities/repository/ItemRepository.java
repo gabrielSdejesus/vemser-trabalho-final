@@ -28,6 +28,22 @@ public class ItemRepository implements Repository<Integer, Item>{
         }
     }
 
+    public Integer getUltimoIdCompra(Connection connection) throws SQLException {
+        try {
+            String sql = "SELECT SEQ_ITEM.CURRVAL mysequence from DUAL";
+            Statement stmt = connection.createStatement();
+            ResultSet res = stmt.executeQuery(sql);
+
+            if (res.next()) {
+                return res.getInt("mysequence");
+            }
+
+            return null;
+        } catch (SQLException e) {
+            throw new BancoDeDadosException(e.getCause());
+        }
+    }
+
     @Override
     public Item adicionar(Item item) throws BancoDeDadosException {
         Connection con = null;
@@ -38,30 +54,16 @@ public class ItemRepository implements Repository<Integer, Item>{
             item.setIdItem(proximoId);
 
             String sql = """
-                    INSERT INTO ITEM\n
-                    (id_item, nome, valor)\n
-                    VALUES(?,?,?)
+                    INSERT INTO item\n 
+                    VALUES(?, ?, ?, ?, ?)
                     """;
 
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setInt(1, item.getIdItem());
-            stmt.setString(2, item.getNome());
-            stmt.setDouble(3, item.getValor());
-
-            String sqlCompraItem = """
-                    INSERT INTO COMPRA_ITEM\n
-                    (id_compra, id_item, quantidade)\n
-                    VALUES(?,?,?)
-                    """;
-
-            String selectLastCompra = """
-                    SEQ_CLIENTE.CURRVAL
-                    """;
-
-            PreparedStatement stmt1 = con.prepareStatement(sqlCompraItem);
-            stmt1.setString(1, selectLastCompra);
-            stmt1.setInt(2, item.getIdItem());
-            stmt1.setDouble(3, item.getQuantidade());
+            stmt.setInt(2, this.getUltimoIdCompra(con));
+            stmt.setString(3, item.getNome());
+            stmt.setDouble(4, item.getValor());
+            stmt.setInt(5, item.getQuantidade());
 
             int res = stmt.executeUpdate();
             System.out.println("adicionarItem.res=" + res);
@@ -170,7 +172,8 @@ public class ItemRepository implements Repository<Integer, Item>{
             Statement stmt = con.createStatement();
 
             String sql = """
-                    SELECT * FROM ITEM
+                    SELECT i.*, c.NUMERO_CARTAO, c.DOC_VENDEDOR, c.DATA FROM ITEM i\n
+                    LEFT JOIN COMPRA c ON i.ID_ITEM = c.ID_COMPRA 
                     """;
 
             // Executa-se a consulta
@@ -200,8 +203,9 @@ public class ItemRepository implements Repository<Integer, Item>{
         item.setIdItem(res.getInt("id_item"));
         item.setNome(res.getString("nome"));
         item.setValor(res.getDouble("valor"));
+        item.setQuantidade(res.getInt("quantidade"));
         Compra compra = new Compra();
-        compra.setIdCompra(res.getInt("ID_COMPRA"));
+        compra.setIdCompra(res.getInt("id_compra"));
         item.setCompra(compra);
         return item;
     }
