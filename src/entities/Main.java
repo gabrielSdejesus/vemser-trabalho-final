@@ -6,7 +6,6 @@ import entities.model.Conta;
 import entities.model.Contato;
 import entities.model.Endereco;
 import entities.repository.EnderecoRepository;
-import entities.view.TelaPrincipal;
 
 import java.util.ArrayList;
 import java.util.List;

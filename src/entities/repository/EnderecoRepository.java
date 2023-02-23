@@ -189,14 +189,13 @@ public class EnderecoRepository implements Repository<Integer, Endereco> {
             con = ConexaoBancoDeDados.getConnection();
             Statement stmt = con.createStatement();
 
-           StringBuilder sql = null;
-           sql.append("SELECT c.nome, e.cidade, e.logradouro, e.estado, e.pais, e.cep ");
-           sql.append("FROM Endereco e ");
-           sql.append("INNER JOIN Cliente c ");
-           sql.append("ON e.id_cliente = c.id_cliente");
+            String sql = """
+                        SELECT c."nome", e.*  FROM "Endereco" e\n 
+                        INNER JOIN "Cliente" c ON e."id_cliente" = c."id_cliente"\n
+                    """;
 
             // Executa-se a consulta
-            ResultSet res = stmt.executeQuery(sql.toString());
+            ResultSet res = stmt.executeQuery(sql);
 
             while (res.next()) {
                 Endereco endereco = getEnderecoFromResultSet(res);
@@ -204,6 +203,7 @@ public class EnderecoRepository implements Repository<Integer, Endereco> {
             }
             return enderecos;
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new BancoDeDadosException(e.getCause());
         } finally {
             try {
@@ -222,16 +222,14 @@ public class EnderecoRepository implements Repository<Integer, Endereco> {
         try {
             con = ConexaoBancoDeDados.getConnection();
 
-
-            StringBuilder sql = null;
-            sql.append("SELECT c.nome, e.cidade, e.logradouro, e.estado, e.pais, e.cep ");
-            sql.append("FROM Endereco e ");
-            sql.append("INNER JOIN Cliente c ");
-            sql.append("ON e.id_cliente = c.id_cliente ");
-            sql.append("WHERE e.id_endereco = ?");
+            String sql = """
+                        SELECT c."nome", e.*  FROM "Endereco" e\n 
+                        INNER JOIN "Cliente" c ON e."id_cliente" = c."id_cliente"\n
+                        WHERE e."id_endereco" = ?
+                    """;
 
             // Executa-se a consulta
-            PreparedStatement stmt = con.prepareStatement(sql.toString());
+            PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setInt(1, idEndereco);
 
             ResultSet res = stmt.executeQuery();
@@ -242,6 +240,7 @@ public class EnderecoRepository implements Repository<Integer, Endereco> {
             }
             return enderecos;
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new BancoDeDadosException(e.getCause());
         } finally {
             try {
@@ -257,7 +256,8 @@ public class EnderecoRepository implements Repository<Integer, Endereco> {
     private Endereco getEnderecoFromResultSet(ResultSet res) throws SQLException {
         Endereco endereco = new Endereco();
         endereco.setIdEndereco(res.getInt("id_endereco"));
-        Cliente cliente = null;
+        Cliente cliente = new Cliente();
+        cliente.setNome(res.getString("nome"));
         endereco.setCliente(cliente);
         endereco.setCep(res.getString("cep"));
         endereco.setCidade(res.getString("cidade"));

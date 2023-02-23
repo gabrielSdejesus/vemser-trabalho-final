@@ -82,7 +82,7 @@ public class Endereco {
     public String toString() {
         return "Endereco{" +
                 "idEndereco=" + idEndereco +
-                ", cliente=" + cliente +
+                ", cliente=" + cliente.getNome() +
                 ", logradouro='" + logradouro + '\'' +
                 ", cidade='" + cidade + '\'' +
                 ", estado='" + estado + '\'' +
