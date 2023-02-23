@@ -188,7 +188,7 @@ public class ContatoRepository implements Repository<Integer, Contato>{
         }
     }
 
-    public List<Contato> listarContatosPorPessoa(Integer idContato) throws BancoDeDadosException {
+    public List<Contato> listarContatosPorPessoa(Integer idCliente) throws BancoDeDadosException {
         List<Contato> contatos = new ArrayList<>();
         Connection con = null;
         try {
@@ -197,12 +197,12 @@ public class ContatoRepository implements Repository<Integer, Contato>{
             String sql = """
                         SELECT *  FROM contato c\n 
                         INNER JOIN cliente c2 ON c.id_cliente = c2.id_cliente\n
-                        WHERE c.id_contato = ?
+                        WHERE c.id_cliente = ?
                     """;
 
             // Executa-se a consulta
             PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setInt(1, idContato);
+            stmt.setInt(1, idCliente);
 
             ResultSet res = stmt.executeQuery();
 
