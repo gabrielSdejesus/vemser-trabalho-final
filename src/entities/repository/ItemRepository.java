@@ -55,7 +55,8 @@ public class ItemRepository implements Repository<Integer, Item>{
 
             String selectLastCompra = """
                     SEQ_CLIENTE.CURRVAL
-                    """
+                    """;
+
             PreparedStatement stmt1 = con.prepareStatement(sqlCompraItem);
             stmt1.setString(1, selectLastCompra);
             stmt1.setInt(2, item.getIdItem());
@@ -114,11 +115,11 @@ public class ItemRepository implements Repository<Integer, Item>{
             con = ConexaoBancoDeDados.getConnection();
 
             StringBuilder sql = new StringBuilder();
-            sql.append("UPDATE contato SET \n");
-            Compra compra = item.getCompra();
-            if (compra != null) {
-                if (compra.getIdCompra() > 0) {
-                    sql.append(" id_compra = ?,");
+            sql.append("UPDATE item SET \n");
+            Cliente cliente = contato.getCliente();
+            if (cliente != null) {
+                if (cliente.getIdCliente() > 0) {
+                    sql.append(" id_cliente = ?,");
                 }
             }
 

@@ -106,11 +106,7 @@ public class ContatoRepository implements Repository<Integer, Contato>{
             StringBuilder sql = new StringBuilder();
             sql.append("UPDATE contato SET \n");
             Cliente cliente = contato.getCliente();
-            if (cliente != null) {
-                if (cliente.getIdCliente() > 0) {
-                    sql.append(" id_cliente = ?,");
-                }
-            }
+
 
             if(contato.getTelefone() != null){
                 sql.append(" telefone = ?,");
@@ -121,7 +117,11 @@ public class ContatoRepository implements Repository<Integer, Contato>{
             }
 
             sql.deleteCharAt(sql.length() - 1); //remove o ultimo ','
-            sql.append(" WHERE id_contato = ? ");
+            if (cliente != null) {
+                if (cliente.getIdCliente() > 0) {
+                    sql.append(" WHERE id_cliente = ? ");
+                }
+            }
 
             PreparedStatement stmt = con.prepareStatement(sql.toString());
 

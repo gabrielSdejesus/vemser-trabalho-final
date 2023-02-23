@@ -107,11 +107,6 @@ public class EnderecoRepository implements Repository<Integer, Endereco> {
             StringBuilder sql = new StringBuilder();
             sql.append("UPDATE endereco SET \n");
             Cliente cliente = endereco.getCliente();
-            if (cliente != null) {
-                if (cliente.getIdCliente() > 0) {
-                    sql.append(" id_cliente = ?,");
-                }
-            }
 
             if (endereco.getCidade() != null){
                 sql.append(" cidade = ?,");
@@ -134,7 +129,11 @@ public class EnderecoRepository implements Repository<Integer, Endereco> {
             }
 
             sql.deleteCharAt(sql.length() - 1); //remove o ultimo ','
-            sql.append(" WHERE id_endereco = ? ");
+            if (cliente != null) {
+                if (cliente.getIdCliente() > 0) {
+                    sql.append(" WHERE id_endereco = ? ");
+                }
+            }
 
             PreparedStatement stmt = con.prepareStatement(sql.toString());
 
