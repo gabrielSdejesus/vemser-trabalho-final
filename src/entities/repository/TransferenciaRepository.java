@@ -39,7 +39,7 @@ public class TransferenciaRepository implements Repository<Integer, Transferenci
             String sql = """
                     INSERT INTO TRANSFERENCIA\n
                     (id_transferencia, numero_conta_enviou, numero_conta_recebeu, valor)\n
-                    VALUES(?,?,?,?,?,?,?)
+                    VALUES(?,?,?,?)
                     """;
 
             PreparedStatement stmt = con.prepareStatement(sql);
