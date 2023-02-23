@@ -198,7 +198,7 @@ public class TransferenciaRepository implements Repository<Integer, Transferenci
             con = ConexaoBancoDeDados.getConnection();
 
             String sql = """
-                        SELECT c.nome, t.*  FROM TRANSFERENCIA t\n 
+                        SELECT c.numero_conta, t.*  FROM TRANSFERENCIA t\n 
                         INNER JOIN CONTA c ON t.numero_conta_enviou = c.numero_conta\n
                         WHERE t.numero_conta_enviou = ?
                     """;
