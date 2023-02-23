@@ -2,10 +2,10 @@ package entities.repository;
 
 import entities.exception.BancoDeDadosException;
 import entities.model.Cliente;
-import entities.model.Compra;
 import entities.model.Item;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ItemRepository implements Repository<Integer, Item>{
@@ -162,6 +162,46 @@ public class ItemRepository implements Repository<Integer, Item>{
 
     @Override
     public List<Item> listar() throws BancoDeDadosException {
-        return null;
+        List<Item> itens = new ArrayList<>();
+        Connection con = null;
+        try {
+            con = ConexaoBancoDeDados.getConnection();
+
+            String sql = """
+                    SELECT i.*, ci.QUANTIDADE, c.NUMERO_CARTAO, c.DOC_VENDEDOR,\n
+                    ci.QUANTIDADE * i.VALOR AS VALOR_TOTAL FROM COMPRA c\n
+                    INNER JOIN COMPRA_ITEM ci ON ci.ID_COMPRA = c.ID_COMPRA\n
+                    INNER JOIN ITEM i ON ci.ID_ITEM = i.ID_ITEM WHERE ci.ID_COMPRA = ?
+                    """;
+
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setInt(1, );
+            // Executa-se a consulta
+
+            while (res.next()) {
+                Item item = getItemFromResultSet(res);
+                itens.add(item);
+            }
+            return itens;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new BancoDeDadosException(e.getCause());
+        } finally {
+            try {
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private Item getItemFromResultSet(ResultSet res) throws SQLException {
+        Item item = new Item();
+        item.setNome(res.getString("nome"));
+        item.setValor(res.getDouble(""));
+        Cliente cliente = new Cliente();
+        return item;
     }
 }
