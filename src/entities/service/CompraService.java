@@ -19,7 +19,15 @@ public class CompraService extends Service{
 
     public void exibirCompras(Conta conta) {
         try{
-            List<Compra> compras = this.compraRepository.listarComprasDaConta(conta);
+            List<Compra> compras = new ArrayList<>();
+
+            CartaoService cartaoService = new CartaoService();
+            List<Cartao> cartoes = cartaoService.returnCartoes(conta.getNumeroConta());
+
+            for(Cartao cartao: cartoes){
+                compras.addAll(this.compraRepository.listarPorCartao(cartao.getNumeroCartao()));
+            }
+
             if(compras.size() != 0){
                 for(Compra compra:compras){
                     if (compra != null){
@@ -39,7 +47,7 @@ public class CompraService extends Service{
 
     public void adicionarCompra(Conta conta){
         CartaoService cartaoService = new CartaoService();
-        List<Cartao> cartoes = cartaoService.retornarCartoesDaConta(conta);
+        List<Cartao> cartoes = cartaoService.returnCartoes(conta.getNumeroConta());
         Cartao cartao;
         ArrayList<Item> itens = new ArrayList<>();
         String nomeItem;
@@ -81,15 +89,19 @@ public class CompraService extends Service{
                     }
                     break;
                 } else {
-                    double valorItem, quantidadeItem;
+                    double valorItem;
+                    int quantidadeItem;
                     System.out.println("Insira o valor do item:");
                     valorItem = Double.parseDouble(SCANNER.nextLine());
                     System.out.println("Insira a quantidade do item:");
-                    quantidadeItem = Double.parseDouble(SCANNER.nextLine());
+                    quantidadeItem = Integer.parseInt(SCANNER.nextLine());
                     if(quantidadeItem > 0 && valorItem > 0){
-                        item = new Item(nomeItem, valorItem, quantidadeItem);
+                        item = new Item();
+                        item.setNome(nomeItem);
+                        item.setQuantidade(quantidadeItem);
+                        item.setValor(valorItem);
                         itens.add(item);
-                        valorTotalAtual += item.returnPrecoItem();//valor do item * qtd do item
+                        valorTotalAtual += item.getValor()*item.getQuantidade();
                     }else{
                         System.err.println("Item não adicionado!");
                         System.err.println("Valor/Quantidade do item inválidos!");
@@ -104,17 +116,6 @@ public class CompraService extends Service{
                 System.out.println("Insira o documento do vendedor:");
                 docVendedor = SCANNER.nextLine();
 
-                /////mandar todos os itens pro BD e cadastrar se ele ainda não estiver lá
-                try{
-                    ItemService itemService = new ItemService();
-                    itemService.adicionar(itens);
-                }catch (SQLException e){
-                    e.printStackTrace();
-                }
-                /////
-
-
-
                 ////Colocar a compra no BD
                 Compra compra = new Compra();
                 LocalDate localDate = LocalDate.now();
@@ -122,11 +123,23 @@ public class CompraService extends Service{
                 compra.setData(localDate);
                 compra.setCartao(cartao);
                 try{
-                    this.compraRepository.adicionar(compra);
+                    compra = this.compraRepository.adicionar(compra);
                 }catch (SQLException e){
                     e.printStackTrace();
                 }
                 ////
+
+                /////Mandar todos os itens pro BD
+                for(Item it:itens){
+                    it.setCompra(compra);
+                }
+                try{
+                    ItemService itemService = new ItemService();
+                    itemService.adicionar(itens);
+                }catch (SQLException e){
+                    e.printStackTrace();
+                }
+                /////
             }
         } else {
             System.err.println("Este número não representa nenhum cartão.");
