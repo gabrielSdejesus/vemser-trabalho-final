@@ -58,7 +58,8 @@ public class Compra {
     public String toString() {
         return "Compra{" +
                 "idCompra=" + idCompra +
-                ", cartao=" + cartao +
+                ", nDoCartao=" + cartao.getNumeroCartao() +
+                ", nomeDoCliente= " + cartao.getConta().getIdCliente().getNome() +
                 ", docVendedor='" + docVendedor + '\'' +
                 ", data=" + data +
                 '}';

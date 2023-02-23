@@ -5,7 +5,7 @@ import java.time.LocalDate;
 public abstract class Cartao {
     private Integer idCartao;
     private Conta conta;
-    private Integer numeroCartao;
+    private String numeroCartao;
     private LocalDate dataExpedicao;
     private Integer codigoSeguranca;
     private Integer tipo;
@@ -14,7 +14,7 @@ public abstract class Cartao {
     public Cartao() {
     }
 
-    public Cartao(Integer idCartao, Conta conta, Integer numeroCartao, LocalDate dataExpedicao, Integer codigoSeguranca, Integer tipo, LocalDate vencimento) {
+    public Cartao(Integer idCartao, Conta conta, String numeroCartao, LocalDate dataExpedicao, Integer codigoSeguranca, Integer tipo, LocalDate vencimento) {
         this.idCartao = idCartao;
         this.conta = conta;
         this.numeroCartao = numeroCartao;
@@ -40,11 +40,11 @@ public abstract class Cartao {
         this.conta = conta;
     }
 
-    public Integer getNumeroCartao() {
+    public String getNumeroCartao() {
         return numeroCartao;
     }
 
-    public void setNumeroCartao(Integer numeroCartao) {
+    public void setNumeroCartao(String numeroCartao) {
         this.numeroCartao = numeroCartao;
     }
 
