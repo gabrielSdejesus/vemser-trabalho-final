@@ -158,4 +158,9 @@ public class CartaoRepository implements Repository<Integer, Cartao> {
     public List<Cartao> listar() throws BancoDeDadosException {
         return null;
     }
+
+    public List<Cartao> listarCartoesDaConta(Conta conta){
+        //traz os cartões que tem o numero_conta igual o da conta do parâmetro
+        return null;
+    }
 }

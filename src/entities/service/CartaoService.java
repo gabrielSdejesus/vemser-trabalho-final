@@ -5,6 +5,8 @@ import entities.model.CartaoDeCredito;
 import entities.model.CartaoDeDebito;
 import entities.model.Conta;
 
+import java.util.List;
+
 public class CartaoService extends Service{
     public static void exibirExtrato(Conta conta, int tipo){
         Cartao[] cartoes = conta.getCartoes();
@@ -110,5 +112,10 @@ public class CartaoService extends Service{
                 }
             }
         }
+    }
+
+    public List<Cartao> returnCartoes(Conta conta) {
+        //traz os cartões que tem o numero_conta igual o da conta do parâmetro
+        return null;
     }
 }

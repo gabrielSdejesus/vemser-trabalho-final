@@ -22,7 +22,7 @@ public class CompraService extends Service{
             List<Compra> compras = new ArrayList<>();
 
             CartaoService cartaoService = new CartaoService();
-            List<Cartao> cartoes = cartaoService.returnCartoes(conta.getNumeroConta());
+            List<Cartao> cartoes = cartaoService.returnCartoes(conta);
 
             for(Cartao cartao: cartoes){
                 compras.addAll(this.compraRepository.listarPorCartao(cartao.getNumeroCartao()));
@@ -47,7 +47,7 @@ public class CompraService extends Service{
 
     public void adicionarCompra(Conta conta){
         CartaoService cartaoService = new CartaoService();
-        List<Cartao> cartoes = cartaoService.returnCartoes(conta.getNumeroConta());
+        List<Cartao> cartoes = cartaoService.returnCartoes(conta);
         Cartao cartao;
         ArrayList<Item> itens = new ArrayList<>();
         String nomeItem;
