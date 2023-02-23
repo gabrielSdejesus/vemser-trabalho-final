@@ -53,7 +53,7 @@ public class Contato {
     public String toString() {
         return "Contato{" +
                 "idContato=" + idContato +
-                ", cliente=" + cliente +
+                ", cliente=" + cliente.getNome() +
                 ", telefone='" + telefone + '\'' +
                 ", email='" + email + '\'' +
                 '}';
