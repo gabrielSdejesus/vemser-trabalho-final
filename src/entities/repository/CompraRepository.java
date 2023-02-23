@@ -46,7 +46,7 @@ public class CompraRepository implements Repository<Integer, Compra>{
             PreparedStatement stmt = con.prepareStatement(sql);
 
             stmt.setInt(1, compra.getIdCompra());
-            stmt.setInt(2, compra.getCartao().getIdCartao());
+            stmt.setInt(2, Integer.parseInt(compra.getCartao().getNumeroCartao()));
             stmt.setString(3, compra.getDocVendedor());
             stmt.setDate(4, Date.valueOf(compra.getData()));
 
@@ -106,7 +106,7 @@ public class CompraRepository implements Repository<Integer, Compra>{
             sql.append("UPDATE compra SET \n");
             Cartao cartao = compra.getCartao();
             if (cartao != null) {
-                if (cartao.getIdCartao() > 0) {
+                if (cartao.getNumeroCartao() != null) {
                     sql.append(" numero_cartao = ?,");
                 }
             }
@@ -126,8 +126,8 @@ public class CompraRepository implements Repository<Integer, Compra>{
 
             int index = 1;
             if (cartao != null) {
-                if (cartao.getIdCartao() > 0) {
-                    stmt.setInt(index++, cartao.getIdCartao());
+                if (cartao.getNumeroCartao() != null) {
+                    stmt.setInt(index++, Integer.parseInt(cartao.getNumeroCartao()));
                 }
             }
 

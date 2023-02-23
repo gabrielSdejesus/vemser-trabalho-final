@@ -39,7 +39,7 @@ public class CartaoRepository implements Repository<Integer, Cartao> {
                     """;
 
             PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setString(1, cartao.);
+            stmt.setInt(1, Integer.parseInt(cartao.getNumeroCartao()));
 
 
             int res = stmt.executeUpdate();
