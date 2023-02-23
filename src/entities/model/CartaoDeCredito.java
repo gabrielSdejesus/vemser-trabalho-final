@@ -20,4 +20,10 @@ public class CartaoDeCredito extends Cartao {
         this.limite = limite;
     }
 
+    @Override
+    public String toString() {
+        return  super.toString() + "\n CartaoDeCredito{" +
+                "limite=" + limite +
+                '}';
+    }
 }

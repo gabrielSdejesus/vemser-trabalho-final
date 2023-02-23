@@ -84,4 +84,17 @@ public abstract class Cartao {
     public void setVencimento(LocalDate vencimento) {
         this.vencimento = vencimento;
     }
+
+    @Override
+    public String toString() {
+        return "Cartao{" +
+                "idCartao=" + idCartao +
+                ", conta=" + conta +
+                ", numeroCartao=" + numeroCartao +
+                ", dataExpedicao=" + dataExpedicao +
+                ", codigoSeguranca=" + codigoSeguranca +
+                ", tipo=" + tipo +
+                ", vencimento=" + vencimento +
+                '}';
+    }
 }

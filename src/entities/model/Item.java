@@ -2,38 +2,51 @@ package entities.model;
 
 import entities.interfaces.Exibicao;
 
-public class Item implements Exibicao {
-    private String nomeItem;
-    private double valor, quantidade;
+public class Item {
+
+    private Integer idItem;
+    private String nome;
+    private Double valor;
 
     public Item() {
     }
 
-    public Item(String nomeItem, double valor, double quantidade) {
-        this.nomeItem = nomeItem;
+    public Item(Integer idItem, String nome, Double valor) {
+        this.idItem = idItem;
+        this.nome = nome;
         this.valor = valor;
-        this.quantidade = quantidade;
     }
 
-    public double returnPrecoItem(){
-        return valor*quantidade;
+    public Integer getIdItem() {
+        return idItem;
     }
 
-    @Override
-    public void exibir() {
-        System.out.printf("\t\tItem: %s; Valor unitário: R$%.2f; Quantidade: %.2f; Valor total: R$%.2f\n", nomeItem, valor, quantidade, this.returnPrecoItem());
+    public void setIdItem(Integer idItem) {
+        this.idItem = idItem;
     }
 
-    public String getNomeItem() {
-        return nomeItem;
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public Double getValor() {
+        return valor;
+    }
+
+    public void setValor(Double valor) {
+        this.valor = valor;
     }
 
     @Override
     public String toString() {
         return "Item{" +
-                "nomeItem='" + nomeItem + '\'' +
+                "idItem=" + idItem +
+                ", nome='" + nome + '\'' +
                 ", valor=" + valor +
-                ", quantidade=" + quantidade +
                 '}';
     }
 }
