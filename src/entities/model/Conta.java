@@ -6,7 +6,7 @@ public class Conta {
     private Cliente cliente;
     private String senha;
     private int agencia;
-    private double Saldo;
+    private double saldo;
     private double chequeEspecial;
 
     public int getNumeroConta() {
@@ -42,11 +42,11 @@ public class Conta {
     }
 
     public double getSaldo() {
-        return Saldo;
+        return saldo;
     }
 
     public void setSaldo(double saldo) {
-        Saldo = saldo;
+        saldo = saldo;
     }
 
     public double getChequeEspecial() {
