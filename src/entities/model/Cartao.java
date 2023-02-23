@@ -8,95 +8,80 @@ import java.util.List;
 import java.util.Random;
 
 public abstract class Cartao {
-    private LocalDate dataExpedicao;
-    private int codigoSeguranca;
-    private int tipo;
-    private int numero;
-    private String senha;
-    private LocalDate vencimento;
+    private Integer idCartao;
     private Conta conta;
-    private List<Compra> compras = new ArrayList<>();
+    private Integer numeroCartao;
+    private LocalDate dataExpedicao;
+    private Integer codigoSeguranca;
+    private Integer tipo;
+    private LocalDate vencimento;
 
-    public Cartao(){}
+    public Cartao() {
+    }
 
-    public Cartao(Conta conta, int tipo) {
-
-        int numero = new Random().nextInt(10000000, 99999999);
-        while (BancoDeDados.consultarNumeroDoCartao(numero)){
-            numero++;
-        }
-
-        this.dataExpedicao = LocalDate.now();
-        this.codigoSeguranca = new Random().nextInt(100,999);
-        this.numero = numero;
-        this.senha = conta.getSenha();
-        this.vencimento = LocalDate.now().plusYears(4);
+    public Cartao(Integer idCartao, Conta conta, Integer numeroCartao, LocalDate dataExpedicao, Integer codigoSeguranca, Integer tipo, LocalDate vencimento) {
+        this.idCartao = idCartao;
         this.conta = conta;
-        this.tipo  = tipo;
+        this.numeroCartao = numeroCartao;
+        this.dataExpedicao = dataExpedicao;
+        this.codigoSeguranca = codigoSeguranca;
+        this.tipo = tipo;
+        this.vencimento = vencimento;
     }
 
-    public void adicionarCompra(Compra compra) {
-        if(pagarComCartao(compra.returnValorTotal(), this.senha)){
-            compras.add(compra);
-        }else{
-            System.err.println("Compra não realizada, saldo indisponível!");
-        }
+    public Integer getIdCartao() {
+        return idCartao;
     }
 
-    public boolean pagarComCartao(double valor, String senha){
-        if(conta.getSaldo() >= valor && valor > 0) {
-            conta.sacar(valor, senha);
-            return true;
-        }
-        return false;
-    }
-
-    public void exibirDadosCartao() {
-        System.out.println("\t\tData de expedição: "+dataExpedicao);
-        System.out.println("\t\tCódigo de Segurança: "+codigoSeguranca);
-        System.out.println("\t\tNúmero: "+numero);
-        System.out.println("\t\tVencimento: "+vencimento);
-        System.out.println("\t\tTipo: " + (getTipo() == 1? "Débito\n": "Crédito"));
-    }
-
-    public void alterarSenhaDoCartao(String novaSenha, String senhaAntiga) {
-        conta.alterarSenha(senhaAntiga,novaSenha);
-    }
-
-    public List<Compra> getCompras() {
-        return compras;
+    public void setIdCartao(Integer idCartao) {
+        this.idCartao = idCartao;
     }
 
     public Conta getConta() {
         return conta;
     }
 
-    public void exibirCompras(int i) {
-        System.out.println("\nExibindo compras do cartão [" + i +"] de " + (getTipo() == 1? "Débito": "Crédito"));
-        if(!compras.isEmpty()) {
-            for (Compra compra : compras) {
-                compra.exibir();
-            }
-        } else {
-            System.out.println("Não há compras neste cartão!\n");
-        }
+    public void setConta(Conta conta) {
+        this.conta = conta;
     }
 
-    public int getTipo(){
+    public Integer getNumeroCartao() {
+        return numeroCartao;
+    }
+
+    public void setNumeroCartao(Integer numeroCartao) {
+        this.numeroCartao = numeroCartao;
+    }
+
+    public LocalDate getDataExpedicao() {
+        return dataExpedicao;
+    }
+
+    public void setDataExpedicao(LocalDate dataExpedicao) {
+        this.dataExpedicao = dataExpedicao;
+    }
+
+    public Integer getCodigoSeguranca() {
+        return codigoSeguranca;
+    }
+
+    public void setCodigoSeguranca(Integer codigoSeguranca) {
+        this.codigoSeguranca = codigoSeguranca;
+    }
+
+    public Integer getTipo() {
         return tipo;
     }
 
-    @Override
-    public String toString() {
-        return "Cartao{" +
-                "dataExpedicao=" + dataExpedicao +
-                ", codigoSeguranca=" + codigoSeguranca +
-                ", tipo=" + tipo +
-                ", numero=" + numero +
-                ", senha='" + senha + '\'' +
-                ", vencimento=" + vencimento +
-                ", conta=" + conta +
-                ", compras=" + compras +
-                '}';
+    public void setTipo(Integer tipo) {
+        this.tipo = tipo;
+    }
+
+    public LocalDate getVencimento() {
+        return vencimento;
+    }
+
+    public void setVencimento(LocalDate vencimento) {
+        this.vencimento = vencimento;
     }
 }

@@ -6,16 +6,18 @@ import entities.interfaces.Exibicao;
 public class Endereco {
 
     private Integer idEndereco;
-    private Integer idCliente;
+    private Cliente cliente;
     private String logradouro;
     private String cidade;
     private String estado;
     private String pais;
     private String cep;
 
-    public Endereco(Integer idEndereco, Integer idCliente, String logradouro, String cidade, String estado, String pais, String cep) {
+    public Endereco(){};
+
+    public Endereco(Integer idEndereco, Cliente cliente, String logradouro, String cidade, String estado, String pais, String cep) {
         this.idEndereco = idEndereco;
-        this.idCliente = idCliente;
+        this.cliente = cliente;
         this.logradouro = logradouro;
         this.cidade = cidade;
         this.estado = estado;
@@ -31,12 +33,12 @@ public class Endereco {
         this.idEndereco = idEndereco;
     }
 
-    public Integer getIdCliente() {
-        return idCliente;
+    public Cliente getCliente() {
+        return cliente;
     }
 
-    public void setIdCliente(Integer idCliente) {
-        this.idCliente = idCliente;
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
     }
 
     public String getLogradouro() {
@@ -77,5 +79,18 @@ public class Endereco {
 
     public void setCep(String cep) {
         this.cep = cep;
+    }
+
+    @Override
+    public String toString() {
+        return "Endereco{" +
+                "idEndereco=" + idEndereco +
+                ", cliente=" + cliente +
+                ", logradouro='" + logradouro + '\'' +
+                ", cidade='" + cidade + '\'' +
+                ", estado='" + estado + '\'' +
+                ", pais='" + pais + '\'' +
+                ", cep='" + cep + '\'' +
+                '}';
     }
 }

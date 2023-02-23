@@ -1,16 +1,19 @@
 package entities;
 
+import entities.exception.BancoDeDadosException;
 import entities.model.Cliente;
 import entities.model.Conta;
 import entities.model.Contato;
 import entities.model.Endereco;
+import entities.repository.EnderecoRepository;
 import entities.view.TelaPrincipal;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
-    public static void main(String[] args) {
-        ArrayList<Contato> contatos = new ArrayList<>();
+    public static void main(String[] args) throws BancoDeDadosException {
+        /*ArrayList<Contato> contatos = new ArrayList<>();
         contatos.add(new Contato("1999990000", "nicolascanova@hotmail.com"));
 
         ArrayList<Endereco> enderecos = new ArrayList<>();
@@ -22,6 +25,12 @@ public class Main {
 
         System.out.println("Número da conta: "+contaDoCanova.getNumero());
 
-        TelaPrincipal.exibirTelaPrincipal();
+        TelaPrincipal.exibirTelaPrincipal();*/
+
+        EnderecoRepository ep = new EnderecoRepository();
+
+        List<Endereco> enderecos = ep.listar();
+
+        enderecos.forEach(System.out::println);
     }
 }
