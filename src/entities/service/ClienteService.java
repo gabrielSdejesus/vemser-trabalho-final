@@ -139,7 +139,7 @@ public class ClienteService extends Service{
         }
     }
 
-    public static void alterarContato(Conta conta){
+    public static void alterarContatoCliente(Conta conta){
         ArrayList<Contato> contatos = conta.getCliente().getContatos();
         int inputAlteracaoContato, tipoAlteracaoContato;
         String novoDado;
@@ -177,7 +177,7 @@ public class ClienteService extends Service{
         }
     }
 
-    public static void alterarEndereco(Conta conta){
+    public static void alterarEnderecoCliente(Conta conta){
         ArrayList<Endereco> enderecos = conta.getCliente().getEnderecos();
         int inputAlteracaoEndereco, tipoAlteracaoEndereco;
         String novoDado;
@@ -222,7 +222,7 @@ public class ClienteService extends Service{
         }
     }
 
-    public static void deletarContato(Conta conta){
+    public static void deletarContatoCliente(Conta conta){
         ArrayList<Contato> contatos = conta.getCliente().getContatos();
         int inputExclusaoContato;
 
@@ -245,7 +245,7 @@ public class ClienteService extends Service{
         }
     }
 
-    public static void deletarEndereco(Conta conta){
+    public static void deletarEnderecoCliente(Conta conta){
         ArrayList<Endereco> enderecos = conta.getCliente().getEnderecos();
         int inputExclusaoEndereco;
 
@@ -268,7 +268,7 @@ public class ClienteService extends Service{
         }
     }
 
-    public static void adicionarContato(Conta conta){
+    public static void adicionarContatoCliente(Conta conta){
         String contatoInput = "";
         ArrayList<Contato> contatos = new ArrayList<>();
         while(!contatoInput.equalsIgnoreCase("ENCERRAR CONTATOS")){
@@ -295,7 +295,7 @@ public class ClienteService extends Service{
         conta.getCliente().addContatos(contatos);
     }
 
-    public static void adicionarEndereco(Conta conta){
+    public static void adicionarEnderecoCliente(Conta conta){
         String enderecoInput = "";
         ArrayList<Endereco> enderecos = new ArrayList<>();
         while(!enderecoInput.equalsIgnoreCase("ENCERRAR ENDEREÇOS")){

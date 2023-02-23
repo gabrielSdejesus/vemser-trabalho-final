@@ -35,7 +35,7 @@ public class TelaPerfil extends Tela {
             case 3 -> {
                 login = Tela.login();
                 if(login != null){
-                    ClienteService.alterarContato(login);
+                    ClienteService.alterarContatoCliente(login);
                 }else{
                     System.err.println("Login mal-sucedido\n");
                 }
@@ -44,7 +44,7 @@ public class TelaPerfil extends Tela {
             case 4 -> {
                 login = Tela.login();
                 if(login != null){
-                    ClienteService.alterarEndereco(login);
+                    ClienteService.alterarEnderecoCliente(login);
                 }else{
                     System.out.println("Login mal-sucedido\n");
                 }
@@ -53,7 +53,7 @@ public class TelaPerfil extends Tela {
             case 5 -> {
                 login = Tela.login();
                 if(login != null) {
-                    ClienteService.deletarContato(login);
+                    ClienteService.deletarContatoCliente(login);
                 }else{
                     System.out.println("Login mal-sucedido\n");
                 }
@@ -62,7 +62,7 @@ public class TelaPerfil extends Tela {
             case 6 -> {
                 login = Tela.login();
                 if(login != null) {
-                    ClienteService.deletarEndereco(login);
+                    ClienteService.deletarEnderecoCliente(login);
                 }else{
                     System.err.println("Login mal-sucedido\n");
                 }
@@ -71,7 +71,7 @@ public class TelaPerfil extends Tela {
             case 7 -> {
                 login = Tela.login();
                 if(login != null) {
-                    ClienteService.adicionarContato(login);
+                    ClienteService.adicionarContatoCliente(login);
                 }else{
                     System.err.println("Login mal-sucedido\n");
                 }
@@ -80,7 +80,7 @@ public class TelaPerfil extends Tela {
             case 8 -> {
                 login = Tela.login();
                 if(login != null) {
-                    ClienteService.adicionarEndereco(login);
+                    ClienteService.adicionarEnderecoCliente(login);
                 }else{
                     System.err.println("Login mal-sucedido\n");
                 }
