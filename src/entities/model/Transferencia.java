@@ -1,7 +1,5 @@
 package entities.model;
 
-import entities.interfaces.Exibicao;
-
 public class Transferencia{
 
     private Integer idTransferencia;
