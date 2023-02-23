@@ -117,11 +117,8 @@ public class ContatoRepository implements Repository<Integer, Contato>{
             }
 
             sql.deleteCharAt(sql.length() - 1); //remove o ultimo ','
-            if (cliente != null) {
-                if (cliente.getIdCliente() > 0) {
-                    sql.append(" WHERE id_cliente = ? ");
-                }
-            }
+            sql.append(" WHERE id_cliente = ? ");
+            sql.append("AND id_contato = ?");
 
             PreparedStatement stmt = con.prepareStatement(sql.toString());
 
@@ -136,6 +133,7 @@ public class ContatoRepository implements Repository<Integer, Contato>{
             }
 
             stmt.setInt(index++, id);
+            stmt.setInt(index, contato.getIdContato());
 
             // Executa-se a consulta
             int res = stmt.executeUpdate();

@@ -144,7 +144,7 @@ public class ItemRepository implements Repository<Integer, Item>{
 
             // Executa-se a consulta
             int res = stmt.executeUpdate();
-            System.out.println("editarContato.res=" + res);
+            System.out.println("editarItem.res=" + res);
 
             return res > 0;
         } catch (SQLException e) {

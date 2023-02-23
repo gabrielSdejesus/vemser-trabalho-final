@@ -130,7 +130,7 @@ public class EnderecoRepository implements Repository<Integer, Endereco> {
 
             sql.deleteCharAt(sql.length() - 1); //remove o ultimo ','
             sql.append(" WHERE id_cliente = ? ");
-
+            sql.append("AND id_endereco = ? ");
 
             PreparedStatement stmt = con.prepareStatement(sql.toString());
 
@@ -156,7 +156,8 @@ public class EnderecoRepository implements Repository<Integer, Endereco> {
                 stmt.setString(index++, endereco.getCep());
             }
 
-            stmt.setInt(index, id);
+            stmt.setInt(index++, id);
+            stmt.setInt(index, endereco.getIdEndereco());
 
             int res = stmt.executeUpdate();
             System.out.println("editarEndereco.res=" + res);
