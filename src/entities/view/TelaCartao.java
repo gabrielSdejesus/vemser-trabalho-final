@@ -8,7 +8,7 @@ import entities.model.Conta;
 
 import java.util.Scanner;
 
-public class TelaCartao implements Tela {
+public class TelaCartao extends Tela {
     public static void exibirTelaCartao(){
         System.out.println("\nVocê está na Tela de Cartão");
         TelaCartao.tratarInput(TelaCartao.pedirInput());

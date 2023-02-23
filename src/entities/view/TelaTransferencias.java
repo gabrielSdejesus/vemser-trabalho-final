@@ -5,7 +5,7 @@ import entities.model.Conta;
 
 import java.util.Scanner;
 
-public class TelaTransferencias implements Tela {
+public class TelaTransferencias extends Tela {
     public static void exibirTransferencias(){
         System.out.println("Você está na Tela de Transferências");
         TelaTransferencias.tratarInput(TelaTransferencias.pedirInput());
