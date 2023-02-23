@@ -28,7 +28,7 @@ public class Main {
 
         EnderecoRepository ep = new EnderecoRepository();
 
-        List<Endereco> enderecos = ep.listar();
+        List<Endereco> enderecos = ep.listarEnderecosPorPessoa(1);
 
         enderecos.forEach(System.out::println);
     }

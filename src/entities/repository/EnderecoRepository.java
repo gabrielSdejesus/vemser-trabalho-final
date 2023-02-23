@@ -37,7 +37,7 @@ public class EnderecoRepository implements Repository<Integer, Endereco> {
             endereco.setIdEndereco(proximoId);
 
             StringBuilder sql = null;
-            sql.append("INSERT INTO Endereco");
+            sql.append("INSERT INTO endereco");
             sql.append("(id_endereco, id_cliente, cidade, logradouro, estado, pais, cep) ");
             sql.append("VALUES(?,?,?,?,?,?,?)");
 
@@ -73,7 +73,7 @@ public class EnderecoRepository implements Repository<Integer, Endereco> {
         try {
             con = ConexaoBancoDeDados.getConnection();
 
-            String sql = "DELETE FROM Endereco WHERE ID_CONTATO = ?";
+            String sql = "DELETE FROM endereco WHERE id_endereco = ?";
 
             PreparedStatement stmt = con.prepareStatement(sql);
 
@@ -105,7 +105,7 @@ public class EnderecoRepository implements Repository<Integer, Endereco> {
             con = ConexaoBancoDeDados.getConnection();
 
             StringBuilder sql = new StringBuilder();
-            sql.append("UPDATE Endereco SET \n");
+            sql.append("UPDATE endereco SET \n");
             Cliente cliente = endereco.getCliente();
             if (cliente != null) {
                 if (cliente.getIdCliente() > 0) {
@@ -190,8 +190,8 @@ public class EnderecoRepository implements Repository<Integer, Endereco> {
             Statement stmt = con.createStatement();
 
             String sql = """
-                        SELECT c."nome", e.*  FROM "Endereco" e\n 
-                        INNER JOIN "Cliente" c ON e."id_cliente" = c."id_cliente"\n
+                        SELECT c.nome, e.*  FROM endereco e\n 
+                        INNER JOIN cliente c ON e.id_cliente = c.id_cliente\n
                     """;
 
             // Executa-se a consulta
@@ -223,9 +223,9 @@ public class EnderecoRepository implements Repository<Integer, Endereco> {
             con = ConexaoBancoDeDados.getConnection();
 
             String sql = """
-                        SELECT c."nome", e.*  FROM "Endereco" e\n 
-                        INNER JOIN "Cliente" c ON e."id_cliente" = c."id_cliente"\n
-                        WHERE e."id_endereco" = ?
+                        SELECT c.nome, e.*  FROM endereco e\n 
+                        INNER JOIN cliente c ON e.id_cliente = c.id_cliente\n
+                        WHERE e.id_endereco = ?
                     """;
 
             // Executa-se a consulta
