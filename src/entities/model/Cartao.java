@@ -3,9 +3,9 @@ package entities.model;
 import java.time.LocalDate;
 
 public abstract class Cartao {
-    private Integer idCartao;
-    private Conta conta;
+
     private String numeroCartao;
+    private Conta conta;
     private LocalDate dataExpedicao;
     private Integer codigoSeguranca;
     private Integer tipo;
@@ -14,30 +14,13 @@ public abstract class Cartao {
     public Cartao() {
     }
 
-    public Cartao(Integer idCartao, Conta conta, String numeroCartao, LocalDate dataExpedicao, Integer codigoSeguranca, Integer tipo, LocalDate vencimento) {
-        this.idCartao = idCartao;
-        this.conta = conta;
+    public Cartao(String numeroCartao, Conta conta, LocalDate dataExpedicao, Integer codigoSeguranca, Integer tipo, LocalDate vencimento) {
         this.numeroCartao = numeroCartao;
+        this.conta = conta;
         this.dataExpedicao = dataExpedicao;
         this.codigoSeguranca = codigoSeguranca;
         this.tipo = tipo;
         this.vencimento = vencimento;
-    }
-
-    public Integer getIdCartao() {
-        return idCartao;
-    }
-
-    public void setIdCartao(Integer idCartao) {
-        this.idCartao = idCartao;
-    }
-
-    public Conta getConta() {
-        return conta;
-    }
-
-    public void setConta(Conta conta) {
-        this.conta = conta;
     }
 
     public String getNumeroCartao() {
@@ -46,6 +29,14 @@ public abstract class Cartao {
 
     public void setNumeroCartao(String numeroCartao) {
         this.numeroCartao = numeroCartao;
+    }
+
+    public Conta getConta() {
+        return conta;
+    }
+
+    public void setConta(Conta conta) {
+        this.conta = conta;
     }
 
     public LocalDate getDataExpedicao() {
@@ -83,9 +74,8 @@ public abstract class Cartao {
     @Override
     public String toString() {
         return "Cartao{" +
-                "idCartao=" + idCartao +
+                "numeroCartao='" + numeroCartao + '\'' +
                 ", conta=" + conta +
-                ", numeroCartao=" + numeroCartao +
                 ", dataExpedicao=" + dataExpedicao +
                 ", codigoSeguranca=" + codigoSeguranca +
                 ", tipo=" + tipo +
