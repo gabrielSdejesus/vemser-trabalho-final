@@ -191,7 +191,7 @@ public class TransferenciaRepository implements Repository<Integer, Transferenci
         }
     }
 
-    public List<Transferencia> listarTransferenciasPorPessoa(Integer idTransferencia) throws BancoDeDadosException {
+    public List<Transferencia> listarTransferenciasPorConta(Integer numeroConta) throws BancoDeDadosException {
         List<Transferencia> transferencias = new ArrayList<>();
         Connection con = null;
         try {
@@ -200,11 +200,11 @@ public class TransferenciaRepository implements Repository<Integer, Transferenci
             String sql = """
                         SELECT c.nome, t.*  FROM TRANSFERENCIA t\n 
                         INNER JOIN CONTA c ON t.numero_conta_enviou = c.numero_conta\n
-                        WHERE t.id_transferencia = ?
+                        WHERE t.numero_conta_enviou = ?
                     """;
 
             PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setInt(1, idTransferencia);
+            stmt.setInt(1, numeroConta);
 
             ResultSet res = stmt.executeQuery();
 
