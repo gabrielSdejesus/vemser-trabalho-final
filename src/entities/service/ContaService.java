@@ -1,17 +1,74 @@
 package entities.service;
 
 import entities.exception.BancoDeDadosException;
-import entities.model.Cartao;
+import entities.model.Cliente;
 import entities.model.Conta;
 import entities.repository.ContaRepository;
 
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.regex.Pattern;
 
 public class ContaService extends Service{
 
     private ContaRepository contaRepository;
+    private ClienteRepository clienteRepository;
 
     public ContaService() { this.contaRepository = new ContaRepository(); };
+
+    public void adicionar() {
+        while (true) {
+            int numeroConta = ThreadLocalRandom.current().nextInt(1000, 9999);
+            int agencia = ThreadLocalRandom.current().nextInt(10, 99);
+            String nomeCliente;
+            String cpfCliente;
+            String senha;
+
+            try {
+                if(contaRepository.consultarPorNumeroConta(numeroConta).size() == 0) {
+
+                    while (true) {
+                        System.out.print("Insira o nome do cliente: ");
+                        nomeCliente = SCANNER.nextLine().strip().toUpperCase();
+                        if (Pattern.matches("[0-9!@#$%^&*(),.?\":{}|<>]", nomeCliente)) {
+                            System.out.println("Nome inválido! Insira novamente.");
+                        } else break;
+                    }
+
+                    while (true) {
+                        System.out.print("Insira o CPF do cliente: ");
+                        cpfCliente = SCANNER.nextLine().strip().replaceAll(" ", "");
+                        if (Pattern.matches("^[a-zA-Z!@#$%^&*(),.?\":{}|<>]+$", cpfCliente)) {
+                            System.out.println("CPF inválido! Insira novamente.");
+                        } else break;
+                    }
+
+                    while (true) {
+                        System.out.print("Insira a nova senha: ");
+                        senha = SCANNER.nextLine().trim().replaceAll(" ", "");
+                        if (senha.length() == 6 && !Pattern.matches("[a-zA-Z!@#$%^&*(),.?\":{}|<>]+", senha)) {
+                            break;
+                        }
+                        System.out.println("A senha não possui 6 digitos ou não é composta apenas por números! Tente novamente.");
+                    }
+
+                    Conta conta = new Conta(
+                            numeroConta,
+                            agencia,
+                            new Cliente(clienteRepository.getProximoId, nomeCliente, cpfCliente),
+                            senha
+                    );
+
+                    clienteRepository.adicionar(conta.getIdCliente());
+                    contaRepository.adicionar(conta);
+
+                }
+            } catch (BancoDeDadosException e) {
+                e.printStackTrace();
+                break;
+            }
+        }
+    }
 
     public void listar() {
         try {
@@ -20,6 +77,57 @@ public class ContaService extends Service{
             e.printStackTrace();
         }
     }
+
+    public void editar(Integer numeroConta, Conta conta) {
+        String novaSenha;
+        Double novoChequeEspecial;
+
+        while (true) {
+            System.out.print("Insira a nova senha: ");
+            novaSenha = SCANNER.nextLine().trim().replaceAll(" ", "");
+            if (novaSenha.length() == 6 && !Pattern.matches("[a-zA-Z!@#$%^&*(),.?\":{}|<>]+", novaSenha)) {
+                conta.setSenha(novaSenha);
+                break;
+            } else if (novaSenha.length() == 0) {
+                break;
+            }
+            System.out.println("A senha não possui 6 digitos ou não é composta apenas por números! Tente novamente.");
+        }
+
+        while (true) {
+            try {
+                System.out.print("Insira o novo cheque especial: ");
+                String novoChequeEspecialString = SCANNER.nextLine().trim();
+                if(novoChequeEspecialString.length() == 0) {
+                    break;
+                }
+                novoChequeEspecial = Double.parseDouble(novoChequeEspecialString);
+                conta.setChequeEspecial(novoChequeEspecial);
+                break;
+            } catch (NullPointerException | NumberFormatException e) {
+                System.out.println("Valor inválido! Tente novamente.");
+            }
+        }
+
+        try {
+            contaRepository.editar(numeroConta, conta);
+        } catch (BancoDeDadosException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void remover(Integer numeroConta) {
+        try{
+            if(contaRepository.remover(numeroConta)) {
+                System.out.println("Conta removida com sucesso!");
+            }
+        } catch (BancoDeDadosException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
 
 

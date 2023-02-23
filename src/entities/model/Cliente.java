@@ -8,6 +8,11 @@ public class Cliente {
 
     public Cliente(){};
 
+    public Cliente(int idCliente, String cpf, String nome) {
+        this.cpf = cpf;
+        this.nome = nome;
+    }
+
     public int getIdCliente() {
         return idCliente;
     }

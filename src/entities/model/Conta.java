@@ -9,6 +9,17 @@ public class Conta {
     private double saldo;
     private double chequeEspecial;
 
+    public Conta(){}
+
+    public Conta(int numeroConta, int agencia, Cliente cliente, String senha) {
+        this.numeroConta = numeroConta;
+        this.cliente = cliente;
+        this.senha = senha;
+        this.agencia = agencia;
+        this.saldo = saldo;
+        this.chequeEspecial = chequeEspecial;
+    }
+
     public int getNumeroConta() {
         return numeroConta;
     }
@@ -46,7 +57,7 @@ public class Conta {
     }
 
     public void setSaldo(double saldo) {
-        saldo = saldo;
+        this.saldo = saldo;
     }
 
     public double getChequeEspecial() {

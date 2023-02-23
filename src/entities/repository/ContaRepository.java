@@ -39,9 +39,7 @@ public class ContaRepository implements Repository<Integer, Conta> {
         try {
             con = ConexaoBancoDeDados.getConnection();
 
-            Integer nextID = getProximoId(con);
-
-            String sql = "INSERT INTO CONTATO\n" +
+            String sql = "INSERT INTO CONTA\n" +
                     "(NUMERO_CONTA, ID_CLIENTE, AGENCIA, SALDO, CHEQUE_ESPECIAL)\n" +
                     "VALUES(?, ?, ?, ?, ?)\n";
 
@@ -109,7 +107,7 @@ public class ContaRepository implements Repository<Integer, Conta> {
     }
 
     @Override
-    public boolean editar(Integer id, Conta conta) throws BancoDeDadosException {
+    public boolean editar(Integer numeroConta, Conta conta) throws BancoDeDadosException {
         Connection con = null;
         try {
             con = ConexaoBancoDeDados.getConnection();
@@ -160,6 +158,35 @@ public class ContaRepository implements Repository<Integer, Conta> {
             Statement stmt = con.createStatement();
 
             String sql = "SELECT * FROM CONTA c INNER JOIN CLIENTE c2 ON c.ID_CLIENTE = c2.ID_CLIENTE";
+
+            ResultSet res = stmt.executeQuery(sql);
+
+            while (res.next()) {
+                Conta conta = getContaFromResultSet(res);
+                contas.add(conta);
+            }
+            return contas;
+        } catch (SQLException e) {
+            throw new BancoDeDadosException(e.getCause());
+        } finally {
+            try {
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public List<Conta> consultarPorNumeroConta(Integer numeroConta) throws BancoDeDadosException {
+        List<Conta> contas = new ArrayList<>();
+        Connection con = null;
+        try {
+            con = ConexaoBancoDeDados.getConnection();
+            String sql = "SELECT numero_conta FROM CONTA WHERE numero_conta = ?";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setInt(1, numeroConta);
 
             ResultSet res = stmt.executeQuery(sql);
 
