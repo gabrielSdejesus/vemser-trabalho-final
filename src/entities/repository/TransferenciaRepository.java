@@ -172,7 +172,8 @@ public class TransferenciaRepository implements Repository<Integer, Transferenci
                     INNER JOIN CONTA c2 ON c.ID_CLIENTE = c2.ID_CLIENTE\n
                     INNER JOIN TRANSFERENCIA t ON c2.NUMERO_CONTA = t.NUMERO_CONTA_RECEBEU\n
                     INNER JOIN CONTA c3 ON t.NUMERO_CONTA_ENVIOU = c3.NUMERO_CONTA\n
-                    INNER JOIN CLIENTE c4 ON c3.ID_CLIENTE = c4.ID_CLIENTE
+                    INNER JOIN CLIENTE c4 ON c3.ID_CLIENTE = c4.ID_CLIENTE\n
+                    ORDER BY t.ID_TRANSFERENCIA DESC
                     """;
 
             ResultSet res = stmt.executeQuery(sql);
@@ -210,12 +211,15 @@ public class TransferenciaRepository implements Repository<Integer, Transferenci
                     INNER JOIN TRANSFERENCIA t ON c2.NUMERO_CONTA = t.NUMERO_CONTA_RECEBEU\n
                     INNER JOIN CONTA c3 ON t.NUMERO_CONTA_ENVIOU = c3.NUMERO_CONTA\n
                     INNER JOIN CLIENTE c4 ON c3.ID_CLIENTE = c4.ID_CLIENTE\n
-                    WHERE t.NUMERO_CONTA_ENVIOU = ? AND ROWNUM <= 10\n
+                    WHERE (t.NUMERO_CONTA_ENVIOU = ?\n
+                    OR t.NUMERO_CONTA_RECEBEU = ?)\n
+                    AND ROWNUM <= 10\n
                     ORDER BY t.ID_TRANSFERENCIA DESC
                     """;
 
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setInt(1, id);
+            stmt.setInt(2, id);
 
             ResultSet res = stmt.executeQuery();
 
