@@ -1,11 +1,13 @@
 package entities.service;
 
+import entities.exception.BancoDeDadosException;
 import entities.model.Cliente;
 import entities.model.Conta;
 import entities.model.Endereco;
 import entities.repository.EnderecoRepository;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class EnderecoService extends Service{
 
@@ -23,7 +25,7 @@ public class EnderecoService extends Service{
             System.out.print("Insira o Logradouro do Endereço do cliente: ");
             enderecoInput = SCANNER.nextLine();
 
-            String cidade, estado, pais, cep, logradouro;
+            String cidade, estado, pais, cep;
 
             if(enderecoInput.equalsIgnoreCase("ENCERRAR ENDEREÇOS")){
                 if (enderecos.size()<1){
@@ -57,14 +59,19 @@ public class EnderecoService extends Service{
                 System.out.println("\tEndereço adicionado!");
             }
         }
-        EnderecoService enderecoService = new EnderecoService();
-        for(Endereco endereco: enderecos){
-            enderecoService.adicionarEndereco(endereco);
+        if(enderecos.size() > 0){
+            for(Endereco endereco: enderecos){
+                try{
+                    this.enderecoRepository.adicionar(endereco);
+                }catch(BancoDeDadosException e){
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
     public void deletarEndereco(Conta conta){
-        ArrayList<Endereco> enderecos = conta.getCliente().getEnderecos();
+        List<Endereco> enderecos = this.retornarEnderecosDoCliente(conta);
         int inputExclusaoEndereco;
 
         if(enderecos.size() > 1){
@@ -87,20 +94,20 @@ public class EnderecoService extends Service{
     }
 
     public void alterarEndereco(Conta conta){
-        ArrayList<Endereco> enderecos = conta.getCliente().getEnderecos();
+        List<Endereco> enderecos = this.retornarEnderecosDoCliente(conta);
         int inputAlteracaoEndereco, tipoAlteracaoEndereco;
-        String novoDado;
 
-        System.out.println("Selecione um endereço para alterar:");
+        StringBuilder message = new StringBuilder("Selecione um endereço para alterar:\n");
         for(int i=0;i<enderecos.size();i++){
-            System.out.printf("[%d] Logradouro: %s; Cidade: %s; Estado: %s; País: %s; CEP: %s\n", (i+1), enderecos.get(i).getLogradouro(), enderecos.get(i).getCidade(), enderecos.get(i).getEstado(), enderecos.get(i).getPais(), enderecos.get(i).getCep());
+            message.append("[").append(i + 1).append("] Logradouro: ").append(enderecos.get(i).getLogradouro()).append("; Cidade: ").append(enderecos.get(i).getCidade()).append("; Estado: ").append(enderecos.get(i).getEstado()).append("; País: ").append(enderecos.get(i).getPais()).append("; CEP: ").append(enderecos.get(i).getCep()).append("\n");
         }
 
-        inputAlteracaoEndereco = Integer.parseInt(SCANNER.nextLine());
+        inputAlteracaoEndereco = askInt(String.valueOf(message));
 
         if(inputAlteracaoEndereco > 0 && inputAlteracaoEndereco <= enderecos.size()){
+            Endereco novoEndereco = enderecos.get(inputAlteracaoEndereco);
 
-            System.out.println("Selecione a alteração que quer fazer no Contato:");
+            System.out.println("Selecione a alteração que quer fazer no Endereço:");
             System.out.println("[1] Logradouro");
             System.out.println("[2] Cidade");
             System.out.println("[3] Estado");
@@ -112,22 +119,37 @@ public class EnderecoService extends Service{
             if (tipoAlteracaoEndereco < 1 || tipoAlteracaoEndereco >= 6){
                 System.out.println("Operação cancelada!");
             }else{
-                String tipoEndereco = "";
                 switch(tipoAlteracaoEndereco){
-                    case 1 -> tipoEndereco = "Logradouro";
-                    case 2 -> tipoEndereco = "Cidade";
-                    case 3 -> tipoEndereco = "Estado";
-                    case 4 -> tipoEndereco = "País";
-                    case 5 -> tipoEndereco = "CEP";
+                    case 1 -> novoEndereco.setLogradouro(askString("Insira o novo [Logradouro]: "));
+                    case 2 -> novoEndereco.setCidade(askString("Insira a nova [Cidade]: "));
+                    case 3 -> novoEndereco.setEstado(askString("Insira o novo [Estado]: "));
+                    case 4 -> novoEndereco.setPais(askString("Insira o novo [País]: "));
+                    case 5 -> novoEndereco.setCep(askString("Insira o novo [CEP]: "));
                     default -> System.err.println("Erro bizarro!");
                 }
-                System.out.print("Insira o novo ["+tipoEndereco+"]: ");
-                novoDado = SCANNER.nextLine();
-                enderecos.get(inputAlteracaoEndereco-1).alterarDado(tipoEndereco.toLowerCase(), novoDado);
-                System.out.println("Endereço alterado com sucesso!");
+                try{
+                    if(this.enderecoRepository.editar(novoEndereco.getIdEndereco(), novoEndereco)){
+                        System.out.println("Endereço alterado com sucesso!");
+                    }else{
+                        System.err.println("Problemas ao editar o ENDEREÇO");
+                    }
+                }catch(BancoDeDadosException e){
+                    e.printStackTrace();
+                }
             }
         }else{
             System.out.println("Nenhum endereço selecionado!");
         }
+    }
+
+    public List<Endereco> retornarEnderecosDoCliente(Conta conta){
+        List<Endereco> enderecos;
+        try{
+            enderecos = this.enderecoRepository.listarEnderecosPorPessoa(conta.getCliente().getIdCliente());
+            return enderecos;
+        }catch (BancoDeDadosException e){
+            e.printStackTrace();
+        }
+        return null;
     }
 }

@@ -210,7 +210,7 @@ public class EnderecoRepository implements Repository<Integer, Endereco> {
         }
     }
 
-    public List<Endereco> listarEnderecosPorPessoa(Integer idEndereco) throws BancoDeDadosException {
+    public List<Endereco> listarEnderecosPorPessoa(Integer idCliente) throws BancoDeDadosException {
         List<Endereco> enderecos = new ArrayList<>();
         Connection con = null;
         try {
@@ -223,7 +223,7 @@ public class EnderecoRepository implements Repository<Integer, Endereco> {
                     """;
 
             PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setInt(1, idEndereco);
+            stmt.setInt(1, idCliente);
 
             ResultSet res = stmt.executeQuery();
 
