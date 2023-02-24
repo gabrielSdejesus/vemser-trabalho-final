@@ -4,6 +4,7 @@ import entities.exception.BancoDeDadosException;
 import entities.model.Cartao;
 import entities.model.CartaoDeCredito;
 import entities.model.Cliente;
+import entities.model.Status;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -38,14 +39,14 @@ public class ClienteRepository implements Repository<Integer, Cliente> {
 
             String sql = """
                     INSERT INTO cliente\n 
-                    VALUES(?, ?, ?)
+                    VALUES(?, ?, ?, ?)
                     """;
 
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setInt(1, cliente.getIdCliente());
             stmt.setString(2, cliente.getCpf());
             stmt.setString(3, cliente.getNome());
-
+            stmt.setInt(4, cliente.getStatus().getStatus());
 
             int res = stmt.executeUpdate();
             System.out.println("adicionarCliente.res=" + res);
@@ -63,13 +64,12 @@ public class ClienteRepository implements Repository<Integer, Cliente> {
         }
     }
 
-    @Override
     public boolean remover(Integer id) throws BancoDeDadosException {
         Connection con = null;
         try {
             con = ConexaoBancoDeDados.getConnection();
 
-            String sql = "DELETE FROM cliente WHERE ID_CLIENTE = ?";
+            String sql = "UPDATE CLIENTE SET STATUS = 0 WHERE ID_CLIENTE = ? ";
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setInt(1, id);
             int res = stmt.executeUpdate();
@@ -89,7 +89,6 @@ public class ClienteRepository implements Repository<Integer, Cliente> {
         }
     }
 
-    @Override
     public boolean editar(Integer id, Cliente cliente) throws BancoDeDadosException {
         Connection con = null;
         try {
@@ -202,6 +201,7 @@ public class ClienteRepository implements Repository<Integer, Cliente> {
         cliente.setIdCliente(res.getInt("ID_CLIENTE"));
         cliente.setCpf(res.getString("CPF_CLIENTE"));
         cliente.setNome(res.getString("NOME"));
+        cliente.setStatus(Status.getTipoStatus(res.getInt("STATUS")));
         return cliente;
     }
 }

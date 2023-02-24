@@ -10,6 +10,7 @@ public abstract class Cartao {
     private Integer codigoSeguranca;
     private TipoCartao tipo;
     private LocalDate vencimento;
+    private Status status = Status.ATIVO;
 
     public Cartao() {
     }
@@ -71,15 +72,24 @@ public abstract class Cartao {
         this.vencimento = vencimento;
     }
 
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "Cartao{" +
                 "numeroCartao='" + numeroCartao + '\'' +
-                ", conta=" + conta.getNumeroConta() +
+                ", conta=" + conta +
                 ", dataExpedicao=" + dataExpedicao +
                 ", codigoSeguranca=" + codigoSeguranca +
                 ", tipo=" + tipo +
                 ", vencimento=" + vencimento +
+                ", status=" + status +
                 '}';
     }
 }

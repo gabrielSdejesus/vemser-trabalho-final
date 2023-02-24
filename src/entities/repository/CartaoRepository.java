@@ -37,7 +37,7 @@ public class CartaoRepository implements Repository<String, Cartao> {
 
             String sql = """
                     INSERT INTO cartao\n 
-                    VALUES(?, ?, ?, ?, ?, ?, ?)
+                    VALUES(?, ?, ?, ?, ?, ?, ?, ?)
                     """;
 
             PreparedStatement stmt = con.prepareStatement(sql);
@@ -47,6 +47,7 @@ public class CartaoRepository implements Repository<String, Cartao> {
             stmt.setInt(4, cartao.getCodigoSeguranca());
             stmt.setInt(5, cartao.getTipo().getTipo());
             stmt.setDate(6, Date.valueOf(cartao.getVencimento()));
+            stmt.setInt(7, cartao.getStatus().getStatus());
 
             if(cartao.getClass().equals(CartaoDeCredito.class)){
                 stmt.setDouble(7, ((CartaoDeCredito) cartao).getLimite());
@@ -70,13 +71,12 @@ public class CartaoRepository implements Repository<String, Cartao> {
         }
     }
 
-    @Override
     public boolean remover(String id) throws BancoDeDadosException {
         Connection con = null;
         try {
             con = ConexaoBancoDeDados.getConnection();
 
-            String sql = "DELETE FROM cartao WHERE NUMERO_CARTAO = ?";
+            String sql = "UPDATE CARTAO SET STATUS = 0 WHERE ID_CARTAO = ?";
 
             PreparedStatement stmt = con.prepareStatement(sql);
 
@@ -100,7 +100,6 @@ public class CartaoRepository implements Repository<String, Cartao> {
         }
     }
 
-    @Override
     public boolean editar(String id, Cartao cartao) throws BancoDeDadosException {
         Connection con = null;
         try {
@@ -212,7 +211,8 @@ public class CartaoRepository implements Repository<String, Cartao> {
 
             String sql = """
                     SELECT *  FROM CARTAO c\n
-                    WHERE c.NUMERO_CONTA = ?
+                    WHERE c.NUMERO_CONTA = ?\n
+                    AND STATUS = 1
                     """;
 
             // Executa-se a consulta
@@ -255,6 +255,7 @@ public class CartaoRepository implements Repository<String, Cartao> {
             cartaoDeDebito.setCodigoSeguranca(res.getInt("CODIGO_SEGURANCA"));
             cartaoDeDebito.setTipo(TipoCartao.getTipoCartao(res.getInt("TIPO")));
             cartaoDeDebito.setVencimento(res.getDate("VENCIMENTO").toLocalDate());
+            cartaoDeDebito.setStatus(Status.getTipoStatus(res.getInt("STATUS")));
             return cartaoDeDebito;
         } else{
             CartaoDeCredito cartaoDeCredito = new CartaoDeCredito();
@@ -267,6 +268,7 @@ public class CartaoRepository implements Repository<String, Cartao> {
             cartaoDeCredito.setTipo(TipoCartao.getTipoCartao(res.getInt("TIPO")));
             cartaoDeCredito.setVencimento(res.getDate("VENCIMENTO").toLocalDate());
             cartaoDeCredito.setLimite(res.getDouble("LIMITE"));
+            cartaoDeCredito.setStatus(Status.getTipoStatus(res.getInt("STATUS")));
             return cartaoDeCredito;
         }
     }

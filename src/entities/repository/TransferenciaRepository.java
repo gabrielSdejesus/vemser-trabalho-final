@@ -67,16 +67,6 @@ public class TransferenciaRepository implements Repository<Integer, Transferenci
     }
 
     @Override
-    public boolean remover(Integer id) throws BancoDeDadosException {
-        return false;
-    }
-
-    @Override
-    public boolean editar(Integer id, Transferencia transferencia) throws BancoDeDadosException {
-        return false;
-    }
-
-    @Override
     public List<Transferencia> listar() throws BancoDeDadosException {
         List<Transferencia> transferencias = new ArrayList<>();
         Connection con = null;

@@ -1,10 +1,7 @@
 package entities.repository;
 
 import entities.exception.BancoDeDadosException;
-import entities.model.Cartao;
-import entities.model.CartaoDeCredito;
-import entities.model.Cliente;
-import entities.model.Conta;
+import entities.model.*;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -50,7 +47,7 @@ public class ContaRepository implements Repository<Integer, Conta> {
             stmt.setInt(4, conta.getAgencia());
             stmt.setDouble(5, conta.getSaldo());
             stmt.setDouble(6, conta.getChequeEspecial());
-            stmt.setInt(7, 1);
+            stmt.setInt(7, conta.getStatus().getStatus());
 
             int res = stmt.executeUpdate();
             System.out.println("adicionarConta.res=" + res);
@@ -69,7 +66,35 @@ public class ContaRepository implements Repository<Integer, Conta> {
         }
     }
 
-    @Override
+    public boolean reativarConta(Integer id) throws BancoDeDadosException {
+        Connection con = null;
+        try {
+            con = ConexaoBancoDeDados.getConnection();
+
+            String sql = "UPDATE conta SET status = 1 WHERE numero_conta = ?";
+
+            PreparedStatement stmt = con.prepareStatement(sql);
+
+            stmt.setInt(1, id);
+
+            // Executa-se a consulta
+            int res = stmt.executeUpdate();
+            System.out.println("removerClientePorId.res=" + res);
+
+            return res > 0;
+        } catch (SQLException e) {
+            throw new BancoDeDadosException(e.getCause());
+        } finally {
+            try {
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public boolean remover(Integer id) throws BancoDeDadosException {
         Connection con = null;
         try {
@@ -99,7 +124,6 @@ public class ContaRepository implements Repository<Integer, Conta> {
         }
     }
 
-    @Override
     public boolean editar(Integer id, Conta conta) throws BancoDeDadosException {
         Connection con = null;
         try {
@@ -241,7 +265,7 @@ public class ContaRepository implements Repository<Integer, Conta> {
         conta.setAgencia(res.getInt("AGENCIA"));
         conta.setSaldo(res.getDouble("SALDO"));
         conta.setChequeEspecial(res.getDouble("CHEQUE_ESPECIAL"));
-        conta.setStatus(res.getInt("STATUS"));
+        conta.setStatus(Status.getTipoStatus(res.getInt("STATUS")));
         Cliente cliente = new Cliente();
         cliente.setIdCliente(res.getInt("ID_CLIENTE"));
         cliente.setCpf(res.getString("CPF_CLIENTE"));

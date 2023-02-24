@@ -8,7 +8,7 @@ public class Conta {
     private Integer agencia;
     private Double saldo;
     private Double chequeEspecial;
-    private Integer status = 1;
+    private Status status = Status.ATIVO;
 
     public Conta(){}
 
@@ -69,11 +69,11 @@ public class Conta {
         this.chequeEspecial = chequeEspecial;
     }
 
-    public Integer getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
@@ -86,7 +86,7 @@ public class Conta {
                 ", agencia=" + agencia +
                 ", saldo=" + saldo +
                 ", chequeEspecial=" + chequeEspecial +
-                ", ativo=" + status +
+                ", status=" + status +
                 '}';
     }
 }

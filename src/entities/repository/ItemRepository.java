@@ -82,16 +82,6 @@ public class ItemRepository implements Repository<Integer, Item>{
     }
 
     @Override
-    public boolean remover(Integer id) throws BancoDeDadosException {
-        return false;
-    }
-
-    @Override
-    public boolean editar(Integer id, Item item) throws BancoDeDadosException {
-        return false;
-    }
-
-    @Override
     public ArrayList<Item> listar() throws BancoDeDadosException {
         ArrayList<Item> itens = new ArrayList<>();
         Connection con = null;

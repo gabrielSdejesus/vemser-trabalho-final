@@ -66,7 +66,6 @@ public class ContatoRepository implements Repository<Integer, Contato>{
         }
     }
 
-    @Override
     public boolean remover(Integer id) throws BancoDeDadosException {
         Connection con = null;
         try {
@@ -97,7 +96,6 @@ public class ContatoRepository implements Repository<Integer, Contato>{
 
     }
 
-    @Override
     public boolean editar(Integer id, Contato contato) throws BancoDeDadosException {
         Connection con = null;
         try {

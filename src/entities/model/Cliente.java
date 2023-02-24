@@ -5,6 +5,7 @@ public class Cliente {
     private Integer idCliente;
     private String cpf;
     private String nome;
+    private Status status = Status.ATIVO;
 
     public Cliente(){};
 
@@ -32,12 +33,21 @@ public class Cliente {
         this.nome = nome;
     }
 
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "Cliente{" +
                 "idCliente=" + idCliente +
                 ", cpf='" + cpf + '\'' +
                 ", nome='" + nome + '\'' +
+                ", status=" + status +
                 '}';
     }
 }
