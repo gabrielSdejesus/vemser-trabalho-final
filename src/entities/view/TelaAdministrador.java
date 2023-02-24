@@ -34,7 +34,7 @@ public class TelaAdministrador extends Tela {
             }
             case 3 -> {
                 if(Tela.loginAdm()){
-                    contaService.deletarConta();
+                    contaService.removerConta();
                 }else{
                     System.err.println("Senha administrativa inválida!");
                 }

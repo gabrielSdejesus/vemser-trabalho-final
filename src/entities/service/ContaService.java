@@ -96,8 +96,10 @@ public class ContaService extends Service{
 
     }
 
-    public void remover(Integer numeroConta) {
+    public void removerConta() {
         try{
+            this.listar();
+            int numeroConta = askInt("Insira o número da CONTA que deseja DELETAR:");
             if(contaRepository.remover(numeroConta)) {
                 System.out.println("Conta removida com sucesso!");
             }
