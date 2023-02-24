@@ -2,11 +2,7 @@ package entities.service;
 
 import entities.exception.BancoDeDadosException;
 import entities.model.Cliente;
-import entities.model.Conta;
-import entities.model.Contato;
-import entities.model.Endereco;
 import entities.repository.ClienteRepository;
-import entities.view.TelaAdministrador;
 
 import java.util.List;
 import java.util.regex.Pattern;
