@@ -1,22 +1,23 @@
 package entities.repository;
 
 import entities.exception.BancoDeDadosException;
-import entities.model.Cartao;
-import entities.model.Conta;
+import entities.model.*;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
-public class CartaoRepository implements Repository<Integer, Cartao> {
+public class CartaoRepository implements Repository<String, Cartao> {
+    
     @Override
-    public Integer getProximoId(Connection connection) throws SQLException {
+    public String getProximoId(Connection connection) throws SQLException {
         try {
             String sql = "SELECT SEQ_CARTAO.NEXTVAL mysequence from DUAL";
             Statement stmt = connection.createStatement();
             ResultSet res = stmt.executeQuery(sql);
 
             if (res.next()) {
-                return res.getInt("mysequence");
+                return res.getString("mysequence");
             }
 
             return null;
@@ -31,21 +32,27 @@ public class CartaoRepository implements Repository<Integer, Cartao> {
         try {
             con = ConexaoBancoDeDados.getConnection();
 
-            Integer proximoId = this.getProximoId(con);
+            String proximoId = this.getProximoId(con);
             cartao.setNumeroCartao(String.valueOf(proximoId));
 
             String sql = """
                     INSERT INTO cartao\n 
-                    VALUES(?, ?, ?, ?, ?, ?)
+                    VALUES(?, ?, ?, ?, ?, ?, ?)
                     """;
 
             PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setInt(1, Integer.parseInt(cartao.getNumeroCartao()));
+            stmt.setString(1, cartao.getNumeroCartao());
             stmt.setInt(2, cartao.getConta().getNumeroConta());
             stmt.setDate(3, Date.valueOf(cartao.getDataExpedicao()));
             stmt.setInt(4, cartao.getCodigoSeguranca());
             stmt.setInt(5, cartao.getTipo().getTipo());
             stmt.setDate(6, Date.valueOf(cartao.getVencimento()));
+
+            if(cartao.getClass().equals(CartaoDeCredito.class)){
+                stmt.setDouble(7, ((CartaoDeCredito) cartao).getLimite());
+            } else {
+                stmt.setString(7, null);
+            }
 
             int res = stmt.executeUpdate();
             System.out.println("adicionarCartao.res=" + res);
@@ -64,16 +71,16 @@ public class CartaoRepository implements Repository<Integer, Cartao> {
     }
 
     @Override
-    public boolean remover(Integer id) throws BancoDeDadosException {
+    public boolean remover(String id) throws BancoDeDadosException {
         Connection con = null;
         try {
             con = ConexaoBancoDeDados.getConnection();
 
-            String sql = "DELETE FROM cartao WHERE id_cartao = ?";
+            String sql = "DELETE FROM cartao WHERE NUMERO_CARTAO = ?";
 
             PreparedStatement stmt = con.prepareStatement(sql);
 
-            stmt.setInt(1, id);
+            stmt.setString(1, id);
 
             // Executa-se a consulta
             int res = stmt.executeUpdate();
@@ -94,7 +101,7 @@ public class CartaoRepository implements Repository<Integer, Cartao> {
     }
 
     @Override
-    public boolean editar(Integer id, Cartao cartao) throws BancoDeDadosException {
+    public boolean editar(String id, Cartao cartao) throws BancoDeDadosException {
         Connection con = null;
         try {
             con = ConexaoBancoDeDados.getConnection();
@@ -115,6 +122,9 @@ public class CartaoRepository implements Repository<Integer, Cartao> {
                 sql.append(" VENCIMENTO = ?,");
             }
 
+            if(cartao.getClass().equals(CartaoDeCredito.class)){
+                sql.append(" LIMITE = ?,");
+            }
 
             sql.deleteCharAt(sql.length() - 1); //remove o ultimo ','
             sql.append(" WHERE numero_cartao = ? ");
@@ -134,7 +144,11 @@ public class CartaoRepository implements Repository<Integer, Cartao> {
                 stmt.setDate(index++, Date.valueOf(cartao.getVencimento()));
             }
 
-            stmt.setInt(index++, id);
+            if(cartao.getClass().equals(CartaoDeCredito.class)){
+                stmt.setDouble(index++, ((CartaoDeCredito) cartao).getLimite());
+            }
+
+            stmt.setString(index++, id);
 
             // Executa-se a consulta
             int res = stmt.executeUpdate();
@@ -156,11 +170,108 @@ public class CartaoRepository implements Repository<Integer, Cartao> {
 
     @Override
     public List<Cartao> listar() throws BancoDeDadosException {
-        return null;
+        List<Cartao> cartoes = new ArrayList<>();
+        Connection con = null;
+        try {
+            con = ConexaoBancoDeDados.getConnection();
+            Statement stmt = con.createStatement();
+
+            String sql = """
+                    SELECT * FROM CARTAO c
+                    """;
+
+            // Executa-se a consulta
+            ResultSet res = stmt.executeQuery(sql);
+
+            while (res.next()) {
+                Cartao cartao = getCartaoFromResultSet(res);
+                cartoes.add(cartao);
+            }
+            return cartoes;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new BancoDeDadosException(e.getCause());
+        } finally {
+            try {
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public List<Cartao> listarCartoesPorNumeroConta(Conta conta) throws BancoDeDadosException{
+        List<Cartao> cartoes = new ArrayList<>();
+        Connection con = null;
+        try {
+            con = ConexaoBancoDeDados.getConnection();
+
+            String sql = """
+                    SELECT *  FROM CARTAO c\n
+                    WHERE c.NUMERO_CONTA = ?
+                    """;
+
+            // Executa-se a consulta
+            PreparedStatement stmt = con.prepareStatement(sql);
+
+            if(conta != null){
+                stmt.setInt(1, conta.getNumeroConta());
+            }
+
+            ResultSet res = stmt.executeQuery();
+
+            while (res.next()) {
+                Cartao cartao = getCartaoFromResultSet(res);
+                cartoes.add(cartao);
+            }
+            return cartoes;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new BancoDeDadosException(e.getCause());
+        } finally {
+            try {
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public Cartao getCartaoFromResultSet(ResultSet res) throws SQLException {
+
+        if (res.getInt("TIPO") == 1) {
+            CartaoDeDebito cartaoDeDebito = new CartaoDeDebito();
+            cartaoDeDebito.setNumeroCartao(res.getString("NUMERO_CARTAO"));
+            Conta conta = new Conta();
+            conta.setNumeroConta(res.getInt("NUMERO_CONTA"));
+            cartaoDeDebito.setConta(conta);
+            cartaoDeDebito.setDataExpedicao(res.getDate("DATA_EXPEDICAO").toLocalDate());
+            cartaoDeDebito.setCodigoSeguranca(res.getInt("CODIGO_SEGURANCA"));
+            cartaoDeDebito.setTipo(TipoCartao.getTipoCartao(res.getInt("TIPO")));
+            cartaoDeDebito.setVencimento(res.getDate("VENCIMENTO").toLocalDate());
+            return cartaoDeDebito;
+        } else{
+            CartaoDeCredito cartaoDeCredito = new CartaoDeCredito();
+            cartaoDeCredito.setNumeroCartao(res.getString("NUMERO_CARTAO"));
+            Conta conta = new Conta();
+            conta.setNumeroConta(res.getInt("NUMERO_CONTA"));
+            cartaoDeCredito.setConta(conta);
+            cartaoDeCredito.setDataExpedicao(res.getDate("DATA_EXPEDICAO").toLocalDate());
+            cartaoDeCredito.setCodigoSeguranca(res.getInt("CODIGO_SEGURANCA"));
+            cartaoDeCredito.setTipo(TipoCartao.getTipoCartao(res.getInt("TIPO")));
+            cartaoDeCredito.setVencimento(res.getDate("VENCIMENTO").toLocalDate());
+            cartaoDeCredito.setLimite(res.getDouble("LIMITE"));
+            return cartaoDeCredito;
+        }
     }
 
     public List<Cartao> listarCartoesDaConta(Conta conta){
         //traz os cartões que tem o numero_conta igual o da conta do parâmetro
         return null;
     }
+
 }
