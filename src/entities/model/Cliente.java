@@ -2,7 +2,7 @@ package entities.model;
 
 public class Cliente {
 
-    private int idCliente;
+    private Integer idCliente;
     private String cpf;
     private String nome;
 
@@ -13,11 +13,11 @@ public class Cliente {
         this.nome = nome;
     }
 
-    public int getIdCliente() {
+    public Integer getIdCliente() {
         return idCliente;
     }
 
-    public void setIdCliente(int idCliente) {
+    public void setIdCliente(Integer idCliente) {
         this.idCliente = idCliente;
     }
 

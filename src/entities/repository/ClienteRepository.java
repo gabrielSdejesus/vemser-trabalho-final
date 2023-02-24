@@ -67,14 +67,14 @@ public class ClienteRepository implements Repository<Integer, Cliente> {
     }
 
     @Override
-    public boolean remover(Integer id_cliente) throws BancoDeDadosException {
+    public boolean remover(Integer id) throws BancoDeDadosException {
         Connection con = null;
         try {
             con = ConexaoBancoDeDados.getConnection();
 
             String sql = "DELETE FROM cliente WHERE ID_CLIENTE = ?";
             PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setInt(1, id_cliente);
+            stmt.setInt(1, id);
             int res = stmt.executeUpdate();
 
             System.out.println("removerClientePorID.res=" + res);
@@ -93,7 +93,7 @@ public class ClienteRepository implements Repository<Integer, Cliente> {
     }
 
     @Override
-    public boolean editar(Integer id_cliente, Cliente cliente) throws BancoDeDadosException {
+    public boolean editar(Integer id, Cliente cliente) throws BancoDeDadosException {
         Connection con = null;
         try {
             con = ConexaoBancoDeDados.getConnection();
@@ -113,8 +113,16 @@ public class ClienteRepository implements Repository<Integer, Cliente> {
 
             PreparedStatement stmt = con.prepareStatement(sql.toString());
 
-            stmt.setString(1, cliente.getCpf());
-            stmt.setString(2, cliente.getNome());
+            int index = 1;
+            if(cliente.getNome() != null){
+                stmt.setString(index++, cliente.getCpf());
+            }
+
+            if(cliente.getCpf() != null){
+                stmt.setString(index++, cliente.getNome());
+            }
+
+            stmt.setInt(index, id);
 
             int res = stmt.executeUpdate();
             System.out.println("editarCliente.res=" + res);
@@ -163,13 +171,13 @@ public class ClienteRepository implements Repository<Integer, Cliente> {
         }
     }
 
-    public Cliente consultarPorIdCliente(Integer idCliente) throws BancoDeDadosException {
+    public Cliente consultarPorIdCliente(Integer id) throws BancoDeDadosException {
         Connection con = null;
         try {
             con = ConexaoBancoDeDados.getConnection();
             String sql = "SELECT * FROM CLIENTE WHERE ID_CLIENTE = ?";
             PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setInt(1, idCliente);
+            stmt.setInt(1, id);
 
             ResultSet res = stmt.executeQuery(sql);
             return getClienteFromResultSet(res);
@@ -192,7 +200,6 @@ public class ClienteRepository implements Repository<Integer, Cliente> {
         cliente.setIdCliente(res.getInt("ID_CLIENTE"));
         cliente.setCpf(res.getString("CPF_CLIENTE"));
         cliente.setNome(res.getString("NOME"));
-
         return cliente;
     }
 }

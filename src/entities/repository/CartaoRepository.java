@@ -148,7 +148,7 @@ public class CartaoRepository implements Repository<String, Cartao> {
                 stmt.setDouble(index++, ((CartaoDeCredito) cartao).getLimite());
             }
 
-            stmt.setString(index++, id);
+            stmt.setString(index, id);
 
             // Executa-se a consulta
             int res = stmt.executeUpdate();
