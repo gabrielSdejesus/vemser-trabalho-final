@@ -2,16 +2,16 @@ package entities.model;
 
 public class Conta {
 
-    private int numeroConta;
+    private Integer numeroConta;
     private Cliente cliente;
     private String senha;
-    private int agencia;
-    private double saldo;
-    private double chequeEspecial;
+    private Integer agencia;
+    private Double saldo;
+    private Double chequeEspecial;
 
     public Conta(){}
 
-    public Conta(int numeroConta, int agencia, Cliente cliente, String senha) {
+    public Conta(Integer numeroConta, Integer agencia, Cliente cliente, String senha, Double saldo, Double chequeEspecial) {
         this.numeroConta = numeroConta;
         this.cliente = cliente;
         this.senha = senha;
@@ -20,11 +20,11 @@ public class Conta {
         this.chequeEspecial = chequeEspecial;
     }
 
-    public int getNumeroConta() {
+    public Integer getNumeroConta() {
         return numeroConta;
     }
 
-    public void setNumeroConta(int numeroConta) {
+    public void setNumeroConta(Integer numeroConta) {
         this.numeroConta = numeroConta;
     }
 
@@ -44,32 +44,39 @@ public class Conta {
         this.senha = senha;
     }
 
-    public int getAgencia() {
+    public Integer getAgencia() {
         return agencia;
     }
 
-    public void setAgencia(int agencia) {
+    public void setAgencia(Integer agencia) {
         this.agencia = agencia;
     }
 
-    public double getSaldo() {
+    public Double getSaldo() {
         return saldo;
     }
 
-    public void setSaldo(double saldo) {
+    public void setSaldo(Double saldo) {
         this.saldo = saldo;
     }
 
-    public double getChequeEspecial() {
+    public Double getChequeEspecial() {
         return chequeEspecial;
     }
 
-    public void setChequeEspecial(double chequeEspecial) {
+    public void setChequeEspecial(Double chequeEspecial) {
         this.chequeEspecial = chequeEspecial;
     }
 
     @Override
     public String toString() {
-        return "Cliente: " + getCliente().getNome() + " | " + "Numero da conta: " + getNumeroConta() + " | " + "Agencia: " + getAgencia();
+        return "Conta{" +
+                "numeroConta=" + numeroConta +
+                ", cliente=" + cliente +
+                ", senha='" + senha + '\'' +
+                ", agencia=" + agencia +
+                ", saldo=" + saldo +
+                ", chequeEspecial=" + chequeEspecial +
+                '}';
     }
 }

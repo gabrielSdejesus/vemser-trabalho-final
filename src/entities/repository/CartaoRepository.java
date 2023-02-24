@@ -122,7 +122,8 @@ public class CartaoRepository implements Repository<String, Cartao> {
                 sql.append(" VENCIMENTO = ?,");
             }
 
-            if(cartao.getClass().equals(CartaoDeCredito.class)){
+            if(cartao.getClass().equals(CartaoDeCredito.class)
+                    && ((CartaoDeCredito) cartao).getLimite() > 0){
                 sql.append(" LIMITE = ?,");
             }
 
@@ -144,7 +145,8 @@ public class CartaoRepository implements Repository<String, Cartao> {
                 stmt.setDate(index++, Date.valueOf(cartao.getVencimento()));
             }
 
-            if(cartao.getClass().equals(CartaoDeCredito.class)){
+            if(cartao.getClass().equals(CartaoDeCredito.class)
+                    && ((CartaoDeCredito) cartao).getLimite() > 0){
                 stmt.setDouble(index++, ((CartaoDeCredito) cartao).getLimite());
             }
 

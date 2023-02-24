@@ -1,6 +1,8 @@
 package entities.repository;
 
 import entities.exception.BancoDeDadosException;
+import entities.model.Cartao;
+import entities.model.CartaoDeCredito;
 import entities.model.Cliente;
 import entities.model.Conta;
 
@@ -12,24 +14,17 @@ public class ContaRepository implements Repository<Integer, Conta> {
     @Override
     public Integer getProximoId(Connection connection) throws BancoDeDadosException {
         try {
-            String sql = "SELECT seq_conta mysequence FROM DUAL";
+            String sql = "SELECT SEQ_CONTA.NEXTVAL mysequence FROM DUAL";
             Statement stmt = connection.createStatement();
             ResultSet res = stmt.executeQuery(sql);
-            if(res.next()) {
+
+            if (res.next()) {
                 return res.getInt("mysequence");
             }
-            return null;
 
+            return null;
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
-        } finally {
-            try {
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                throw new BancoDeDadosException(e.getCause());
-            }
         }
     }
 
@@ -39,18 +34,22 @@ public class ContaRepository implements Repository<Integer, Conta> {
         try {
             con = ConexaoBancoDeDados.getConnection();
 
-            String sql = "INSERT INTO CONTA\n" +
-                    "(NUMERO_CONTA, ID_CLIENTE, AGENCIA, SALDO, CHEQUE_ESPECIAL)\n" +
-                    "VALUES(?, ?, ?, ?, ?)\n";
+            Integer proximoId = this.getProximoId(con);
+            conta.setNumeroConta(proximoId);
+
+            String sql = """
+                    INSERT INTO conta\n 
+                    VALUES(?, ?, ?, ?, ?, ?)
+                    """;
 
             PreparedStatement stmt = con.prepareStatement(sql);
 
-            stmt.setInt(1, getProximoId(con));
+            stmt.setInt(1, conta.getNumeroConta());
             stmt.setInt(2, conta.getCliente().getIdCliente());
             stmt.setString(3, conta.getSenha());
             stmt.setInt(4, conta.getAgencia());
-            stmt.setDouble(4, conta.getSaldo());
-            stmt.setDouble(4, conta.getChequeEspecial());
+            stmt.setDouble(5, conta.getSaldo());
+            stmt.setDouble(6, conta.getChequeEspecial());
 
             int res = stmt.executeUpdate();
             System.out.println("adicionarConta.res=" + res);
@@ -70,28 +69,21 @@ public class ContaRepository implements Repository<Integer, Conta> {
     }
 
     @Override
-    public boolean remover(Integer numeroConta) throws BancoDeDadosException {
+    public boolean remover(Integer id) throws BancoDeDadosException {
         Connection con = null;
         try {
             con = ConexaoBancoDeDados.getConnection();
 
-            String sql = "DELETE FROM cartao WHERE NUMERO_CONTA = ?";
+            String sql = "DELETE FROM conta WHERE numero_conta = ?";
+
             PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setInt(1, numeroConta);
+
+            stmt.setInt(1, id);
+
+            // Executa-se a consulta
             int res = stmt.executeUpdate();
+            System.out.println("removerClientePorId.res=" + res);
 
-            sql = "DELETE FROM transferencia WHERE NUMERO_CONTA_ENVIOU = ? OR NUMERO_CONTA_RECEBEU = ?";
-            stmt = con.prepareStatement(sql);
-            stmt.setInt(1, numeroConta);
-            stmt.setInt(2, numeroConta);
-            res = stmt.executeUpdate();
-
-            sql = "DELETE FROM conta WHERE NUMERO_CONTA = ?";
-            stmt = con.prepareStatement(sql);
-            stmt.setInt(1, numeroConta);
-            res = stmt.executeUpdate();
-
-            System.out.println("removerContaPorNumeroConta.res=" + res);
             return res > 0;
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
@@ -101,13 +93,13 @@ public class ContaRepository implements Repository<Integer, Conta> {
                     con.close();
                 }
             } catch (SQLException e) {
-                throw new BancoDeDadosException(e.getCause());
+                e.printStackTrace();
             }
         }
     }
 
     @Override
-    public boolean editar(Integer numeroConta, Conta conta) throws BancoDeDadosException {
+    public boolean editar(Integer id, Conta conta) throws BancoDeDadosException {
         Connection con = null;
         try {
             con = ConexaoBancoDeDados.getConnection();
@@ -115,10 +107,19 @@ public class ContaRepository implements Repository<Integer, Conta> {
             StringBuilder sql = new StringBuilder();
             sql.append("UPDATE conta SET \n");
 
-            if (conta.getSenha() != null) {
+            if(conta.getSenha() != null){
                 sql.append(" SENHA = ?,");
             }
-            if (conta.getChequeEspecial() != 0.0) {
+
+            if(conta.getAgencia().toString().matches("\\d{4}")){
+                sql.append(" AGENCIA = ?,");
+            }
+
+            if(conta.getSaldo() > 0){
+                sql.append(" SALDO = ?,");
+            }
+
+            if(conta.getChequeEspecial() > 0){
                 sql.append(" CHEQUE_ESPECIAL = ?,");
             }
 
@@ -127,9 +128,24 @@ public class ContaRepository implements Repository<Integer, Conta> {
 
             PreparedStatement stmt = con.prepareStatement(sql.toString());
 
-            stmt.setString(1, conta.getSenha());
-            stmt.setDouble(2, conta.getChequeEspecial());
-            stmt.setInt(3, conta.getNumeroConta());
+            int index = 1;
+            if(conta.getSenha() != null){
+                stmt.setString(1, conta.getSenha());
+            }
+
+            if(conta.getAgencia().toString().matches("\\d{4}")){
+                stmt.setInt(2, conta.getAgencia());
+            }
+
+            if(conta.getSaldo() > 0){
+                stmt.setDouble(3, conta.getSaldo());
+            }
+
+            if(conta.getChequeEspecial() > 0){
+                stmt.setDouble(4, conta.getChequeEspecial());
+            }
+
+            stmt.setInt(index, id);
 
             // Executa-se a consulta
             int res = stmt.executeUpdate();
@@ -157,7 +173,7 @@ public class ContaRepository implements Repository<Integer, Conta> {
             con = ConexaoBancoDeDados.getConnection();
             Statement stmt = con.createStatement();
 
-            String sql = "SELECT * FROM CONTA c INNER JOIN CLIENTE c2 ON c.ID_CLIENTE = c2.ID_CLIENTE";
+            String sql = "SELECT * FROM CONTA c LEFT JOIN CLIENTE c2 ON c.ID_CLIENTE = c2.ID_CLIENTE";
 
             ResultSet res = stmt.executeQuery(sql);
 
@@ -179,16 +195,30 @@ public class ContaRepository implements Repository<Integer, Conta> {
         }
     }
 
-    public Conta consultarPorNumeroConta(Integer numeroConta) throws BancoDeDadosException {
+    public Conta consultarPorNumeroConta(Integer id) throws BancoDeDadosException {
         Connection con = null;
         try {
             con = ConexaoBancoDeDados.getConnection();
-            String sql = "SELECT * FROM CONTA WHERE numero_conta = ?";
-            PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setInt(1, numeroConta);
+            Conta conta = new Conta();
 
-            ResultSet res = stmt.executeQuery(sql);
-            return getContaFromResultSet(res);
+            String sql = "SELECT * FROM CONTA c\n " +
+                    " LEFT JOIN CLIENTE c2 ON c.ID_CLIENTE = c2.ID_CLIENTE\n" +
+                    " WHERE numero_conta = ?";
+
+            // Executa-se a consulta
+            PreparedStatement stmt = con.prepareStatement(sql);
+
+            if(id.toString().matches("\\d{6}")) {
+                stmt.setInt(1, id);
+            }
+
+            ResultSet res = stmt.executeQuery();
+
+            while (res.next()) {
+                conta = getContaFromResultSet(res);
+            }
+
+            return conta;
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
         } finally {
@@ -210,14 +240,11 @@ public class ContaRepository implements Repository<Integer, Conta> {
         conta.setAgencia(res.getInt("AGENCIA"));
         conta.setSaldo(res.getDouble("SALDO"));
         conta.setChequeEspecial(res.getDouble("CHEQUE_ESPECIAL"));
-
         Cliente cliente = new Cliente();
         cliente.setIdCliente(res.getInt("ID_CLIENTE"));
         cliente.setCpf(res.getString("CPF_CLIENTE"));
         cliente.setNome(res.getString("NOME"));
-
         conta.setCliente(cliente);
-
         return conta;
     }
 
