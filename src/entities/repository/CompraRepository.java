@@ -46,7 +46,7 @@ public class CompraRepository implements Repository<Integer, Compra>{
             PreparedStatement stmt = con.prepareStatement(sql);
 
             stmt.setInt(1, compra.getIdCompra());
-            stmt.setInt(2, Integer.parseInt(compra.getCartao().getNumeroCartao()));
+            stmt.setString(2, compra.getCartao().getNumeroCartao());
             stmt.setString(3, compra.getDocVendedor());
             stmt.setDate(4, Date.valueOf(compra.getData()));
 
