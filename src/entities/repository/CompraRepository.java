@@ -246,7 +246,7 @@ public class CompraRepository implements Repository<Integer, Compra>{
         conta.setNumeroConta(res.getInt("numero_conta"));
         Cliente cliente = new Cliente();
         cliente.setNome(res.getString("nome"));
-        conta.setIdCliente(cliente);
+        conta.setCliente(cliente);
         cartao.setConta(conta);
         compra.setCartao(cartao);
         return compra;

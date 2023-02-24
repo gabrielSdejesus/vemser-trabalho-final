@@ -32,7 +32,7 @@ public class Conta {
         return cliente;
     }
 
-    public void setIdCliente(Cliente cliente) {
+    public void setCliente(Cliente cliente) {
         this.cliente = cliente;
     }
 

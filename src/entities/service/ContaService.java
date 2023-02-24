@@ -13,47 +13,35 @@ import java.util.regex.Pattern;
 public class ContaService extends Service{
 
     private ContaRepository contaRepository;
-    private ClienteRepository clienteRepository;
-    private ClienteService clienteService;
 
     public ContaService() {
         this.contaRepository = new ContaRepository();
-        this.clienteRepository = new ClienteRepository();
     };
 
     public void adicionar() {
         while (true) {
-            int numeroConta = ThreadLocalRandom.current().nextInt(1000, 9999);
             int agencia = ThreadLocalRandom.current().nextInt(10, 99);
-            String nomeCliente;
-            String cpfCliente;
             String senha;
 
             try {
-                if(contaRepository.consultarPorNumeroConta(numeroConta) != null) {
+                Cliente cliente = new ClienteService().adicionar();
 
-                    Cliente cliente = new ClienteService().adicionar();
-
-                    while (true) {
-                        System.out.print("Insira a nova senha: ");
-                        senha = SCANNER.nextLine().trim().replaceAll(" ", "");
-                        if (senha.length() == 6 && !Pattern.matches("[a-zA-Z!@#$%^&*(),.?\":{}|<>]+", senha)) {
-                            break;
-                        }
-                        System.out.println("A senha não possui 6 digitos ou não é composta apenas por números! Tente novamente.");
+                while (true) {
+                    System.out.print("Insira a nova senha: ");
+                    senha = SCANNER.nextLine().trim().replaceAll(" ", "");
+                    if (senha.length() == 6 && !Pattern.matches("[a-zA-Z!@#$%^&*(),.?\":{}|<>]+", senha)) {
+                        break;
                     }
-
-                    Conta conta = new Conta(
-                            numeroConta,
-                            agencia,
-                            cliente,
-                            senha
-                    );
-
-                    clienteRepository.adicionar(conta.getCliente());
-                    contaRepository.adicionar(conta);
-
+                    System.out.println("A senha não possui 6 digitos ou não é composta apenas por números! Tente novamente.");
                 }
+
+                Conta conta = new Conta();
+                conta.setAgencia(agencia);
+                conta.setCliente(cliente);
+                conta.setSenha(senha);
+
+                contaRepository.adicionar(conta);
+
             } catch (BancoDeDadosException e) {
                 e.printStackTrace();
                 break;
