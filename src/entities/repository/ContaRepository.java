@@ -228,14 +228,14 @@ public class ContaRepository implements Repository<Integer, Conta> {
 
             String sql = "SELECT * FROM CONTA c\n " +
                     " LEFT JOIN CLIENTE c2 ON c.ID_CLIENTE = c2.ID_CLIENTE\n" +
-                    " WHERE numero_conta = ? AND STATUS = 1";
+                    " WHERE numero_conta = ? AND c.STATUS = 1";
 
             // Executa-se a consulta
             PreparedStatement stmt = con.prepareStatement(sql);
 
-            if(id.toString().matches("\\d{6}")) {
-                stmt.setInt(1, id);
-            }
+
+            stmt.setInt(1, id);
+
 
             ResultSet res = stmt.executeQuery();
 
