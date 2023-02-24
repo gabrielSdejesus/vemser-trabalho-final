@@ -16,7 +16,7 @@ public class TelaAdministrador extends Tela {
         switch(input){
             case 1 ->{
                 if(Tela.loginAdm()){
-                    clienteService.cadastrarCliente();
+                    clienteService.exibirCliente(clienteService.adicionarCliente().getIdCliente());
                 }else{
                     System.err.println("Senha administrativa inválida!\n");
                 }

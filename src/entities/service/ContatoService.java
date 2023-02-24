@@ -22,11 +22,11 @@ public class ContatoService extends Service{
         List<Contato> contatos = this.retornarContatosDoCliente(conta);
         int inputAlteracaoContato, tipoAlteracaoContato;
 
-        System.out.println("Selecione um contato para alterar: ");
+        StringBuilder message = new StringBuilder("Selecione um contato para alterar:\n");
         for(int i=0;i<contatos.size();i++){
-            System.out.printf("[%d] Telefone: %s; Email: %s\n", (i+1), contatos.get(i).getTelefone(), contatos.get(i).getEmail());
+            message.append("[").append(i + 1).append("] Telefone: ").append(contatos.get(i).getTelefone()).append("; Email: ").append(contatos.get(i).getEmail()).append("\n");
         }
-        inputAlteracaoContato = Integer.parseInt(SCANNER.nextLine());
+        inputAlteracaoContato = askInt(String.valueOf(message));
 
         if(inputAlteracaoContato > 0 && inputAlteracaoContato <= contatos.size()){
             Contato novoContato = contatos.get(inputAlteracaoContato);
@@ -66,7 +66,7 @@ public class ContatoService extends Service{
         int inputExclusaoContato;
 
         if(contatos.size()>1){
-            StringBuilder message = new StringBuilder("Selecione um contato para deletar:");
+            StringBuilder message = new StringBuilder("Selecione um contato para deletar:\n");
 
             System.out.println("Selecione um contato para deletar:");
             for (int i = 0; i < contatos.size(); i++) {
