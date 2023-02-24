@@ -39,7 +39,7 @@ public class ContaRepository implements Repository<Integer, Conta> {
 
             String sql = """
                     INSERT INTO conta\n 
-                    VALUES(?, ?, ?, ?, ?, ?)
+                    VALUES(?, ?, ?, ?, ?, ?, ?)
                     """;
 
             PreparedStatement stmt = con.prepareStatement(sql);
@@ -50,6 +50,7 @@ public class ContaRepository implements Repository<Integer, Conta> {
             stmt.setInt(4, conta.getAgencia());
             stmt.setDouble(5, conta.getSaldo());
             stmt.setDouble(6, conta.getChequeEspecial());
+            stmt.setInt(7, 1);
 
             int res = stmt.executeUpdate();
             System.out.println("adicionarConta.res=" + res);
@@ -74,7 +75,7 @@ public class ContaRepository implements Repository<Integer, Conta> {
         try {
             con = ConexaoBancoDeDados.getConnection();
 
-            String sql = "DELETE FROM conta WHERE numero_conta = ?";
+            String sql = "UPDATE conta SET status = 0 WHERE numero_conta = ?";
 
             PreparedStatement stmt = con.prepareStatement(sql);
 
@@ -203,7 +204,7 @@ public class ContaRepository implements Repository<Integer, Conta> {
 
             String sql = "SELECT * FROM CONTA c\n " +
                     " LEFT JOIN CLIENTE c2 ON c.ID_CLIENTE = c2.ID_CLIENTE\n" +
-                    " WHERE numero_conta = ?";
+                    " WHERE numero_conta = ? AND STATUS = 1";
 
             // Executa-se a consulta
             PreparedStatement stmt = con.prepareStatement(sql);
@@ -240,6 +241,7 @@ public class ContaRepository implements Repository<Integer, Conta> {
         conta.setAgencia(res.getInt("AGENCIA"));
         conta.setSaldo(res.getDouble("SALDO"));
         conta.setChequeEspecial(res.getDouble("CHEQUE_ESPECIAL"));
+        conta.setStatus(res.getInt("STATUS"));
         Cliente cliente = new Cliente();
         cliente.setIdCliente(res.getInt("ID_CLIENTE"));
         cliente.setCpf(res.getString("CPF_CLIENTE"));

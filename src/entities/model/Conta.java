@@ -8,6 +8,7 @@ public class Conta {
     private Integer agencia;
     private Double saldo;
     private Double chequeEspecial;
+    private Integer status = 1;
 
     public Conta(){}
 
@@ -68,6 +69,14 @@ public class Conta {
         this.chequeEspecial = chequeEspecial;
     }
 
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "Conta{" +
@@ -77,6 +86,7 @@ public class Conta {
                 ", agencia=" + agencia +
                 ", saldo=" + saldo +
                 ", chequeEspecial=" + chequeEspecial +
+                ", ativo=" + status +
                 '}';
     }
 }
