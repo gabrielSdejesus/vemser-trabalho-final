@@ -1,6 +1,7 @@
 package entities.view;
 
 import entities.model.Conta;
+import entities.service.TransferenciaService;
 
 public class TelaTransferencias extends Tela {
     public static void exibirTransferencias(){
@@ -9,7 +10,7 @@ public class TelaTransferencias extends Tela {
     }
 
     public static void tratarInput() {
-        int input = TelaTransferencias.pedirInput("[1] -> Insira seus dados de login para VISUALIZAR suas TRANSFERÊNCIAS\n[2] -> Voltar para a Tela Principal")
+        int input = TelaTransferencias.pedirInput("[1] -> Insira seus dados de login para VISUALIZAR suas TRANSFERÊNCIAS\n[2] -> Voltar para a Tela Principal");
         TransferenciaService transferenciaService = new TransferenciaService();
         Conta login;
         switch(input){

@@ -12,7 +12,7 @@ import java.util.List;
 public class ItemRepository implements Repository<Integer, Item>{
 
     @Override
-    public Integer getProximoId(Connection connection) throws SQLException {
+    public Integer getProximoId(Connection connection) throws BancoDeDadosException {
         try {
             String sql = "SELECT SEQ_ITEM.NEXTVAL mysequence from DUAL";
             Statement stmt = connection.createStatement();

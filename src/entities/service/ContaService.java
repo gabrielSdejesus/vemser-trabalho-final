@@ -4,10 +4,9 @@ import entities.exception.BancoDeDadosException;
 import entities.model.Cliente;
 import entities.model.Conta;
 import entities.repository.ContaRepository;
+import entities.repository.ClienteRepository;
 
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Pattern;
 
@@ -15,8 +14,12 @@ public class ContaService extends Service{
 
     private ContaRepository contaRepository;
     private ClienteRepository clienteRepository;
+    private ClienteService clienteService;
 
-    public ContaService() { this.contaRepository = new ContaRepository(); };
+    public ContaService() {
+        this.contaRepository = new ContaRepository();
+        this.clienteRepository = new ClienteRepository();
+    };
 
     public void adicionar() {
         while (true) {
@@ -29,21 +32,7 @@ public class ContaService extends Service{
             try {
                 if(contaRepository.consultarPorNumeroConta(numeroConta) != null) {
 
-                    while (true) {
-                        System.out.print("Insira o nome do cliente: ");
-                        nomeCliente = SCANNER.nextLine().strip().toUpperCase();
-                        if (Pattern.matches("[0-9!@#$%^&*(),.?\":{}|<>]", nomeCliente)) {
-                            System.out.println("Nome inválido! Insira novamente.");
-                        } else break;
-                    }
-
-                    while (true) {
-                        System.out.print("Insira o CPF do cliente: ");
-                        cpfCliente = SCANNER.nextLine().strip().replaceAll(" ", "");
-                        if (Pattern.matches("^[a-zA-Z!@#$%^&*(),.?\":{}|<>]+$", cpfCliente)) {
-                            System.out.println("CPF inválido! Insira novamente.");
-                        } else break;
-                    }
+                    Cliente cliente = new ClienteService().adicionar();
 
                     while (true) {
                         System.out.print("Insira a nova senha: ");
@@ -57,7 +46,7 @@ public class ContaService extends Service{
                     Conta conta = new Conta(
                             numeroConta,
                             agencia,
-                            new Cliente(clienteRepository.getProximoId(), nomeCliente, cpfCliente),
+                            cliente,
                             senha
                     );
 
@@ -146,7 +135,7 @@ public class ContaService extends Service{
         return null;
     }
 
-
+/*
     public void deletarConta(){
         String numeroConta;
         if(BancoDeDados.getContas().size() > 0){
@@ -304,5 +293,5 @@ public class ContaService extends Service{
         }else{
             System.err.println("CPF do CLIENTE ou NÚMERO da CONTA incorreto!");
         }
-    }
+    }*/
 }

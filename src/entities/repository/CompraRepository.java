@@ -12,7 +12,7 @@ import java.util.List;
 public class CompraRepository implements Repository<Integer, Compra>{
 
     @Override
-    public Integer getProximoId(Connection connection) throws SQLException {
+    public Integer getProximoId(Connection connection) throws BancoDeDadosException {
         try {
             String sql = "SELECT SEQ_COMPRA.NEXTVAL mysequence from DUAL";
             Statement stmt = connection.createStatement();

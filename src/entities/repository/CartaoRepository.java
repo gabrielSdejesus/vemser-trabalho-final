@@ -10,7 +10,7 @@ import java.util.List;
 public class CartaoRepository implements Repository<String, Cartao> {
     
     @Override
-    public String getProximoId(Connection connection) throws SQLException {
+    public String getProximoId(Connection connection) throws BancoDeDadosException {
         try {
             String sql = "SELECT SEQ_CARTAO.NEXTVAL mysequence from DUAL";
             Statement stmt = connection.createStatement();
