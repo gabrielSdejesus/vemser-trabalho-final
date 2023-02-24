@@ -1,5 +1,6 @@
 package entities.service;
 
+import entities.exception.BancoDeDadosException;
 import entities.model.*;
 import entities.repository.CompraRepository;
 
@@ -29,7 +30,7 @@ public class CompraService extends Service{
             }else{
                 System.out.println("Sem compras feitas nesse cartão");
             }
-        }catch (SQLException e){
+        }catch (BancoDeDadosException e){
             e.printStackTrace();
         }
     }
@@ -113,7 +114,7 @@ public class CompraService extends Service{
                 compra.setCartao(cartao);
                 try{
                     compra = this.compraRepository.adicionar(compra);
-                }catch (SQLException e){
+                }catch (BancoDeDadosException e){
                     e.printStackTrace();
                 }
                 /////
@@ -126,7 +127,7 @@ public class CompraService extends Service{
                 itemService.adicionar(itens);
                 /////
 
-                ////Alterar o limite do cartão de crédito se tiver comprado com o cartão de crédito
+                /////Alterar o limite do cartão de crédito se tiver comprado com o cartão de crédito
                 if(cartao.getClass().equals(CartaoDeCredito.class)){
                     ((CartaoDeCredito) cartao).setLimite(((CartaoDeCredito) cartao).getLimite()-valorTotalAtual);
                     if(cartaoService.editarCartao(cartao.getNumeroCartao(), cartao)){
@@ -135,7 +136,7 @@ public class CompraService extends Service{
                         System.err.println("Problemas ao atualizar o limite do cartão de crédito");
                     }
                 }
-                ////
+                /////
             }
         } else {
             System.err.println("Este número não representa nenhum cartão.");

@@ -1,5 +1,6 @@
 package entities.service;
 
+import entities.exception.BancoDeDadosException;
 import entities.model.*;
 import entities.repository.CartaoRepository;
 
@@ -49,12 +50,7 @@ public class CartaoService extends Service{
         }else{
             int tipoCartao;
 
-            System.out.println("Insira o tipo do cartão:");
-            System.out.println("[1] CRÉDITO");
-            System.out.println("[2] DÉBITO");
-            System.out.println("[3] CANCELAR");
-
-            tipoCartao = Integer.parseInt(SCANNER.nextLine());
+            tipoCartao = askInt("Insira o tipo do cartão:\n[1] CRÉDITO\n[2] DÉBITO\n[3] CANCELAR");
 
             if (tipoCartao < 1 || tipoCartao >= 3){
                 System.out.println("Operação cancelada!");
@@ -80,7 +76,7 @@ public class CartaoService extends Service{
                                 System.out.println("\t\tData de expedição: "+cartaoDeCredito.getDataExpedicao());
                                 System.out.println("\t\tCódigo de segurança: "+cartaoDeCredito.getCodigoSeguranca());
                             }
-                        }catch (SQLException e){
+                        }catch (BancoDeDadosException e){
                             e.printStackTrace();
                         }
                     }
@@ -102,7 +98,7 @@ public class CartaoService extends Service{
                                 System.out.println("\t\tData de expedição: "+cartaoDeDebito.getDataExpedicao());
                                 System.out.println("\t\tCódigo de segurança: "+cartaoDeDebito.getCodigoSeguranca());
                             }
-                        }catch (SQLException e){
+                        }catch (BancoDeDadosException e){
                             e.printStackTrace();
                         }
                     }
@@ -118,13 +114,13 @@ public class CartaoService extends Service{
         }else{
             int cartao;
 
-            System.out.println("Selecione o CARTÃO para REMOVER:");
+            StringBuilder message = new StringBuilder("Selecione o CARTÃO para REMOVER:\n");
             for(int i=0;i<cartoes.size();i++){
                 if(cartoes.get(i) != null){
-                    System.out.printf("Cartão [%d] -> %s\n", (i+1), (cartoes.get(i).getTipo() == TipoCartao.DEBITO ? "Débito":"Crédito"));
+                    message.append("Cartão [").append(i + 1).append("] -> ").append(cartoes.get(i).getTipo() == TipoCartao.DEBITO ? "Débito" : "Crédito");
                 }
             }
-            cartao = Integer.parseInt(SCANNER.nextLine())-1;
+            cartao = askInt(String.valueOf(message))-1;
             try{
                 if(cartoes.get(cartao).getTipo() == TipoCartao.CREDITO){
                     CartaoDeCredito cartaoDeCredito = (CartaoDeCredito) cartoes.get(cartao);
@@ -141,7 +137,7 @@ public class CartaoService extends Service{
                     }
                 }
 
-            }catch(SQLException e){
+            }catch(BancoDeDadosException e){
                 e.printStackTrace();
             }
         }
@@ -151,7 +147,7 @@ public class CartaoService extends Service{
         List<Cartao> cartoes = new ArrayList<>();
         try{
             cartoes = this.cartaoRepository.listarCartoesPorNumeroConta(conta);
-        }catch(SQLException e){
+        }catch(BancoDeDadosException e){
             e.printStackTrace();
         }
         if(cartoes.size() == 0){
@@ -164,7 +160,7 @@ public class CartaoService extends Service{
     public boolean editarCartao(String idCartao, Cartao cartao){
         try{
             return this.cartaoRepository.editar(idCartao, cartao);
-        }catch(SQLException e){
+        }catch(BancoDeDadosException e){
             e.printStackTrace();
         }
         return false;
