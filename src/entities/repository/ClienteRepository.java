@@ -1,6 +1,8 @@
 package entities.repository;
 
 import entities.exception.BancoDeDadosException;
+import entities.model.Cartao;
+import entities.model.CartaoDeCredito;
 import entities.model.Cliente;
 
 import java.sql.*;
@@ -12,7 +14,7 @@ public class ClienteRepository implements Repository<Integer, Cliente> {
     @Override
     public Integer getProximoId(Connection connection) throws BancoDeDadosException {
         try {
-            String sql = "SELECT seq_cliente mysequence FROM DUAL";
+            String sql = "SELECT SEQ_CLIENTE.NEXTVAL mysequence FROM DUAL";
             Statement stmt = connection.createStatement();
             ResultSet res = stmt.executeQuery(sql);
             if(res.next()) {
@@ -22,14 +24,6 @@ public class ClienteRepository implements Repository<Integer, Cliente> {
 
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
-        } finally {
-            try {
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                throw new BancoDeDadosException(e.getCause());
-            }
         }
     }
 
@@ -39,20 +33,23 @@ public class ClienteRepository implements Repository<Integer, Cliente> {
         try {
             con = ConexaoBancoDeDados.getConnection();
 
-            String sql = "INSERT INTO CLIENTE\n" +
-                    "(ID_CLIENTE, CPF_CLIENTE, NOME)\n" +
-                    "VALUES(?, ?, ?)\n";
+            Integer proximoId = this.getProximoId(con);
+            cliente.setIdCliente(proximoId);
+
+            String sql = """
+                    INSERT INTO cliente\n 
+                    VALUES(?, ?, ?)
+                    """;
 
             PreparedStatement stmt = con.prepareStatement(sql);
-
-            stmt.setInt(1, getProximoId(con));
+            stmt.setInt(1, cliente.getIdCliente());
             stmt.setString(2, cliente.getCpf());
             stmt.setString(3, cliente.getNome());
 
-            ResultSet res = stmt.executeQuery();
 
-            return getClienteFromResultSet(res);
-
+            int res = stmt.executeUpdate();
+            System.out.println("adicionarCliente.res=" + res);
+            return cliente;
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
         } finally {
@@ -61,7 +58,7 @@ public class ClienteRepository implements Repository<Integer, Cliente> {
                     con.close();
                 }
             } catch (SQLException e) {
-                throw new BancoDeDadosException(e.getCause());
+                e.printStackTrace();
             }
         }
     }
@@ -175,12 +172,18 @@ public class ClienteRepository implements Repository<Integer, Cliente> {
         Connection con = null;
         try {
             con = ConexaoBancoDeDados.getConnection();
+            Cliente cliente = new Cliente();
+
             String sql = "SELECT * FROM CLIENTE WHERE ID_CLIENTE = ?";
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setInt(1, id);
 
-            ResultSet res = stmt.executeQuery(sql);
-            return getClienteFromResultSet(res);
+
+            ResultSet res = stmt.executeQuery();
+            while (res.next()) {
+                cliente = getClienteFromResultSet(res);
+            }
+            return cliente;
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
         } finally {
