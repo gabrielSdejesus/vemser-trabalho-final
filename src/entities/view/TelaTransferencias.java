@@ -17,7 +17,7 @@ public class TelaTransferencias extends Tela {
             case 1 ->{
                 login = Tela.login();
                 if(login != null){
-                    transferenciaService.exibirTransferencias(login);
+                    transferenciaService.listarTransferenciasPorConta(login.getNumeroConta());
                 }else{
                     System.err.println("Login mal-sucedido");
                 }
