@@ -30,7 +30,7 @@ public class ItemRepository implements Repository<Integer, Item>{
 
     public Integer getUltimoIdCompra(Connection connection) throws SQLException {
         try {
-            String sql = "SELECT SEQ_ITEM.CURRVAL mysequence from DUAL";
+            String sql = "SELECT SEQ_COMPRA.CURRVAL mysequence from DUAL";
             Statement stmt = connection.createStatement();
             ResultSet res = stmt.executeQuery(sql);
 
@@ -83,89 +83,17 @@ public class ItemRepository implements Repository<Integer, Item>{
 
     @Override
     public boolean remover(Integer id) throws BancoDeDadosException {
-        Connection con = null;
-        try {
-            con = ConexaoBancoDeDados.getConnection();
-
-            String sql = "DELETE FROM item WHERE id_item = ?";
-
-            PreparedStatement stmt = con.prepareStatement(sql);
-
-            stmt.setInt(1, id);
-
-            // Executa-se a consulta
-            int res = stmt.executeUpdate();
-            System.out.println("removerItemPorId.res=" + res);
-
-            return res > 0;
-        } catch (SQLException e) {
-            throw new BancoDeDadosException(e.getCause());
-        } finally {
-            try {
-                if (con != null) {
-                    con.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+        return false;
     }
 
     @Override
     public boolean editar(Integer id, Item item) throws BancoDeDadosException {
-        Connection con = null;
-        try {
-            con = ConexaoBancoDeDados.getConnection();
-
-            StringBuilder sql = new StringBuilder();
-            sql.append("UPDATE item SET \n");
-
-            if(item.getNome() != null){
-                sql.append(" nome = ?,");
-            }
-
-            if(item.getValor() != null){
-                sql.append(" valor = ?,");
-            }
-
-            sql.deleteCharAt(sql.length() - 1); //remove o ultimo ','
-            sql.append(" WHERE id_item = ? ");
-
-            PreparedStatement stmt = con.prepareStatement(sql.toString());
-
-            int index = 1;
-
-            if (item.getNome() != null) {
-                stmt.setString(index++, item.getNome());
-            }
-
-            if (item.getValor() != null) {
-                stmt.setDouble(index++, item.getValor());
-            }
-
-            stmt.setInt(index++, id);
-
-            // Executa-se a consulta
-            int res = stmt.executeUpdate();
-            System.out.println("editarItem.res=" + res);
-
-            return res > 0;
-        } catch (SQLException e) {
-            throw new BancoDeDadosException(e.getCause());
-        } finally {
-            try {
-                if (con != null) {
-                    con.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+        return false;
     }
 
     @Override
-    public List<Item> listar() throws BancoDeDadosException {
-        List<Item> itens = new ArrayList<>();
+    public ArrayList<Item> listar() throws BancoDeDadosException {
+        ArrayList<Item> itens = new ArrayList<>();
         Connection con = null;
         try {
             con = ConexaoBancoDeDados.getConnection();
@@ -184,6 +112,37 @@ public class ItemRepository implements Repository<Integer, Item>{
                 itens.add(item);
             }
             return itens;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new BancoDeDadosException(e.getCause());
+        } finally {
+            try {
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public ArrayList<Item> listarItensPorIdCompra(Integer idCompra) throws BancoDeDadosException {
+        ArrayList<Item> itens = new ArrayList<>();
+        Connection con = null;
+        try {
+            con = ConexaoBancoDeDados.getConnection();
+
+            String sql = "SELECT * FROM item WHERE id_compra = ?";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setInt(1, idCompra);
+            ResultSet res = stmt.executeQuery(sql);
+
+            while(res.next()) {
+                Item item = getItemFromResultSet(res);
+                itens.add(item);
+            }
+            return itens;
+
         } catch (SQLException e) {
             e.printStackTrace();
             throw new BancoDeDadosException(e.getCause());

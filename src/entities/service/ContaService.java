@@ -27,7 +27,7 @@ public class ContaService extends Service{
                 Cliente cliente = new ClienteService().adicionar();
 
                 while (true) {
-                    System.out.print("Insira a nova senha: ");
+                    System.out.print("Insira a senha: ");
                     senha = SCANNER.nextLine().trim().replaceAll(" ", "");
                     if (senha.length() == 6 && !Pattern.matches("[a-zA-Z!@#$%^&*(),.?\":{}|<>]+", senha)) {
                         break;
