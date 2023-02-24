@@ -161,7 +161,12 @@ public class CartaoService extends Service{
         }
     }
 
-    public void editarCartao(String idCartao, Cartao cartao){
-
+    public boolean editarCartao(String idCartao, Cartao cartao){
+        try{
+            return this.cartaoRepository.editar(idCartao, cartao);
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return false;
     }
 }

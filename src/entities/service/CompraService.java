@@ -129,7 +129,11 @@ public class CompraService extends Service{
                 ////Alterar o limite do cartão de crédito se tiver comprado com o cartão de crédito
                 if(cartao.getClass().equals(CartaoDeCredito.class)){
                     ((CartaoDeCredito) cartao).setLimite(((CartaoDeCredito) cartao).getLimite()-valorTotalAtual);
-                    cartaoService.editarCartao(cartao.getNumeroCartao(), cartao);
+                    if(cartaoService.editarCartao(cartao.getNumeroCartao(), cartao)){
+                        System.out.println("Limite do cartão de CRÉDITO ATUALIZADO!");
+                    }else{
+                        System.err.println("Problemas ao atualizar o limite do cartão de crédito");
+                    }
                 }
                 ////
             }
