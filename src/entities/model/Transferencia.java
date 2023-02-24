@@ -52,8 +52,10 @@ public class Transferencia{
     public String toString() {
         return "Transferencia{" +
                 "idTransferencia=" + idTransferencia +
-                ", contaEnviou=" + contaEnviou +
-                ", contaRecebeu=" + contaRecebeu +
+                ", contaEnviou=" + contaEnviou.getNumeroConta() +
+                ", nomeEnviou=" + contaEnviou.getCliente().getNome() +
+                ", contaRecebeu=" + contaRecebeu.getNumeroConta() +
+                ", nomeRecebeu=" + contaRecebeu.getCliente().getNome() +
                 ", valor=" + valor +
                 '}';
     }

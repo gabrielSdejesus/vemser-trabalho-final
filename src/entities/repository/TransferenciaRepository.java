@@ -1,6 +1,7 @@
 package entities.repository;
 
 import entities.exception.BancoDeDadosException;
+import entities.model.Cliente;
 import entities.model.Conta;
 import entities.model.Transferencia;
 
@@ -166,8 +167,12 @@ public class TransferenciaRepository implements Repository<Integer, Transferenci
             Statement stmt = con.createStatement();
 
             String sql = """
-                        SELECT c.numero_conta, t.*  FROM TRANSFERENCIA t\n 
-                        INNER JOIN CONTA c ON t.numero_conta_enviou = c.numero_conta\n
+                    SELECT t.ID_TRANSFERENCIA, c.NOME AS NOME_RECEBEU, t.NUMERO_CONTA_RECEBEU,\n 
+                    c4.NOME AS NOME_ENVIOU, t.NUMERO_CONTA_ENVIOU, t.VALOR FROM CLIENTE c\n
+                    INNER JOIN CONTA c2 ON c.ID_CLIENTE = c2.ID_CLIENTE\n
+                    INNER JOIN TRANSFERENCIA t ON c2.NUMERO_CONTA = t.NUMERO_CONTA_RECEBEU\n
+                    INNER JOIN CONTA c3 ON t.NUMERO_CONTA_ENVIOU = c3.NUMERO_CONTA\n
+                    INNER JOIN CLIENTE c4 ON c3.ID_CLIENTE = c4.ID_CLIENTE
                     """;
 
             ResultSet res = stmt.executeQuery(sql);
@@ -191,20 +196,23 @@ public class TransferenciaRepository implements Repository<Integer, Transferenci
         }
     }
 
-    public List<Transferencia> listarTransferenciasPorConta(Integer numeroConta) throws BancoDeDadosException {
+    public List<Transferencia> listarTransferenciasPorConta(Integer id) throws BancoDeDadosException {
         List<Transferencia> transferencias = new ArrayList<>();
         Connection con = null;
         try {
             con = ConexaoBancoDeDados.getConnection();
 
             String sql = """
-                        SELECT c.numero_conta, t.*  FROM TRANSFERENCIA t\n 
-                        INNER JOIN CONTA c ON t.numero_conta_enviou = c.numero_conta\n
-                        WHERE t.numero_conta_enviou = ?
+                    SELECT t.ID_TRANSFERENCIA, c.NOME AS NOME_RECEBEU, t.NUMERO_CONTA_RECEBEU,\n 
+                    c4.NOME AS NOME_ENVIOU, t.NUMERO_CONTA_ENVIOU, t.VALOR FROM CLIENTE c\n
+                    INNER JOIN CONTA c2 ON c.ID_CLIENTE = c2.ID_CLIENTE\n
+                    INNER JOIN TRANSFERENCIA t ON c2.NUMERO_CONTA = t.NUMERO_CONTA_RECEBEU\n
+                    INNER JOIN CONTA c3 ON t.NUMERO_CONTA_ENVIOU = c3.NUMERO_CONTA\n
+                    INNER JOIN CLIENTE c4 ON c3.ID_CLIENTE = c4.ID_CLIENTE WHERE t.NUMERO_CONTA_ENVIOU = ?
                     """;
 
             PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setInt(1, numeroConta);
+            stmt.setInt(1, id);
 
             ResultSet res = stmt.executeQuery();
 
@@ -228,15 +236,22 @@ public class TransferenciaRepository implements Repository<Integer, Transferenci
     }
 
     private Transferencia getTransferenciaFromResultSet(ResultSet res) throws SQLException {
-        Transferencia transferencia = new Transferencia();
-        transferencia.setIdTransferencia(res.getInt("id_transferencia"));
+
         Conta contaEnviou = new Conta();
-        contaEnviou.setNumeroConta(res.getInt("numero_conta_enviou"));
+        Cliente clienteEnviou = new Cliente();
+        clienteEnviou.setNome(res.getString("NOME_ENVIOU"));
+        contaEnviou.setNumeroConta(res.getInt("NUMERO_CONTA_ENVIOU"));
+
         Conta contaRecebeu = new Conta();
-        contaRecebeu.setNumeroConta(res.getInt("numero_conta_recebeu"));
+        Cliente clienteRecebeu = new Cliente();
+        clienteRecebeu.setNome(res.getString("NOME_RECEBEU"));
+        contaRecebeu.setNumeroConta(res.getInt("NUMERO_CONTA_RECEBEU"));
+
+        Transferencia transferencia = new Transferencia();
+        transferencia.setIdTransferencia(res.getInt("ID_TRANSFERENCIA"));
         transferencia.setContaEnviou(contaEnviou);
         transferencia.setContaRecebeu(contaRecebeu);
-        transferencia.setValor(res.getDouble("valor"));
+        transferencia.setValor(res.getDouble("VALOR"));
         return transferencia;
     }
 }
