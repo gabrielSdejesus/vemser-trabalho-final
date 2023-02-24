@@ -5,6 +5,7 @@ import entities.model.*;
 import entities.repository.ContatoRepository;
 import entities.repository.EnderecoRepository;
 import entities.repository.ItemRepository;
+import entities.service.ContaService;
 import entities.service.TransferenciaService;
 
 import java.util.ArrayList;
