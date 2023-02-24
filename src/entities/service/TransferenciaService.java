@@ -43,23 +43,6 @@ public class TransferenciaService extends Service{
         }
     }
 
-    public boolean editarTransferencia(Integer idTransferencia, Transferencia transferencia){
-        try{
-            return transferenciaRepository.editar(idTransferencia, transferencia);
-        }catch(BancoDeDadosException e){
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    public void removerTransferencia(Transferencia transferencia){
-        try{
-            transferenciaRepository.remover(transferencia.getIdTransferencia());
-        }catch(BancoDeDadosException e){
-            e.printStackTrace();
-        }
-    }
-
     public void listarTransferencias() {
         try {
             transferenciaRepository.listar().forEach(System.out::println);

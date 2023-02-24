@@ -68,94 +68,12 @@ public class TransferenciaRepository implements Repository<Integer, Transferenci
 
     @Override
     public boolean remover(Integer id) throws BancoDeDadosException {
-        Connection con = null;
-        try {
-            con = ConexaoBancoDeDados.getConnection();
-
-            String sql = "DELETE FROM TRANSFERENCIA WHERE id_transferencia = ?";
-
-            PreparedStatement stmt = con.prepareStatement(sql);
-
-            stmt.setInt(1, id);
-
-            int res = stmt.executeUpdate();
-            System.out.println("removerTransferenciaPorId.res=" + res);
-
-            return res > 0;
-        } catch (SQLException e) {
-            throw new BancoDeDadosException(e.getCause());
-        } finally {
-            try {
-                if (con != null) {
-                    con.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-
+        return false;
     }
 
     @Override
     public boolean editar(Integer id, Transferencia transferencia) throws BancoDeDadosException {
-        Connection con = null;
-        try {
-            con = ConexaoBancoDeDados.getConnection();
-
-            StringBuilder sql = new StringBuilder();
-            sql.append("UPDATE TRANSFERENCIA SET \n");
-            Conta conta = transferencia.getContaEnviou();
-            if (conta != null) {
-                if (conta.getNumeroConta() > 0) {
-                    sql.append(" NUMERO_CONTA_ENVIOU = ?,");
-                }
-            }
-
-            if (transferencia.getContaRecebeu() != null){
-                sql.append(" NUMERO_CONTA_RECEBEU = ?,");
-            }
-
-            if (transferencia.getValor() != null) {
-                sql.append(" VALOR = ?,");
-            }
-
-            sql.deleteCharAt(sql.length() - 1); //remove o ultimo ','
-            sql.append(" WHERE ID_TRANSFERENCIA = ? ");
-
-            PreparedStatement stmt = con.prepareStatement(sql.toString());
-
-            int index = 1;
-            if (conta != null) {
-                if (conta.getNumeroConta() > 0) {
-                    stmt.setInt(index++, conta.getNumeroConta());
-                }
-            }
-
-            if (transferencia.getContaRecebeu() != null) {
-                stmt.setInt(index++, transferencia.getContaRecebeu().getNumeroConta());
-            }
-
-            if (transferencia.getValor() != null) {
-                stmt.setDouble(index++, transferencia.getValor());
-            }
-
-            stmt.setInt(index, id);
-
-            int res = stmt.executeUpdate();
-            System.out.println("editarTransferencia.res=" + res);
-
-            return res > 0;
-        } catch (SQLException e) {
-            throw new BancoDeDadosException(e.getCause());
-        } finally {
-            try {
-                if (con != null) {
-                    con.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+        return false;
     }
 
     @Override
