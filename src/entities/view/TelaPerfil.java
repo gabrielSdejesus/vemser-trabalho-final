@@ -93,7 +93,12 @@ public class TelaPerfil extends Tela {
                 exibirTelaPerfil();
             }
             case 9 ->{
-                contaService.alterarSenha();
+                login = Tela.login();
+                if(login != null) {
+                    contaService.alterarSenha(login);
+                }else{
+                    System.err.println("Login mal-sucedido\n");
+                }
                 exibirTelaPerfil();
             }
             case 10 -> Tela.redirecionarParaTela(1);

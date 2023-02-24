@@ -17,7 +17,7 @@ public class Service {
         }
         if(valor <= 0){
             System.out.println("Input inválido!");
-            return -1;
+            return askDouble(message);
         }else{
             return valor;
         }
@@ -34,7 +34,7 @@ public class Service {
         }
         if(valor <= 0){
             System.out.println("Input inválido!");
-            return -1;
+            return askInt(message);
         }else{
             return valor;
         }
@@ -50,7 +50,7 @@ public class Service {
         }
         if(valor.equals("")){
             System.out.println("Input inválido!");
-            return null;
+            return askString(message);
         }else{
             return valor;
         }

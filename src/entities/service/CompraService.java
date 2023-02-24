@@ -135,6 +135,14 @@ public class CompraService extends Service{
                     }else{
                         System.err.println("Problemas ao atualizar o limite do cartão de crédito");
                     }
+                }else{////Paga com saldo caso use o cartão de débito
+                    if(conta.getSaldo()-valorTotalAtual < 0){
+                        ContaService contaService = new ContaService();
+                        conta.setSaldo(conta.getSaldo()-valorTotalAtual);
+                        contaService.editar(conta.getNumeroConta(), conta);
+                    }else{
+                        System.err.println("Saldo insuficiente!");
+                    }
                 }
                 /////
             }
