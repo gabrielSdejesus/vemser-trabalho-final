@@ -45,7 +45,7 @@ public class ContaRepository implements Repository<Integer, Conta> {
 
             PreparedStatement stmt = con.prepareStatement(sql);
 
-            stmt.setInt(1, conta.getNumeroConta());
+            stmt.setInt(1, getProximoId(con));
             stmt.setInt(2, conta.getCliente().getIdCliente());
             stmt.setString(3, conta.getSenha());
             stmt.setInt(4, conta.getAgencia());
@@ -216,7 +216,7 @@ public class ContaRepository implements Repository<Integer, Conta> {
         cliente.setCpf(res.getString("CPF_CLIENTE"));
         cliente.setNome(res.getString("NOME"));
 
-        conta.setIdCliente(cliente);
+        conta.setCliente(cliente);
 
         return conta;
     }

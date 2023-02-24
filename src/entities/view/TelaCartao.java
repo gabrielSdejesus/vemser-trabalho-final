@@ -1,6 +1,5 @@
 package entities.view;
 
-import entities.interfaces.Tela;
 import entities.model.*;
 import entities.service.CartaoService;
 
