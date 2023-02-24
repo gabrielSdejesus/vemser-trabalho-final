@@ -28,7 +28,7 @@ public class ClienteService extends Service{
         while (true) {
             System.out.print("Insira o CPF do cliente: ");
             cpfCliente = SCANNER.nextLine().strip().replaceAll(" ", "");
-            if (Pattern.matches("^[a-zA-Z!@#$%^&*(),.?\":{}|<>]+$", cpfCliente)) {
+            if (Pattern.matches("^[a-zA-Z!@#$%^&*(),.?\":{}|<>]+$", cpfCliente) || cpfCliente.isEmpty()) {
                 System.out.println("CPF inválido! Insira novamente.");
             } else break;
         }
@@ -91,21 +91,33 @@ public class ClienteService extends Service{
                 if (inputClienteEscolhido < 1 || inputClienteEscolhido >= 3){
                     System.out.println("Operação cancelada!");
                 }else{
+                    boolean editar = true;
                     switch(inputClienteEscolhido){
-                        case 1 -> novoCliente.setNome(askString("Insira o novo [Nome]: "));
-                        case 2 -> novoCliente.setCpf(askString("Insira o novo [CPF]: "));
+                        case 1 -> {
+                            novoCliente.setNome(askString("Insira o novo [Nome]: "));
+                            if(novoCliente.getNome().equals("")){
+                                editar = false;
+                            }
+                        }
+                        case 2 -> {
+                            novoCliente.setCpf(askString("Insira o novo [CPF]: "));
+                            if(novoCliente.getCpf().equals("")){
+                                editar = false;
+                            }
+                        }
                         default -> System.err.println("Erro bizarro!");
                     }
-                    try{
-                        if(this.clienteRepository.editar(novoCliente.getIdCliente(), novoCliente)){
-                            System.out.println("CLIENTE alterado com sucesso!");
-                        }else{
-                            System.err.println("Problemas ao editar o CLIENTE");
+                    if(editar){
+                        try{
+                            if(this.clienteRepository.editar(novoCliente.getIdCliente(), novoCliente)){
+                                System.out.println("CLIENTE alterado com sucesso!");
+                            }else{
+                                System.err.println("Problemas ao editar o CLIENTE");
+                            }
+                        }catch(BancoDeDadosException e){
+                            e.printStackTrace();
                         }
-                    }catch(BancoDeDadosException e){
-                        e.printStackTrace();
                     }
-
                 }
             }else{
                 System.err.println("Esse número não representa um CLIENTE!");

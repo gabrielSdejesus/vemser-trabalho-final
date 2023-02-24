@@ -21,22 +21,30 @@ public class TransferenciaService extends Service{
         try{
             transferencia.setValor(askDouble("Insira o valor: "));
 
-            transferencia.setContaEnviou(conta);
+            if(transferencia.getValor() != -1){
+                transferencia.setContaEnviou(conta);
 
-            Conta contaRecebeu = new Conta();
-            contaRecebeu.setNumeroConta(askInt("Insira o número da conta que receberá o valor: "));
-            transferencia.setContaRecebeu(contaRecebeu);
+                Conta contaRecebeu = new Conta();
+                contaRecebeu.setNumeroConta(askInt("Insira o número da conta que receberá o valor: "));
+                if(contaRecebeu.getNumeroConta() != -1){
+                    transferencia.setContaRecebeu(contaRecebeu);
 
-            transferencia = transferenciaRepository.adicionar(transferencia);
-            if(transferencia != null){
-                System.out.println("Transferência realizada com sucesso!");
-                System.out.println("\tDados da transferência:");
-                System.out.println("\t\tId da transferência: "+transferencia.getIdTransferencia());
-                System.out.println("\t\tValor da transferência: "+transferencia.getValor());
-                System.out.println("\t\tNúmero da conta que enviou: "+transferencia.getContaEnviou().getNumeroConta());
-                System.out.println("\t\tNúmero da conta que recebeu: "+transferencia.getContaRecebeu().getNumeroConta());
+                    transferencia = transferenciaRepository.adicionar(transferencia);
+                    if(transferencia != null){
+                        System.out.println("Transferência realizada com sucesso!");
+                        System.out.println("\tDados da transferência:");
+                        System.out.println("\t\tId da transferência: "+transferencia.getIdTransferencia());
+                        System.out.println("\t\tValor da transferência: "+transferencia.getValor());
+                        System.out.println("\t\tNúmero da conta que enviou: "+transferencia.getContaEnviou().getNumeroConta());
+                        System.out.println("\t\tNúmero da conta que recebeu: "+transferencia.getContaRecebeu().getNumeroConta());
+                    }else{
+                        System.err.println("Erro ao concluir transferência!");
+                    }
+                }else{
+                    System.err.println("Número da conta inválido!");
+                }
             }else{
-                System.err.println("Erro ao concluir transferência!");
+                System.err.println("Valor inválido!");
             }
         }catch(BancoDeDadosException e){
             e.printStackTrace();

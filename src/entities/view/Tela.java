@@ -2,23 +2,26 @@ package entities.view;
 
 import entities.model.Conta;
 import entities.service.ContaService;
+import entities.service.Service;
 
 import java.util.Scanner;
 
 public abstract class Tela {
     static Conta login(){
-        Scanner scanner = new Scanner(System.in);
-        String senhaConta, numeroConta;
-        System.out.print("Insira o número da sua conta: ");
-        numeroConta = scanner.nextLine();
-        System.out.print("Insira a senha da sua conta: ");
-        senhaConta = scanner.nextLine();
-        ContaService contaService = new ContaService();
-        Conta conta = contaService.retornarConta(numeroConta, senhaConta);
-        if(conta != null){
-            return conta;
-        }else{
-            System.err.println("Número de conta ou senha inválida");
+        int numeroConta = Service.askInt("Insira o número da sua conta: ");
+        if(numeroConta != -1) {
+            String senhaConta = Service.askString("Insira a senha da sua conta: ");
+            if (senhaConta.equals("")) {
+                ContaService contaService = new ContaService();
+                Conta conta = contaService.retornarConta(numeroConta, senhaConta);
+                if (conta != null) {
+                    return conta;
+                } else {
+                    System.err.println("Número de conta ou senha inválida");
+                }
+            }else{
+                return null;
+            }
         }
         return null;
     }

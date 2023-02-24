@@ -40,21 +40,33 @@ public class ContatoService extends Service{
             if (tipoAlteracaoContato < 1 || tipoAlteracaoContato >= 3){
                 System.out.println("Operação cancelada!");
             }else{
+                boolean editar = true;
                 switch(tipoAlteracaoContato){
-                    case 1 -> novoContato.setTelefone(askString("Insira o novo [Telefone]: "));
-                    case 2 -> novoContato.setEmail(askString("Insira o novo [Email]: "));
+                    case 1 -> {
+                        novoContato.setTelefone(askString("Insira o novo [Telefone]: "));
+                        if(novoContato.getTelefone().equals("")){
+                            editar = false;
+                        }
+                    }
+                    case 2 -> {
+                        novoContato.setEmail(askString("Insira o novo [Email]: "));
+                        if(novoContato.getEmail().equals("")){
+                            editar = false;
+                        }
+                    }
                     default -> System.err.println("Erro bizarro!");
                 }
-                try{
-                    if(this.contatoRepository.editar(novoContato.getIdContato(), novoContato)){
-                        System.out.println("CONTATO alterado com sucesso!");
-                    }else{
-                        System.err.println("Problemas ao editar o CONTATO");
+                if(editar){
+                    try{
+                        if(this.contatoRepository.editar(novoContato.getIdContato(), novoContato)){
+                            System.out.println("CONTATO alterado com sucesso!");
+                        }else{
+                            System.err.println("Problemas ao editar o CONTATO");
+                        }
+                    }catch(BancoDeDadosException e){
+                        e.printStackTrace();
                     }
-                }catch(BancoDeDadosException e){
-                    e.printStackTrace();
                 }
-
             }
         }else{
             System.out.println("Nenhum contato selecionado!");

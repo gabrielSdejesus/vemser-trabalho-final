@@ -126,22 +126,50 @@ public class EnderecoService extends Service{
             if (tipoAlteracaoEndereco < 1 || tipoAlteracaoEndereco >= 6){
                 System.out.println("Operação cancelada!");
             }else{
+                boolean adicionar = true;
                 switch(tipoAlteracaoEndereco){
-                    case 1 -> novoEndereco.setLogradouro(askString("Insira o novo [Logradouro]: "));
-                    case 2 -> novoEndereco.setCidade(askString("Insira a nova [Cidade]: "));
-                    case 3 -> novoEndereco.setEstado(askString("Insira o novo [Estado]: "));
-                    case 4 -> novoEndereco.setPais(askString("Insira o novo [País]: "));
-                    case 5 -> novoEndereco.setCep(askString("Insira o novo [CEP]: "));
+                    case 1 -> {
+                        novoEndereco.setLogradouro(askString("Insira o novo [Logradouro]: "));
+                        if(novoEndereco.getLogradouro().equals("")){
+                            adicionar = false;
+                        }
+                    }
+                    case 2 -> {
+                        novoEndereco.setCidade(askString("Insira a nova [Cidade]: "));
+                        if(novoEndereco.getCidade().equals("")){
+                            adicionar = false;
+                        }
+                    }
+                    case 3 -> {
+                        novoEndereco.setEstado(askString("Insira o novo [Estado]: "));
+                        if(novoEndereco.getEstado().equals("")){
+                            adicionar = false;
+                        }
+                    }
+                    case 4 -> {
+                        novoEndereco.setPais(askString("Insira o novo [País]: "));
+                        if(novoEndereco.getPais().equals("")){
+                            adicionar = false;
+                        }
+                    }
+                    case 5 -> {
+                        novoEndereco.setCep(askString("Insira o novo [CEP]: "));
+                        if(novoEndereco.getCep().equals("")){
+                            adicionar = false;
+                        }
+                    }
                     default -> System.err.println("Erro bizarro!");
                 }
-                try{
-                    if(this.enderecoRepository.editar(novoEndereco.getIdEndereco(), novoEndereco)){
-                        System.out.println("ENDEREÇO alterado com sucesso!");
-                    }else{
-                        System.err.println("Problemas ao editar o ENDEREÇO");
+                if(adicionar){
+                    try{
+                        if(this.enderecoRepository.editar(novoEndereco.getIdEndereco(), novoEndereco)){
+                            System.out.println("ENDEREÇO alterado com sucesso!");
+                        }else{
+                            System.err.println("Problemas ao editar o ENDEREÇO");
+                        }
+                    }catch(BancoDeDadosException e){
+                        e.printStackTrace();
                     }
-                }catch(BancoDeDadosException e){
-                    e.printStackTrace();
                 }
             }
         }else{

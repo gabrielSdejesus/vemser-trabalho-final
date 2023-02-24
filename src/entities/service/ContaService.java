@@ -69,8 +69,10 @@ public class ContaService extends Service{
         try{
             this.listar();
             int numeroConta = askInt("Insira o número da CONTA que deseja DELETAR:");
-            if(contaRepository.remover(numeroConta)) {
-                System.out.println("Conta removida com sucesso!");
+            if(numeroConta != -1){
+                if(contaRepository.remover(numeroConta)) {
+                    System.out.println("Conta removida com sucesso!");
+                }
             }
         } catch (BancoDeDadosException e) {
             e.printStackTrace();
@@ -78,9 +80,9 @@ public class ContaService extends Service{
     }
 
 
-    public Conta retornarConta(String numeroConta, String senhaConta){
+    public Conta retornarConta(int numeroConta, String senhaConta){
         Conta conta;
-        Integer numero = Integer.parseInt(numeroConta);
+        Integer numero = numeroConta;
         try{
             conta = this.contaRepository.consultarPorNumeroConta(numero);
             if(conta != null && conta.getSenha().equals(senhaConta)){
@@ -105,85 +107,107 @@ public class ContaService extends Service{
 
     public void depositar(Conta conta){
         double valor = askDouble("Insira o valor do Depósito: ");
-        conta.setSaldo(conta.getSaldo()+valor);
-        this.editar(conta.getNumeroConta(), conta);
+        if(valor != -1){
+            conta.setSaldo(conta.getSaldo()+valor);
+            this.editar(conta.getNumeroConta(), conta);
+        }else{
+            System.err.println("Valor inválido");
+        }
     }
 
     public void sacar(Conta conta){
         double valor = askDouble("Insira o valor do Saque: ");
-        if(conta.getSaldo()-valor+conta.getChequeEspecial() < 0){
-            System.err.println("Saldo insuficiente!");
+        if(valor != -1){
+            if(conta.getSaldo()-valor+conta.getChequeEspecial() < 0){
+                System.err.println("Saldo insuficiente!");
+            }else{
+                conta.setSaldo(conta.getSaldo()-valor);
+                this.editar(conta.getNumeroConta(), conta);
+            }
         }else{
-            conta.setSaldo(conta.getSaldo()-valor);
-            this.editar(conta.getNumeroConta(), conta);
+            System.err.println("Valor inválido");
         }
     }
 
     public void transferir(Conta conta){
         double valor = askDouble("Insira o valor da transferência: ");
+        if(valor != -1){
+            int numeroConta = askInt("Insira o número da conta que receberá a transferência: ");
+            if(numeroConta != -1){
+                try{
+                    Conta contaRecebeu = this.contaRepository.consultarPorNumeroConta(numeroConta);
 
-        int numeroConta = askInt("Insira o número da conta que receberá a transferência: ");
+                    contaRecebeu.setSaldo(contaRecebeu.getSaldo()+valor);
 
-        try{
-            Conta contaRecebeu = this.contaRepository.consultarPorNumeroConta(numeroConta);
+                    this.editar(numeroConta, contaRecebeu);
 
-            contaRecebeu.setSaldo(contaRecebeu.getSaldo()+valor);
+                    if(conta.getSaldo()-valor < 0){
+                        System.err.println("Saldo insuficiente!");
+                    }else{
+                        conta.setSaldo(conta.getSaldo()-valor);
 
-            this.editar(numeroConta, contaRecebeu);
+                        this.editar(conta.getNumeroConta(), conta);
 
-            if(conta.getSaldo()-valor < 0){
-                System.err.println("Saldo insuficiente!");
+                        System.err.println("Transferência concluída!");
+                        System.out.printf("Saldo atual: R$ %.2f\n", conta.getSaldo());
+                    }
+                }catch(BancoDeDadosException e){
+                    e.printStackTrace();
+                }
             }else{
-                conta.setSaldo(conta.getSaldo()-valor);
-
-                this.editar(conta.getNumeroConta(), conta);
-
-                System.err.println("Transferência concluída!");
-                System.out.printf("Saldo atual: R$ %.2f\n", conta.getSaldo());
+                System.err.println("Valor inválido");
             }
-        }catch(BancoDeDadosException e){
-            e.printStackTrace();
+        }else{
+            System.err.println("Valor inválido");
         }
+
     }
 
     public void pagar(Conta conta){
         double valor = askDouble("Insira o valor do pagamento: ");
+        if(valor != -1){
+            CartaoService cartaoService = new CartaoService();
+            List<Cartao> cartoes = cartaoService.returnCartoes(conta);
+            Cartao cartao;
 
-        CartaoService cartaoService = new CartaoService();
-        List<Cartao> cartoes = cartaoService.returnCartoes(conta);
-        Cartao cartao;
-
-        StringBuilder message = new StringBuilder("Selecione o cartão para efetuar o pagamento:");
-        for(int i=0;i<cartoes.size();i++){
-            if(cartoes.get(i) != null){
-                message.append("Cartão [").append(i + 1).append("] -> ").append(cartoes.get(i).getTipo() == TipoCartao.DEBITO ? "Débito" : "Crédito").append(":");
+            StringBuilder message = new StringBuilder("Selecione o cartão para efetuar o pagamento:");
+            for(int i=0;i<cartoes.size();i++){
+                if(cartoes.get(i) != null){
+                    message.append("Cartão [").append(i + 1).append("] -> ").append(cartoes.get(i).getTipo() == TipoCartao.DEBITO ? "Débito" : "Crédito").append(":");
+                }
             }
-        }
-        cartao = cartoes.get(askInt(String.valueOf(message)) - 1);
+            int input = askInt(String.valueOf(message)) - 1;
 
-        if(cartao.getTipo() == TipoCartao.CREDITO){
-            if(((CartaoDeCredito) cartao).getLimite()-valor < 0){
-                System.err.println("Limite insuficiente!");
-            }else{
-                ((CartaoDeCredito) cartao).setLimite(((CartaoDeCredito) cartao).getLimite()-valor);
-                if(cartaoService.editarCartao(cartao.getNumeroCartao(), cartao)){
-                    System.out.println("Limite do cartão de CRÉDITO ATUALIZADO!");
-                    System.out.printf("Limite restante: R$%.2f", ((CartaoDeCredito) cartao).getLimite());
+            if(input > 0 && input <= cartoes.size()){
+                cartao = cartoes.get(input);
+
+                if(cartao.getTipo() == TipoCartao.CREDITO){
+                    if(((CartaoDeCredito) cartao).getLimite()-valor < 0){
+                        System.err.println("Limite insuficiente!");
+                    }else{
+                        ((CartaoDeCredito) cartao).setLimite(((CartaoDeCredito) cartao).getLimite()-valor);
+                        if(cartaoService.editarCartao(cartao.getNumeroCartao(), cartao)){
+                            System.out.println("Limite do cartão de CRÉDITO ATUALIZADO!");
+                            System.out.printf("Limite restante: R$%.2f", ((CartaoDeCredito) cartao).getLimite());
+                        }else{
+                            System.err.println("Problemas ao atualizar o limite do cartão de crédito");
+                        }
+                    }
                 }else{
-                    System.err.println("Problemas ao atualizar o limite do cartão de crédito");
+                    if(conta.getSaldo()-valor < 0){
+                        System.out.println("Saldo insuficiente!");
+                    }else{
+                        conta.setSaldo(conta.getSaldo()-valor);
+
+                        this.editar(conta.getNumeroConta(), conta);
+
+                        System.err.println("Pagamento concluído!");
+                        System.out.printf("Saldo atual: R$ %.2f\n", conta.getSaldo());
+                    }
                 }
             }
         }else{
-            if(conta.getSaldo()-valor < 0){
-                System.out.println("Saldo insuficiente!");
-            }else{
-                conta.setSaldo(conta.getSaldo()-valor);
-
-                this.editar(conta.getNumeroConta(), conta);
-
-                System.err.println("Pagamento concluído!");
-                System.out.printf("Saldo atual: R$ %.2f\n", conta.getSaldo());
-            }
+            System.err.println("Valor inválido");
         }
     }
 

@@ -121,24 +121,26 @@ public class CartaoService extends Service{
                 }
             }
             cartao = askInt(String.valueOf(message))-1;
-            try{
-                if(cartoes.get(cartao).getTipo() == TipoCartao.CREDITO){
-                    CartaoDeCredito cartaoDeCredito = (CartaoDeCredito) cartoes.get(cartao);
-                    if(cartaoDeCredito.getLimite() != 1000 && this.cartaoRepository.remover(cartoes.get(cartao).getNumeroCartao())){
-                        System.out.println("CARTÃO removido com sucesso!");
+            if(cartao != -1){
+                try{
+                    if(cartoes.get(cartao).getTipo() == TipoCartao.CREDITO){
+                        CartaoDeCredito cartaoDeCredito = (CartaoDeCredito) cartoes.get(cartao);
+                        if(cartaoDeCredito.getLimite() != 1000 && this.cartaoRepository.remover(cartoes.get(cartao).getNumeroCartao())){
+                            System.out.println("CARTÃO removido com sucesso!");
+                        }else{
+                            System.err.println("Problemas na deleção do CARTÃO");
+                        }
                     }else{
-                        System.err.println("Problemas na deleção do CARTÃO");
+                        if(this.cartaoRepository.remover(cartoes.get(cartao).getNumeroCartao())){
+                            System.out.println("CARTÃO removido com sucesso!");
+                        }else{
+                            System.err.println("Problemas na deleção do CARTÃO");
+                        }
                     }
-                }else{
-                    if(this.cartaoRepository.remover(cartoes.get(cartao).getNumeroCartao())){
-                        System.out.println("CARTÃO removido com sucesso!");
-                    }else{
-                        System.err.println("Problemas na deleção do CARTÃO");
-                    }
-                }
 
-            }catch(BancoDeDadosException e){
-                e.printStackTrace();
+                }catch(BancoDeDadosException e){
+                    e.printStackTrace();
+                }
             }
         }
     }

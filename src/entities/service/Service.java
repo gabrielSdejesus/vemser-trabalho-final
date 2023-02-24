@@ -6,7 +6,7 @@ import java.util.Scanner;
 public class Service {
     protected static final Scanner SCANNER = new Scanner(System.in);
 
-    protected static double askDouble(String message){
+    public static double askDouble(String message){
         double valor = -1;
         try{
             System.out.println(message);
@@ -17,13 +17,13 @@ public class Service {
         }
         if(valor <= 0){
             System.out.println("Input inválido!");
-            return askDouble(message);
+            return -1;
         }else{
             return valor;
         }
     }
 
-    protected static int askInt(String message){
+    public static int askInt(String message){
         int valor = -1;
         try{
             System.out.println(message);
@@ -34,13 +34,13 @@ public class Service {
         }
         if(valor <= 0){
             System.out.println("Input inválido!");
-            return askInt(message);
+            return -1;
         }else{
             return valor;
         }
     }
 
-    protected static String askString(String message){
+    public static String askString(String message){
         String valor = "";
         try{
             System.out.println(message);
@@ -50,7 +50,7 @@ public class Service {
         }
         if(valor.equals("")){
             System.out.println("Input inválido!");
-            return askString(message);
+            return "";
         }else{
             return valor;
         }
