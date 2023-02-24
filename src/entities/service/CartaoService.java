@@ -1,10 +1,22 @@
 package entities.service;
 
 import entities.model.*;
+import entities.repository.CartaoRepository;
 
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class CartaoService extends Service{
+
+    private CartaoRepository cartaoRepository;
+
+    public CartaoService() {
+        this.cartaoRepository = new CartaoRepository();
+    }
+
     public void exibirExtrato(Conta conta, TipoCartao tipo){
         List<Cartao> cartoes = this.returnCartoes(conta);
         int cartao = -1;
@@ -31,14 +43,8 @@ public class CartaoService extends Service{
     }
 
     public void cadastrarCartao(Conta conta){
-        int contador = 0;
-        CartaoService cartaoService = new CartaoService();
-        for(Cartao cartao: cartaoService.returnCartoes(conta)){
-            if(cartao != null){
-                contador++;
-            }
-        }
-        if(contador == 2){
+        List<Cartao> cartoes = this.returnCartoes(conta);
+        if(cartoes.size() == 2){
             System.err.println("Você não pode ADICIONAR mais CARTÕES, só é possível ter no MÁXIMO 2 CARTÕES");
         }else{
             int tipoCartao;
@@ -50,32 +56,54 @@ public class CartaoService extends Service{
 
             tipoCartao = Integer.parseInt(SCANNER.nextLine());
 
-            String senha;
-
             if (tipoCartao < 1 || tipoCartao >= 3){
                 System.out.println("Operação cancelada!");
             }else{
-                System.out.println("Digite novamente sua senha:");
-                senha = SCANNER.nextLine();
                 switch(tipoCartao){
                     case 1 -> {
-                        CartaoDeCredito cartaoDeCredito = new CartaoDeCredito(conta);
-                        if(conta.adicionarCartao(cartaoDeCredito, senha)){
-                            System.out.println("Novo CARTÃO de CRÉDITO adicionado com sucesso!");
-                            System.out.println("\tDados do CARTÃO:");
-                            cartaoDeCredito.exibirDadosCartao();
-                        }else{
-                            System.err.println("Senha incorreta!");
+                        CartaoDeCredito cartaoDeCredito = new CartaoDeCredito();
+                        cartaoDeCredito.setConta(conta);
+                        cartaoDeCredito.setLimite(1000);
+                        cartaoDeCredito.setTipo(TipoCartao.CREDITO);
+                        cartaoDeCredito.setVencimento(LocalDate.now().plusYears(4));
+                        cartaoDeCredito.setCodigoSeguranca(ThreadLocalRandom.current().nextInt(100, 999));
+                        cartaoDeCredito.setDataExpedicao(LocalDate.now());
+                        try{
+                            cartaoDeCredito = (CartaoDeCredito) this.cartaoRepository.adicionar(cartaoDeCredito);
+                            if(cartaoDeCredito != null){
+                                System.out.println("Novo CARTÃO de CRÉDITO adicionado com sucesso!");
+                                System.out.println("\tDados do CARTÃO: ");
+                                System.out.println("\t\tNúmero da conta que possui o cartão: "+cartaoDeCredito.getConta().getNumeroConta());
+                                System.out.println("\t\tLimite: "+cartaoDeCredito.getLimite());
+                                System.out.println("\t\tTipo: "+cartaoDeCredito.getTipo());
+                                System.out.println("\t\tVencimento: "+cartaoDeCredito.getVencimento());
+                                System.out.println("\t\tData de expedição: "+cartaoDeCredito.getDataExpedicao());
+                                System.out.println("\t\tCódigo de segurança: "+cartaoDeCredito.getCodigoSeguranca());
+                            }
+                        }catch (SQLException e){
+                            e.printStackTrace();
                         }
                     }
                     case 2 -> {
-                        CartaoDeDebito cartaoDeDebito = new CartaoDeDebito(conta);
-                        if(conta.adicionarCartao(cartaoDeDebito, senha)){
-                            System.out.println("Novo CARTÃO de DÉBITO adicionado com sucesso!");
-                            System.out.println("\tDados do CARTÃO:");
-                            cartaoDeDebito.exibirDadosCartao();
-                        }else{
-                            System.err.println("Senha incorreta!");
+                        CartaoDeDebito cartaoDeDebito = new CartaoDeDebito();
+                        cartaoDeDebito.setConta(conta);
+                        cartaoDeDebito.setTipo(TipoCartao.DEBITO);
+                        cartaoDeDebito.setCodigoSeguranca(ThreadLocalRandom.current().nextInt(100, 999));
+                        cartaoDeDebito.setDataExpedicao(LocalDate.now());
+                        cartaoDeDebito.setVencimento(LocalDate.now().plusYears(4));
+                        try{
+                            cartaoDeDebito = (CartaoDeDebito) this.cartaoRepository.adicionar(cartaoDeDebito);
+                            if(cartaoDeDebito != null){
+                                System.out.println("Novo CARTÃO de DÉBITO adicionado com sucesso!");
+                                System.out.println("\tDados do CARTÃO: ");
+                                System.out.println("\t\tNúmero da conta que possui o cartão: "+cartaoDeDebito.getConta().getNumeroConta());
+                                System.out.println("\t\tTipo: "+cartaoDeDebito.getTipo());
+                                System.out.println("\t\tVencimento: "+cartaoDeDebito.getVencimento());
+                                System.out.println("\t\tData de expedição: "+cartaoDeDebito.getDataExpedicao());
+                                System.out.println("\t\tCódigo de segurança: "+cartaoDeDebito.getCodigoSeguranca());
+                            }
+                        }catch (SQLException e){
+                            e.printStackTrace();
                         }
                     }
                     default -> System.err.println("Erro bizarro!");
@@ -84,44 +112,56 @@ public class CartaoService extends Service{
         }
     }
     public void deletarCartao(Conta conta){
-        int contador = 0;
-        for(Cartao cartao: conta.getCartoes()){
-            if(cartao != null){
-                contador++;
-            }
-        }
-        if(contador == 1){
+        List<Cartao> cartoes = this.returnCartoes(conta);
+        if(cartoes.size() == 1){
             System.err.println("Você não pode REMOVER mais CARTÕES, é NECESSÁRIO ter no MÍNIMO 1 CARTÃO");
         }else{
-            Cartao[] cartoes = conta.getCartoes();
             int cartao;
 
             System.out.println("Selecione o CARTÃO para REMOVER:");
-            for(int i=0;i<cartoes.length;i++){
-                if(cartoes[i] != null){
-                    System.out.printf("Cartão [%d] -> %s\n", (i+1), (cartoes[i].getTipo() == TipoCartao.DEBITO ? "Débito":"Crédito"));
+            for(int i=0;i<cartoes.size();i++){
+                if(cartoes.get(i) != null){
+                    System.out.printf("Cartão [%d] -> %s\n", (i+1), (cartoes.get(i).getTipo() == TipoCartao.DEBITO ? "Débito":"Crédito"));
                 }
             }
             cartao = Integer.parseInt(SCANNER.nextLine())-1;
-
-            String senha;
-            System.out.println("Digite novamente sua senha:");
-            senha = SCANNER.nextLine();
-
-            if(conta.removerCartao(cartao, senha)){
-                System.err.println("CARTÃO removido com sucesso!");
-            }else{
-                if(conta.verificarSenha(senha)){
-                    System.err.println("CARTÃO de CRÉDITO usado, pague a fatura para poder excluí-lo!");
+            try{
+                if(cartoes.get(cartao).getTipo() == TipoCartao.CREDITO){
+                    CartaoDeCredito cartaoDeCredito = (CartaoDeCredito) cartoes.get(cartao);
+                    if(cartaoDeCredito.getLimite() != 1000 && this.cartaoRepository.remover(cartoes.get(cartao).getNumeroCartao())){
+                        System.out.println("CARTÃO removido com sucesso!");
+                    }else{
+                        System.err.println("Problemas na deleção do CARTÃO");
+                    }
                 }else{
-                    System.err.println("Senha incorreta!");
+                    if(this.cartaoRepository.remover(cartoes.get(cartao).getNumeroCartao())){
+                        System.out.println("CARTÃO removido com sucesso!");
+                    }else{
+                        System.err.println("Problemas na deleção do CARTÃO");
+                    }
                 }
+
+            }catch(SQLException e){
+                e.printStackTrace();
             }
         }
     }
 
     public List<Cartao> returnCartoes(Conta conta) {
-        //traz os cartões que tem o numero_conta igual o da conta do parâmetro
-        return null;
+        List<Cartao> cartoes = new ArrayList<>();
+        try{
+            cartoes = this.cartaoRepository.listarCartoesPorNumeroConta(conta);
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        if(cartoes.size() == 0){
+            return null;
+        }else{
+            return cartoes;
+        }
+    }
+
+    public void editarCartao(String idCartao, Cartao cartao){
+
     }
 }

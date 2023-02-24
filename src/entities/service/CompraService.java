@@ -1,13 +1,11 @@
 package entities.service;
 
-import entities.exception.BancoDeDadosException;
 import entities.model.*;
 import entities.repository.CompraRepository;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class CompraService extends Service{
@@ -92,7 +90,7 @@ public class CompraService extends Service{
                         item.setQuantidade(quantidadeItem);
                         item.setValor(valorItem);
                         itens.add(item);
-                        valorTotalAtual += item.getValor()*item.getQuantidade();
+                        valorTotalAtual += (item.getValor()*item.getQuantidade());
                     }else{
                         System.err.println("Item não adicionado!");
                         System.err.println("Valor/Quantidade do item inválidos!");
@@ -107,7 +105,7 @@ public class CompraService extends Service{
                 System.out.println("Insira o documento do vendedor:");
                 docVendedor = SCANNER.nextLine();
 
-                ////Colocar a compra no BD
+                /////Colocar a compra no BD
                 Compra compra = new Compra();
                 LocalDate localDate = LocalDate.now();
                 compra.setDocVendedor(docVendedor);
@@ -118,19 +116,22 @@ public class CompraService extends Service{
                 }catch (SQLException e){
                     e.printStackTrace();
                 }
-                ////
+                /////
 
                 /////Mandar todos os itens pro BD
                 for(Item it:itens){
                     it.setCompra(compra);
                 }
-                try{
-                    ItemService itemService = new ItemService();
-                    itemService.adicionar(itens);
-                }catch (SQLException e){
-                    e.printStackTrace();
-                }
+                ItemService itemService = new ItemService();
+                itemService.adicionar(itens);
                 /////
+
+                ////Alterar o limite do cartão de crédito se tiver comprado com o cartão de crédito
+                if(cartao.getClass().equals(CartaoDeCredito.class)){
+                    ((CartaoDeCredito) cartao).setLimite(((CartaoDeCredito) cartao).getLimite()-valorTotalAtual);
+                    cartaoService.editarCartao(cartao.getNumeroCartao(), cartao);
+                }
+                ////
             }
         } else {
             System.err.println("Este número não representa nenhum cartão.");
