@@ -269,9 +269,4 @@ public class CartaoRepository implements Repository<String, Cartao> {
         }
     }
 
-    public List<Cartao> listarCartoesDaConta(Conta conta){
-        //traz os cartões que tem o numero_conta igual o da conta do parâmetro
-        return null;
-    }
-
 }
