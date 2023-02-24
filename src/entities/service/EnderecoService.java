@@ -75,16 +75,23 @@ public class EnderecoService extends Service{
         int inputExclusaoEndereco;
 
         if(enderecos.size() > 1){
-            System.out.println("Selecione um endereço para deletar:");
-            for (int i = 0; i < enderecos.size(); i++) {
-                System.out.printf("[%d] Logradouro: %s; Cidade: %s; Estado: %s; País: %s; CEP: %s", (i+1), enderecos.get(i).getLogradouro(), enderecos.get(i).getCidade(), enderecos.get(i).getEstado(), enderecos.get(i).getPais(), enderecos.get(i).getCep());
+            StringBuilder message = new StringBuilder("Selecione um endereço para deletar:");
+            for(int i=0;i<enderecos.size();i++){
+                message.append("[").append(i + 1).append("] Logradouro: ").append(enderecos.get(i).getLogradouro()).append("; Cidade: ").append(enderecos.get(i).getCidade()).append("; Estado: ").append(enderecos.get(i).getEstado()).append("; País: ").append(enderecos.get(i).getPais()).append("; CEP: ").append(enderecos.get(i).getCep()).append("\n");
             }
 
-            inputExclusaoEndereco = Integer.parseInt(SCANNER.nextLine());
+            inputExclusaoEndereco = askInt(String.valueOf(message));
 
             if (inputExclusaoEndereco > 0 && inputExclusaoEndereco <= enderecos.size()) {
-                System.out.printf("Contato [%d] excluído!", inputExclusaoEndereco);
-                conta.getCliente().removerEndereco(inputExclusaoEndereco-1);
+                try{
+                    if(this.enderecoRepository.remover(enderecos.get(inputExclusaoEndereco-1).getIdEndereco())){
+                        System.out.println("ENDEREÇO removido com sucesso!");
+                    }else{
+                        System.out.println("Falha ao deletar ENDEREÇO!");
+                    }
+                }catch(BancoDeDadosException e){
+                    e.printStackTrace();
+                }
             }else{
                 System.out.println("Nenhum endereço selecionado!");
             }
@@ -129,7 +136,7 @@ public class EnderecoService extends Service{
                 }
                 try{
                     if(this.enderecoRepository.editar(novoEndereco.getIdEndereco(), novoEndereco)){
-                        System.out.println("Endereço alterado com sucesso!");
+                        System.out.println("ENDEREÇO alterado com sucesso!");
                     }else{
                         System.err.println("Problemas ao editar o ENDEREÇO");
                     }

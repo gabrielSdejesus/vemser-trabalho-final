@@ -1,11 +1,14 @@
 package entities.service;
 
+import entities.exception.BancoDeDadosException;
 import entities.model.Cliente;
 import entities.model.Conta;
 import entities.model.Contato;
+import entities.model.Endereco;
 import entities.repository.ContatoRepository;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ContatoService extends Service{
 
@@ -15,10 +18,9 @@ public class ContatoService extends Service{
         this.contatoRepository = new ContatoRepository();
     }
 
-    public void alterarContatoCliente(Conta conta){
-        ArrayList<Contato> contatos = conta.getCliente().getContatos();
+    public void alterarContato(Conta conta){
+        List<Contato> contatos = this.retornarContatosDoCliente(conta);
         int inputAlteracaoContato, tipoAlteracaoContato;
-        String novoDado;
 
         System.out.println("Selecione um contato para alterar: ");
         for(int i=0;i<contatos.size();i++){
@@ -27,6 +29,7 @@ public class ContatoService extends Service{
         inputAlteracaoContato = Integer.parseInt(SCANNER.nextLine());
 
         if(inputAlteracaoContato > 0 && inputAlteracaoContato <= contatos.size()){
+            Contato novoContato = contatos.get(inputAlteracaoContato);
 
             System.out.println("Selecione a alteração que quer fazer no Contato:");
             System.out.println("[1] Telefone");
@@ -37,37 +40,51 @@ public class ContatoService extends Service{
             if (tipoAlteracaoContato < 1 || tipoAlteracaoContato >= 3){
                 System.out.println("Operação cancelada!");
             }else{
-                String tipoContato = "";
                 switch(tipoAlteracaoContato){
-                    case 1 -> tipoContato = "Telefone";
-                    case 2 -> tipoContato = "Email";
+                    case 1 -> novoContato.setTelefone(askString("Insira o novo [Telefone]: "));
+                    case 2 -> novoContato.setEmail(askString("Insira o novo [Email]: "));
                     default -> System.err.println("Erro bizarro!");
                 }
-                System.out.print("Insira o novo ["+tipoContato+"]: ");
-                novoDado = SCANNER.nextLine();
-                contatos.get(inputAlteracaoContato-1).alterarDado(tipoContato.toLowerCase(), novoDado);
-                System.out.println("Contato alterado com sucesso!");
+                try{
+                    if(this.contatoRepository.editar(novoContato.getIdContato(), novoContato)){
+                        System.out.println("CONTATO alterado com sucesso!");
+                    }else{
+                        System.err.println("Problemas ao editar o CONTATO");
+                    }
+                }catch(BancoDeDadosException e){
+                    e.printStackTrace();
+                }
+
             }
         }else{
             System.out.println("Nenhum contato selecionado!");
         }
     }
 
-    public void deletarContatoCliente(Conta conta){
-        ArrayList<Contato> contatos = conta.getCliente().getContatos();
+    public void deletarContato(Conta conta){
+        List<Contato> contatos = this.retornarContatosDoCliente(conta);
         int inputExclusaoContato;
 
         if(contatos.size()>1){
+            StringBuilder message = new StringBuilder("Selecione um contato para deletar:");
+
             System.out.println("Selecione um contato para deletar:");
             for (int i = 0; i < contatos.size(); i++) {
-                System.out.printf("[%d] Telefone: %s; Email: %s", (i + 1), contatos.get(i).getTelefone(), contatos.get(i).getEmail());
+                message.append("[").append(i + 1).append("] Telefone: ").append(contatos.get(i).getTelefone()).append("; Email: ").append(contatos.get(i).getEmail());
             }
 
-            inputExclusaoContato = Integer.parseInt(SCANNER.nextLine());
+            inputExclusaoContato = askInt(String.valueOf(message));
 
             if (inputExclusaoContato > 0 && inputExclusaoContato <= contatos.size()) {
-                System.out.printf("Contato [%d] excluído!", inputExclusaoContato);
-                conta.getCliente().removerContato(inputExclusaoContato-1);
+                try{
+                    if(this.contatoRepository.remover(contatos.get(inputExclusaoContato-1).getIdContato())){
+                        System.out.println("CONTATO removido com sucesso!");
+                    }else{
+                        System.out.println("Falha ao deletar CONTATO!");
+                    }
+                }catch(BancoDeDadosException e){
+                    e.printStackTrace();
+                }
             }else{
                 System.out.println("Nenhum contato selecionado!");
             }
@@ -76,7 +93,7 @@ public class ContatoService extends Service{
         }
     }
 
-    public void adicionarContatoCliente(Conta conta){
+    public void adicionarContato(Conta conta){
         String contatoInput = "";
         ArrayList<Contato> contatos = new ArrayList<>();
         while(!contatoInput.equalsIgnoreCase("ENCERRAR CONTATOS")){
@@ -109,9 +126,25 @@ public class ContatoService extends Service{
                 System.out.println("\tContato adicionado!");
             }
         }
-        ContatoService contatoService = new ContatoService();
-        for(Contato contato: contatos){
-            contatoService.adicionarContato(contato);
+        if(contatos.size() > 0){
+            for(Contato contato: contatos){
+                try{
+                    this.contatoRepository.adicionar(contato);
+                }catch(BancoDeDadosException e){
+                    e.printStackTrace();
+                }
+            }
         }
+    }
+
+    public List<Contato> retornarContatosDoCliente(Conta conta){
+        List<Contato> contatos;
+        try{
+            contatos = this.contatoRepository.listarContatosPorPessoa(conta.getCliente().getIdCliente());
+            return contatos;
+        }catch (BancoDeDadosException e){
+            e.printStackTrace();
+        }
+        return null;
     }
 }
