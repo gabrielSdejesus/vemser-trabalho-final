@@ -198,7 +198,6 @@ public class ClienteRepository implements Repository<Integer, Cliente> {
     }
 
     private Cliente getClienteFromResultSet(ResultSet res) throws SQLException {
-
         Cliente cliente = new Cliente();
         cliente.setIdCliente(res.getInt("ID_CLIENTE"));
         cliente.setCpf(res.getString("CPF_CLIENTE"));

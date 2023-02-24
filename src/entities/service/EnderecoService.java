@@ -75,7 +75,7 @@ public class EnderecoService extends Service{
         int inputExclusaoEndereco;
 
         if(enderecos.size() > 1){
-            StringBuilder message = new StringBuilder("Selecione um endereço para deletar:");
+            StringBuilder message = new StringBuilder("Selecione um endereço para deletar:\n");
             for(int i=0;i<enderecos.size();i++){
                 message.append("[").append(i + 1).append("] Logradouro: ").append(enderecos.get(i).getLogradouro()).append("; Cidade: ").append(enderecos.get(i).getCidade()).append("; Estado: ").append(enderecos.get(i).getEstado()).append("; País: ").append(enderecos.get(i).getPais()).append("; CEP: ").append(enderecos.get(i).getCep()).append("\n");
             }

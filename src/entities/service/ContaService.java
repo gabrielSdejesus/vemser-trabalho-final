@@ -24,7 +24,7 @@ public class ContaService extends Service{
             String senha;
 
             try {
-                Cliente cliente = new ClienteService().adicionar();
+                Cliente cliente = new ClienteService().adicionarCliente();
 
                 while (true) {
                     System.out.print("Insira a senha: ");

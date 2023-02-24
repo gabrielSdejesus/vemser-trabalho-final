@@ -23,7 +23,7 @@ public class TelaPerfil extends Tela {
             case 1 ->{
                 login = Tela.login();
                 if(login != null){
-                    clienteService.exibirCliente(login);
+                    clienteService.exibirCliente(login.getCliente().getIdCliente());
                 }else{
                     System.err.println("Login mal-sucedido");
                 }
