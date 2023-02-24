@@ -107,20 +107,20 @@ public class TransferenciaRepository implements Repository<Integer, Transferenci
             Conta conta = transferencia.getContaEnviou();
             if (conta != null) {
                 if (conta.getNumeroConta() > 0) {
-                    sql.append(" numero_conta_enviou = ?,");
+                    sql.append(" NUMERO_CONTA_ENVIOU = ?,");
                 }
             }
 
             if (transferencia.getContaRecebeu() != null){
-                sql.append(" numero_conta_recebeu = ?,");
+                sql.append(" NUMERO_CONTA_RECEBEU = ?,");
             }
 
             if (transferencia.getValor() != null) {
-                sql.append(" valor = ?,");
+                sql.append(" VALOR = ?,");
             }
 
             sql.deleteCharAt(sql.length() - 1); //remove o ultimo ','
-            sql.append(" WHERE id_transferencia = ? ");
+            sql.append(" WHERE ID_TRANSFERENCIA = ? ");
 
             PreparedStatement stmt = con.prepareStatement(sql.toString());
 
@@ -204,11 +204,14 @@ public class TransferenciaRepository implements Repository<Integer, Transferenci
 
             String sql = """
                     SELECT t.ID_TRANSFERENCIA, c.NOME AS NOME_RECEBEU, t.NUMERO_CONTA_RECEBEU,\n 
-                    c4.NOME AS NOME_ENVIOU, t.NUMERO_CONTA_ENVIOU, t.VALOR FROM CLIENTE c\n
+                    c4.NOME AS NOME_ENVIOU, t.NUMERO_CONTA_ENVIOU, t.VALOR\n
+                    FROM CLIENTE c\n
                     INNER JOIN CONTA c2 ON c.ID_CLIENTE = c2.ID_CLIENTE\n
                     INNER JOIN TRANSFERENCIA t ON c2.NUMERO_CONTA = t.NUMERO_CONTA_RECEBEU\n
                     INNER JOIN CONTA c3 ON t.NUMERO_CONTA_ENVIOU = c3.NUMERO_CONTA\n
-                    INNER JOIN CLIENTE c4 ON c3.ID_CLIENTE = c4.ID_CLIENTE WHERE t.NUMERO_CONTA_ENVIOU = ?
+                    INNER JOIN CLIENTE c4 ON c3.ID_CLIENTE = c4.ID_CLIENTE\n
+                    WHERE t.NUMERO_CONTA_ENVIOU = ? AND ROWNUM <= 10\n
+                    ORDER BY t.ID_TRANSFERENCIA DESC
                     """;
 
             PreparedStatement stmt = con.prepareStatement(sql);
@@ -240,11 +243,13 @@ public class TransferenciaRepository implements Repository<Integer, Transferenci
         Conta contaEnviou = new Conta();
         Cliente clienteEnviou = new Cliente();
         clienteEnviou.setNome(res.getString("NOME_ENVIOU"));
+        contaEnviou.setCliente(clienteEnviou);
         contaEnviou.setNumeroConta(res.getInt("NUMERO_CONTA_ENVIOU"));
 
         Conta contaRecebeu = new Conta();
         Cliente clienteRecebeu = new Cliente();
         clienteRecebeu.setNome(res.getString("NOME_RECEBEU"));
+        contaRecebeu.setCliente(clienteRecebeu);
         contaRecebeu.setNumeroConta(res.getInt("NUMERO_CONTA_RECEBEU"));
 
         Transferencia transferencia = new Transferencia();
