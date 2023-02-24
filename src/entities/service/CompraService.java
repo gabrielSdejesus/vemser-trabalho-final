@@ -17,28 +17,19 @@ public class CompraService extends Service{
         this.compraRepository = new CompraRepository();
     }
 
-    public void exibirCompras(Conta conta) {
+    public void exibirComprasCartao(Cartao cartao) {
         try{
-            List<Compra> compras = new ArrayList<>();
-
-            CartaoService cartaoService = new CartaoService();
-            List<Cartao> cartoes = cartaoService.returnCartoes(conta);
-
-            for(Cartao cartao: cartoes){
-                compras.addAll(this.compraRepository.listarPorCartao(cartao.getNumeroCartao()));
-            }
+            List<Compra> compras = new ArrayList<>(this.compraRepository.listarPorCartao(cartao.getNumeroCartao()));
 
             if(compras.size() != 0){
                 for(Compra compra:compras){
-                    if (compra != null){
-                        System.out.println("Id da compra: "+compra.getIdCompra()+
-                                "\nData da compra: "+compra.getData()+
-                                "\nCartão usado na compra: "+compra.getCartao()+
-                                "\nDocumento do vendedor: "+compra.getDocVendedor());
-                    }
+                    System.out.println("Id da compra: "+compra.getIdCompra()+
+                            "\nData da compra: "+compra.getData()+
+                            "\nCartão usado na compra: "+compra.getCartao()+
+                            "\nDocumento do vendedor: "+compra.getDocVendedor());
                 }
             }else{
-                System.out.println("Sem compras feitas nessa conta");
+                System.out.println("Sem compras feitas nesse cartão");
             }
         }catch (SQLException e){
             e.printStackTrace();
@@ -57,7 +48,7 @@ public class CompraService extends Service{
         System.out.println("Selecione o cartão para efetuar a compra:");
         for(int i=0;i<cartoes.size();i++){
             if(cartoes.get(i) != null){
-                System.out.printf("Cartão [%d] -> %s\n", (i+1), (cartoes.get(i).getTipo() == 1 ? "Débito":"Crédito"));
+                System.out.printf("Cartão [%d] -> %s\n", (i+1), (cartoes.get(i).getTipo() == TipoCartao.DEBITO ? "Débito":"Crédito"));
             }
         }
 
@@ -70,12 +61,12 @@ public class CompraService extends Service{
             cartao = cartoes.get(i);
 
             do {
-                if(cartao.getTipo() == 1) {
+                if(cartao.getTipo() == TipoCartao.DEBITO) {
                     System.out.printf("Saldo da conta: R$ %.2f", conta.getSaldo());
                 }
 
-                if(cartao.getTipo() == 2){
-                    System.out.printf("\nLimite disponível: R$ %.2f", ((CartaoDeCredito) cartao).limiteRestante());
+                if(cartao.getTipo() == TipoCartao.CREDITO){
+                    System.out.printf("\nLimite disponível: R$ %.2f", ((CartaoDeCredito) cartao).getLimite());
                 }
 
                 System.out.printf("\nValor total da compra: R$ %.2f", valorTotalAtual);

@@ -1,6 +1,7 @@
 package entities.view;
 
 import entities.model.*;
+import entities.service.CartaoService;
 import entities.service.CompraService;
 
 public class TelaCompras extends Tela {
@@ -17,7 +18,10 @@ public class TelaCompras extends Tela {
             case 1 ->{
                 login = Tela.login();
                 if(login != null){
-                    compraService.exibirCompras(login);
+                    CartaoService cartaoService = new CartaoService();
+                    for(Cartao cartao: cartaoService.returnCartoes(login)){
+                        compraService.exibirComprasCartao(cartao);
+                    }
                 }else{
                     System.err.println("Login mal-sucedido");
                 }

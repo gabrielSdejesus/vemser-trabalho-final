@@ -147,7 +147,7 @@ public class ContaService extends Service{
     }
 
 
-    /* public static void deletarConta(){
+    public void deletarConta(){
         String numeroConta;
         if(BancoDeDados.getContas().size() > 0){
             System.err.println("Atenção! Deletar uma CONTA também deletará seu CLIENTE");
@@ -181,7 +181,7 @@ public class ContaService extends Service{
         }
     }
 
-    public static void exibirConta(Conta conta){
+    public void exibirConta(Conta conta){
         String senhaConta;
         System.out.println("Insira a senha da sua conta:");
         senhaConta = SCANNER.nextLine();
@@ -190,7 +190,7 @@ public class ContaService extends Service{
         }
     }
 
-    public static void depositar(Conta conta){
+    public void depositar(Conta conta){
         double valor;
         String senhaConta;
         System.out.print("Insira o valor do Depósito: ");
@@ -207,7 +207,7 @@ public class ContaService extends Service{
         }
     }
 
-    public static void sacar(Conta conta){
+    public void sacar(Conta conta){
         double valor;
         String senhaConta;
         System.out.print("Insira o valor do Saque: ");
@@ -224,7 +224,7 @@ public class ContaService extends Service{
         }
     }
 
-    public static void transferir(Conta conta){
+    public void transferir(Conta conta){
         double valor;
         String senhaConta;
         System.out.print("Insira o valor da transferência: ");
@@ -253,7 +253,7 @@ public class ContaService extends Service{
         }
     }
 
-    public static void pagar(Conta conta){
+    public void pagar(Conta conta){
         double valor;
         String senhaConta;
         System.out.print("Insira o valor do pagamento: ");
@@ -283,7 +283,7 @@ public class ContaService extends Service{
         }
     }
 
-    public static void alterarSenha(){
+    public void alterarSenha(){
         String cpfOuNumero, senhaAntiga, novaSenha;
 
         System.out.print("Insira o CPF do CLIENTE ou o NÚMERO da CONTA: ");
@@ -304,5 +304,5 @@ public class ContaService extends Service{
         }else{
             System.err.println("CPF do CLIENTE ou NÚMERO da CONTA incorreto!");
         }
-    }*/
+    }
 }

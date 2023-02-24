@@ -1,10 +1,8 @@
 package entities.view;
 
 import entities.interfaces.Tela;
-import entities.model.Cartao;
-import entities.model.CartaoDeCredito;
-import entities.model.CartaoDeDebito;
-import entities.model.Conta;
+import entities.model.*;
+import entities.service.CartaoService;
 
 import java.util.Scanner;
 
@@ -18,24 +16,12 @@ public class TelaCartao extends Tela {
         int input = TelaCartao.pedirInput("[1] -> Exibir seu extrato do CARTÃO de CRÉDITO\n[2] -> Exibir seu extrato do CARTÃO de DÉBITO\n[3] -> ADICIONAR CARTÃO\n[4] -> EXCLUIR CARTÃO\n[5] -> Voltar para a Tela Principal");
         Scanner scanner = new Scanner(System.in);
         Conta login;
+        CartaoService cartaoService = new CartaoService();
         switch(input){
             case 1 -> {
                 login = Tela.login();
                 if (login != null) {
-                    Cartao[] cartoes = login.getCartoes();
-                    int cartao = -1;
-
-                    for (int i = 0; i < cartoes.length; i++) {
-                        if (cartoes[i] != null && cartoes[i].getTipo() == 2) {
-                            cartao = i;
-                            System.out.println("\t\nExibindo dados do cartão ["+(i+1)+"]:");
-                            cartoes[cartao].exibirDadosCartao();
-                            cartoes[cartao].exibirCompras((i+1));
-                        }
-                    }
-                    if (cartao == -1) {
-                        System.out.println("\tVocê não possui nenhum cartão de crédito\n");
-                    }
+                    cartaoService.exibirExtrato(login, TipoCartao.CREDITO);
                 } else {
                     System.err.println("Login mal-sucedido");
                 }

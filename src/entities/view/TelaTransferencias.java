@@ -1,9 +1,6 @@
 package entities.view;
 
-import entities.interfaces.Tela;
 import entities.model.Conta;
-
-import java.util.Scanner;
 
 public class TelaTransferencias extends Tela {
     public static void exibirTransferencias(){

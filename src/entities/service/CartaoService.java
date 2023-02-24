@@ -1,33 +1,39 @@
 package entities.service;
 
-import entities.model.Cartao;
-import entities.model.CartaoDeCredito;
-import entities.model.CartaoDeDebito;
-import entities.model.Conta;
+import entities.model.*;
 
 import java.util.List;
 
 public class CartaoService extends Service{
-    public static void exibirExtrato(Conta conta, int tipo){
-        Cartao[] cartoes = conta.getCartoes();
+    public void exibirExtrato(Conta conta, TipoCartao tipo){
+        List<Cartao> cartoes = this.returnCartoes(conta);
         int cartao = -1;
 
-        for (int i = 0; i < cartoes.length; i++) {
-            if (cartoes[i] != null && cartoes[i].getTipo() == tipo) {
+        for(int i=0;i<cartoes.size();i++){
+            if(cartoes.get(i).getTipo() == tipo){
                 cartao = i;
                 System.out.println("\t\nExibindo dados do cartão ["+(i+1)+"]:");
-                cartoes[cartao].exibirDadosCartao();
-                cartoes[cartao].exibirCompras((i+1));
+                System.out.println(
+                        "Tipo do cartão: "+((tipo == TipoCartao.DEBITO)? "DÉBITO":"CRÉDITO")+
+                        "Número da conta do cartão: "+cartoes.get(i).getConta().getNumeroConta()+
+                        "Número do cartão: "+cartoes.get(i).getNumeroCartao()+
+                        "Vencimento do cartão: "+cartoes.get(i).getVencimento()+
+                        "Código de segurança do cartão: "+cartoes.get(i).getCodigoSeguranca()+
+                        "Data de expedição: "+cartoes.get(i).getDataExpedicao());
+                CompraService compraService = new CompraService();
+                compraService.exibirComprasCartao(cartoes.get(i));
+                break;
             }
         }
         if (cartao == -1) {
-            System.out.println("\tVocê não possui nenhum cartão de "+((tipo == 1)? "DÉBITO":"CRÉDITO")+"\n");
+            System.out.println("\tVocê não possui nenhum cartão de "+((tipo == TipoCartao.DEBITO)? "DÉBITO":"CRÉDITO")+"\n");
         }
     }
 
-    public static void cadastrarCartao(Conta conta){
+    public void cadastrarCartao(Conta conta){
         int contador = 0;
-        for(Cartao cartao: conta.getCartoes()){
+        CartaoService cartaoService = new CartaoService();
+        for(Cartao cartao: cartaoService.returnCartoes(conta)){
             if(cartao != null){
                 contador++;
             }
@@ -77,7 +83,7 @@ public class CartaoService extends Service{
             }
         }
     }
-    public static void deletarCartao(Conta conta){
+    public void deletarCartao(Conta conta){
         int contador = 0;
         for(Cartao cartao: conta.getCartoes()){
             if(cartao != null){
@@ -93,7 +99,7 @@ public class CartaoService extends Service{
             System.out.println("Selecione o CARTÃO para REMOVER:");
             for(int i=0;i<cartoes.length;i++){
                 if(cartoes[i] != null){
-                    System.out.printf("Cartão [%d] -> %s\n", (i+1), (cartoes[i].getTipo() == 1 ? "Débito":"Crédito"));
+                    System.out.printf("Cartão [%d] -> %s\n", (i+1), (cartoes[i].getTipo() == TipoCartao.DEBITO ? "Débito":"Crédito"));
                 }
             }
             cartao = Integer.parseInt(SCANNER.nextLine())-1;

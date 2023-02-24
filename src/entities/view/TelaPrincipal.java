@@ -1,7 +1,5 @@
 package entities.view;
 
-import java.util.Scanner;
-
 public class TelaPrincipal extends Tela {
     public static void exibirTelaPrincipal(){
         System.out.println("Você está na Tela Principal");
