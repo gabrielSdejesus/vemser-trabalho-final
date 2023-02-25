@@ -238,11 +238,7 @@ public class ContaRepository implements Repository<Integer, Conta> {
 
             // Executa-se a consulta
             PreparedStatement stmt = con.prepareStatement(sql);
-
-
             stmt.setInt(1, id);
-
-
             ResultSet res = stmt.executeQuery();
 
             while (res.next()) {
