@@ -15,9 +15,7 @@ public class TelaPrincipal extends Tela {
             case 4 -> Tela.redirecionarParaTela(5);
             case 5 -> Tela.redirecionarParaTela(6);
             case 6 -> Tela.redirecionarParaTela(7);
-            default -> {
-                System.out.println("Programa encerrado!");
-            }
+            default -> System.out.println("Programa encerrado!");
         }
     }
 }

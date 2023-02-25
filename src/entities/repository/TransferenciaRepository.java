@@ -38,8 +38,8 @@ public class TransferenciaRepository implements Repository<Transferencia> {
             transferencia.setIdTransferencia(proximoId);
 
             String sql = """
-                    INSERT INTO TRANSFERENCIA\n
-                    (id_transferencia, numero_conta_enviou, numero_conta_recebeu, valor)\n
+                    INSERT INTO TRANSFERENCIA
+                    (id_transferencia, numero_conta_enviou, numero_conta_recebeu, valor)
                     VALUES(?,?,?,?)
                     """;
 
@@ -76,12 +76,12 @@ public class TransferenciaRepository implements Repository<Transferencia> {
             Statement stmt = con.createStatement();
 
             String sql = """
-                    SELECT t.ID_TRANSFERENCIA, c.NOME AS NOME_RECEBEU, t.NUMERO_CONTA_RECEBEU,\n 
-                    c4.NOME AS NOME_ENVIOU, t.NUMERO_CONTA_ENVIOU, t.VALOR FROM CLIENTE c\n
-                    INNER JOIN CONTA c2 ON c.ID_CLIENTE = c2.ID_CLIENTE\n
-                    INNER JOIN TRANSFERENCIA t ON c2.NUMERO_CONTA = t.NUMERO_CONTA_RECEBEU\n
-                    INNER JOIN CONTA c3 ON t.NUMERO_CONTA_ENVIOU = c3.NUMERO_CONTA\n
-                    INNER JOIN CLIENTE c4 ON c3.ID_CLIENTE = c4.ID_CLIENTE\n
+                    SELECT t.ID_TRANSFERENCIA, c.NOME AS NOME_RECEBEU, t.NUMERO_CONTA_RECEBEU,
+                    c4.NOME AS NOME_ENVIOU, t.NUMERO_CONTA_ENVIOU, t.VALOR FROM CLIENTE c
+                    INNER JOIN CONTA c2 ON c.ID_CLIENTE = c2.ID_CLIENTE
+                    INNER JOIN TRANSFERENCIA t ON c2.NUMERO_CONTA = t.NUMERO_CONTA_RECEBEU
+                    INNER JOIN CONTA c3 ON t.NUMERO_CONTA_ENVIOU = c3.NUMERO_CONTA
+                    INNER JOIN CLIENTE c4 ON c3.ID_CLIENTE = c4.ID_CLIENTE
                     ORDER BY t.ID_TRANSFERENCIA DESC
                     """;
 
@@ -113,16 +113,16 @@ public class TransferenciaRepository implements Repository<Transferencia> {
             con = ConexaoBancoDeDados.getConnection();
 
             String sql = """
-                    SELECT t.ID_TRANSFERENCIA, c.NOME AS NOME_RECEBEU, t.NUMERO_CONTA_RECEBEU,\n 
-                    c4.NOME AS NOME_ENVIOU, t.NUMERO_CONTA_ENVIOU, t.VALOR\n
-                    FROM CLIENTE c\n
-                    INNER JOIN CONTA c2 ON c.ID_CLIENTE = c2.ID_CLIENTE\n
-                    INNER JOIN TRANSFERENCIA t ON c2.NUMERO_CONTA = t.NUMERO_CONTA_RECEBEU\n
-                    INNER JOIN CONTA c3 ON t.NUMERO_CONTA_ENVIOU = c3.NUMERO_CONTA\n
-                    INNER JOIN CLIENTE c4 ON c3.ID_CLIENTE = c4.ID_CLIENTE\n
-                    WHERE (t.NUMERO_CONTA_ENVIOU = ?\n
-                    OR t.NUMERO_CONTA_RECEBEU = ?)\n
-                    AND ROWNUM <= 10\n
+                    SELECT t.ID_TRANSFERENCIA, c.NOME AS NOME_RECEBEU, t.NUMERO_CONTA_RECEBEU,
+                    c4.NOME AS NOME_ENVIOU, t.NUMERO_CONTA_ENVIOU, t.VALOR
+                    FROM CLIENTE c
+                    INNER JOIN CONTA c2 ON c.ID_CLIENTE = c2.ID_CLIENTE
+                    INNER JOIN TRANSFERENCIA t ON c2.NUMERO_CONTA = t.NUMERO_CONTA_RECEBEU
+                    INNER JOIN CONTA c3 ON t.NUMERO_CONTA_ENVIOU = c3.NUMERO_CONTA
+                    INNER JOIN CLIENTE c4 ON c3.ID_CLIENTE = c4.ID_CLIENTE
+                    WHERE (t.NUMERO_CONTA_ENVIOU = ?
+                    OR t.NUMERO_CONTA_RECEBEU = ?)
+                    AND ROWNUM <= 10
                     ORDER BY t.ID_TRANSFERENCIA DESC
                     """;
 

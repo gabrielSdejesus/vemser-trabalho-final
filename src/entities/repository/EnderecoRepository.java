@@ -37,8 +37,8 @@ public class EnderecoRepository implements Repository<Endereco> {
             endereco.setIdEndereco(proximoId);
 
             String sql = """
-                    INSERT INTO endereco\n
-                    (id_endereco, id_cliente, cidade, logradouro, estado, pais, cep)\n
+                    INSERT INTO endereco
+                    (id_endereco, id_cliente, cidade, logradouro, estado, pais, cep)
                     VALUES(?,?,?,?,?,?,?)
                     """;
 
@@ -105,7 +105,6 @@ public class EnderecoRepository implements Repository<Endereco> {
 
             StringBuilder sql = new StringBuilder();
             sql.append("UPDATE endereco SET \n");
-            Cliente cliente = endereco.getCliente();
 
             if (endereco.getCidade() != null){
                 sql.append(" cidade = ?,");
@@ -184,8 +183,8 @@ public class EnderecoRepository implements Repository<Endereco> {
             Statement stmt = con.createStatement();
 
             String sql = """
-                        SELECT c.nome, e.*  FROM endereco e\n 
-                        INNER JOIN cliente c ON e.id_cliente = c.id_cliente\n
+                        SELECT c.nome, e.*  FROM endereco e
+                        INNER JOIN cliente c ON e.id_cliente = c.id_cliente
                     """;
 
             ResultSet res = stmt.executeQuery(sql);
@@ -216,8 +215,8 @@ public class EnderecoRepository implements Repository<Endereco> {
             con = ConexaoBancoDeDados.getConnection();
 
             String sql = """
-                        SELECT c.nome, e.*  FROM endereco e\n 
-                        INNER JOIN cliente c ON e.id_cliente = c.id_cliente\n
+                        SELECT c.nome, e.*  FROM endereco e
+                        INNER JOIN cliente c ON e.id_cliente = c.id_cliente
                         WHERE e.id_cliente = ?
                     """;
 

@@ -8,7 +8,6 @@ import entities.repository.EnderecoRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 public class EnderecoService extends Service{
 
@@ -111,7 +110,7 @@ public class EnderecoService extends Service{
                 System.out.println("Nenhum endereço selecionado!");
             }
         }else{
-            System.out.println("Você tem apenas [1] endereço e não pode exluí-lo!");
+            System.err.println("Você tem apenas [1] endereço e não pode exluí-lo!");
         }
     }
 

@@ -61,7 +61,7 @@ public class ContaRepository implements Repository<Conta> {
                     con.close();
                 }
             } catch (SQLException e) {
-                throw new BancoDeDadosException(e.getCause());
+                e.printStackTrace();
             }
         }
     }
@@ -73,7 +73,9 @@ public class ContaRepository implements Repository<Conta> {
 
             String sql1 = "UPDATE CLIENTE C SET c.STATUS = 1 WHERE c.CPF_CLIENTE = ?";
             String sql = "UPDATE CONTA C SET C.STATUS = 1 WHERE c.ID_CLIENTE =\n" +
-                    " (SELECT ID_CLIENTE FROM CLIENTE c2 WHERE C2.CPF_CLIENTE = ?)";
+                    " (SELECT ID_CLIENTE FROM CLIENTE c2 WHERE c2.CPF_CLIENTE = ?)";
+            String sql2 = "UPDATE CARTAO C SET C.STATUS = 1 WHERE c.NUMERO_CONTA =\n" +
+                    " (SELECT NUMERO_CONTA FROM CONTA c2 WHERE c2.ID_CLIENTE =(SELECT ID_CLIENTE FROM CLIENTE c2 WHERE C2.CPF_CLIENTE = ?))";
 
             //reativar cliente
             PreparedStatement stmt = con.prepareStatement(sql1);
@@ -82,6 +84,11 @@ public class ContaRepository implements Repository<Conta> {
 
             //reativar conta
             stmt = con.prepareStatement(sql);
+            stmt.setString(1, cpf);
+            res += stmt.executeUpdate();
+
+            //reativar cartões
+            stmt = con.prepareStatement(sql2);
             stmt.setString(1, cpf);
             res += stmt.executeUpdate();
 
@@ -227,8 +234,8 @@ public class ContaRepository implements Repository<Conta> {
             Conta conta = new Conta();
 
             String sql = """
-                    SELECT * FROM CONTA c\n
-                    LEFT JOIN CLIENTE c2 ON c.ID_CLIENTE = c2.ID_CLIENTE\n
+                    SELECT * FROM CONTA c
+                    LEFT JOIN CLIENTE c2 ON c.ID_CLIENTE = c2.ID_CLIENTE
                     WHERE numero_conta = ? AND c.STATUS = 1
                      """;
 

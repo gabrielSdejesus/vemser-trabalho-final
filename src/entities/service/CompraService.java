@@ -4,7 +4,6 @@ import entities.exception.BancoDeDadosException;
 import entities.model.*;
 import entities.repository.CompraRepository;
 
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +40,8 @@ public class CompraService extends Service{
         Cartao cartao;
         ArrayList<Item> itens = new ArrayList<>();
         String nomeItem;
+        ContaService contaService = new ContaService();
+        conta = contaService.retornarConta(conta.getNumeroConta(), conta.getSenha());
 
         double valorTotalAtual = 0;
 
@@ -76,10 +77,8 @@ public class CompraService extends Service{
                     System.out.println("\n\nInsira o nome do item a ser adicionado ou (digite SAIR para continuar):");
                     nomeItem = SCANNER.nextLine();
                     if (nomeItem.equalsIgnoreCase("SAIR")) {
-                        if(itens.size() > 0){
-                            System.out.println("\nCompra Adicionada com sucesso!");
-                        }else{
-                            System.out.println("\nCompra não realizada!");
+                        if(itens.size() == 0) {
+                            System.err.println("\nCompra não realizada!");
                         }
                         break;
                     } else {
@@ -106,6 +105,25 @@ public class CompraService extends Service{
                 if(!itens.isEmpty()
                         && !item.getNome().isEmpty()
                         && !item.getNome().isBlank()) {
+                    /////Alterar o limite do cartão de crédito se tiver comprado com o cartão de crédito
+                    if(cartao.getClass().equals(CartaoDeCredito.class)){
+                        ((CartaoDeCredito) cartao).setLimite(((CartaoDeCredito) cartao).getLimite()-valorTotalAtual);
+                        if(cartaoService.editarCartao(cartao.getNumeroCartao(), cartao)){
+                            System.out.println("Limite do cartão de CRÉDITO ATUALIZADO!");
+                        }else{
+                            System.err.println("Problemas ao atualizar o limite do cartão de crédito");
+                            return;
+                        }
+                    }else{////Paga com saldo caso use o cartão de débito
+                        if(conta.getSaldo()-valorTotalAtual >= 0){
+                            conta.setSaldo(conta.getSaldo()-valorTotalAtual);
+                            contaService.editar(conta.getNumeroConta(), conta);
+                        }else{
+                            System.err.println("Saldo insuficiente!");
+                            return;
+                        }
+                    }
+                    /////
                     String docVendedor;
                     System.out.println("Insira o documento do vendedor:");
                     docVendedor = SCANNER.nextLine();
@@ -130,25 +148,7 @@ public class CompraService extends Service{
                     ItemService itemService = new ItemService();
                     itemService.adicionar(itens);
                     /////
-
-                    /////Alterar o limite do cartão de crédito se tiver comprado com o cartão de crédito
-                    if(cartao.getClass().equals(CartaoDeCredito.class)){
-                        ((CartaoDeCredito) cartao).setLimite(((CartaoDeCredito) cartao).getLimite()-valorTotalAtual);
-                        if(cartaoService.editarCartao(cartao.getNumeroCartao(), cartao)){
-                            System.out.println("Limite do cartão de CRÉDITO ATUALIZADO!");
-                        }else{
-                            System.err.println("Problemas ao atualizar o limite do cartão de crédito");
-                        }
-                    }else{////Paga com saldo caso use o cartão de débito
-                        if(conta.getSaldo()-valorTotalAtual < 0){
-                            ContaService contaService = new ContaService();
-                            conta.setSaldo(conta.getSaldo()-valorTotalAtual);
-                            contaService.editar(conta.getNumeroConta(), conta);
-                        }else{
-                            System.err.println("Saldo insuficiente!");
-                        }
-                    }
-                    /////
+                    System.out.println("\nCompra realizada!");
                 }
             } else {
                 System.err.println("Este número não representa nenhum cartão.");

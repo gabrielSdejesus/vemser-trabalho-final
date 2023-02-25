@@ -4,7 +4,6 @@ import entities.exception.BancoDeDadosException;
 import entities.model.*;
 import entities.repository.CartaoRepository;
 
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;

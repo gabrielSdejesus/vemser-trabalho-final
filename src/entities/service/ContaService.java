@@ -10,7 +10,6 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Pattern;
 
 public class ContaService extends Service{
-
     private ContaRepository contaRepository;
 
     public ContaService() {
@@ -121,7 +120,6 @@ public class ContaService extends Service{
         return null;
     }
 
-
     public void exibirConta(Conta conta){
         System.out.println("Número da CONTA: "+conta.getNumeroConta());
         System.out.println("Nome do CLIENTE da CONTA: "+conta.getCliente().getNome());
@@ -149,6 +147,7 @@ public class ContaService extends Service{
             }else{
                 conta.setSaldo(conta.getSaldo()-valor);
                 this.editar(conta.getNumeroConta(), conta);
+                System.out.println("Saque concluído!\n");
             }
         }else{
             System.err.println("Valor inválido");
@@ -204,7 +203,7 @@ public class ContaService extends Service{
             StringBuilder message = new StringBuilder("Selecione um cartão para efetuar o pagamento:\n");
             for(int i=0;i<cartoes.size();i++){
                 if(cartoes.get(i) != null){
-                    message.append("Cartão [").append(i + 1).append("] -> ").append(cartoes.get(i).getTipo() == TipoCartao.DEBITO ? "Débito" : "Crédito").append(":\n");
+                    message.append("Cartão [").append(i + 1).append("] -> ").append(cartoes.get(i).getTipo() == TipoCartao.DEBITO ? "Débito" : "Crédito").append("\n");
                 }
             }
             int input = askInt(String.valueOf(message)) - 1;
@@ -263,6 +262,19 @@ public class ContaService extends Service{
                 System.out.println("Senha atualizada com sucesso!");
             }else{
                 System.err.println("Problema ao atualizar senha!");
+            }
+        }catch(BancoDeDadosException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void reativarConta(){
+        String cpf = askString("Insira o CPF para REATIVAR a CONTA e o CLIENTE:");
+        try{
+            if(this.contaRepository.reativarConta(cpf)){
+                System.out.println("CONTA e CLIENTE reativados!");
+            }else{
+                System.err.println("Falha ao reativar CONTA e CLIENTE!");
             }
         }catch(BancoDeDadosException e){
             e.printStackTrace();

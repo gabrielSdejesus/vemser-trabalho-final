@@ -1,8 +1,6 @@
 package entities.repository;
 
 import entities.exception.BancoDeDadosException;
-import entities.model.Cartao;
-import entities.model.CartaoDeCredito;
 import entities.model.Cliente;
 import entities.model.Status;
 
@@ -38,7 +36,7 @@ public class ClienteRepository implements Repository<Cliente> {
             cliente.setIdCliente(proximoId);
 
             String sql = """
-                    INSERT INTO cliente\n 
+                    INSERT INTO cliente
                     (id_cliente, cpf_cliente, nome)
                     VALUES(?, ?, ?)
                     """;
@@ -84,7 +82,7 @@ public class ClienteRepository implements Repository<Cliente> {
                     con.close();
                 }
             } catch (SQLException e) {
-                throw new BancoDeDadosException(e.getCause());
+                e.printStackTrace();
             }
         }
     }

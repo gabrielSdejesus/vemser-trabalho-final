@@ -1,6 +1,5 @@
 package entities.view;
 
-import entities.model.Cartao;
 import entities.model.Conta;
 import entities.model.TipoCartao;
 import entities.service.*;
@@ -12,8 +11,15 @@ public class TelaAdministrador extends Tela {
     }
 
     public static void tratarInput() {
-        int input = pedirInput("[1] -> Cadastrar um novo CLIENTE com CONTA\n[2] -> Deletar CONTA e CLIENTE\n[3] -> Alterar Cliente\n" +
-                "[4] -> Exibir todas as transferências\n[5] -> Exibir todos os clientes\n[6] -> Exibir todas as contas\n[0] -> Voltar para a Tela Principal");
+        int input = pedirInput("""
+                [1] -> Cadastrar um novo CLIENTE com CONTA
+                [2] -> Deletar CONTA e CLIENTE
+                [3] -> Alterar Cliente
+                [4] -> Exibir todas as transferências
+                [5] -> Exibir todos os clientes
+                [6] -> Exibir todas as contas
+                [7] -> Reativar CONTA e CLIENTE
+                [0] -> Voltar para a Tela Principal""");
         ClienteService clienteService = new ClienteService();
         ContaService contaService = new ContaService();
         TransferenciaService transferenciaService = new TransferenciaService();
@@ -67,6 +73,14 @@ public class TelaAdministrador extends Tela {
             case 6 -> {
                 if(Tela.loginAdm()){
                     contaService.listar();
+                }else{
+                    System.err.println("Senha administrativa inválida!");
+                }
+                exibirTelaAdministrador();
+            }
+            case 7 -> {
+                if(Tela.loginAdm()){
+                    contaService.reativarConta();
                 }else{
                     System.err.println("Senha administrativa inválida!");
                 }

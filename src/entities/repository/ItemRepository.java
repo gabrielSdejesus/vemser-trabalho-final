@@ -1,7 +1,6 @@
 package entities.repository;
 
 import entities.exception.BancoDeDadosException;
-import entities.model.Cliente;
 import entities.model.Compra;
 import entities.model.Item;
 
@@ -54,7 +53,7 @@ public class ItemRepository implements Repository<Item>{
             item.setIdItem(proximoId);
 
             String sql = """
-                    INSERT INTO item\n 
+                    INSERT INTO item
                     VALUES(?, ?, ?, ?, ?)
                     """;
 
@@ -91,8 +90,8 @@ public class ItemRepository implements Repository<Item>{
             Statement stmt = con.createStatement();
 
             String sql = """
-                    SELECT i.*, c.NUMERO_CARTAO, c.DOC_VENDEDOR, c.DATA FROM ITEM i\n
-                    LEFT JOIN COMPRA c ON i.ID_ITEM = c.ID_COMPRA 
+                    SELECT i.*, c.NUMERO_CARTAO, c.DOC_VENDEDOR, c.DATA FROM ITEM i
+                    LEFT JOIN COMPRA c ON i.ID_ITEM = c.ID_COMPRA
                     """;
 
             // Executa-se a consulta

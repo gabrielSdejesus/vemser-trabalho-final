@@ -3,7 +3,6 @@ package entities.repository;
 import entities.exception.BancoDeDadosException;
 import entities.model.Cliente;
 import entities.model.Contato;
-import entities.model.Endereco;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -38,8 +37,8 @@ public class ContatoRepository implements Repository<Contato>{
             contato.setIdContato(proximoId);
 
             String sql = """
-                    INSERT INTO contato\n
-                    (id_contato, id_cliente, telefone, email)\n
+                    INSERT INTO contato
+                    (id_contato, id_cliente, telefone, email)
                     VALUES(?,?,?,?)
                     """;
 
@@ -103,8 +102,6 @@ public class ContatoRepository implements Repository<Contato>{
 
             StringBuilder sql = new StringBuilder();
             sql.append("UPDATE contato SET \n");
-            Cliente cliente = contato.getCliente();
-
 
             if(contato.getTelefone() != null){
                 sql.append(" telefone = ?,");
@@ -159,8 +156,8 @@ public class ContatoRepository implements Repository<Contato>{
             Statement stmt = con.createStatement();
 
             String sql = """
-                        SELECT *  FROM contato c\n 
-                        INNER JOIN cliente c2 ON c.id_cliente = c2.id_cliente\n
+                        SELECT *  FROM contato c
+                        INNER JOIN cliente c2 ON c.id_cliente = c2.id_cliente
                     """;
 
             // Executa-se a consulta
@@ -192,8 +189,8 @@ public class ContatoRepository implements Repository<Contato>{
             con = ConexaoBancoDeDados.getConnection();
 
             String sql = """
-                        SELECT c2.nome, c.* FROM contato c\n 
-                        INNER JOIN cliente c2 ON c.id_cliente = c2.id_cliente\n
+                        SELECT c2.nome, c.* FROM contato c
+                        INNER JOIN cliente c2 ON c.id_cliente = c2.id_cliente
                         WHERE c.id_cliente = ?
                     """;
 

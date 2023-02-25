@@ -4,7 +4,6 @@ import entities.model.*;
 import entities.service.CartaoService;
 import entities.service.CompraService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class TelaCompras extends Tela {

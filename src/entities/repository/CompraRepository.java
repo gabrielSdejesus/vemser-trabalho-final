@@ -38,8 +38,8 @@ public class CompraRepository implements Repository<Compra>{
             compra.setIdCompra(proximoId);
 
             String sql = """
-                    INSERT INTO compra\n
-                    (id_compra, numero_cartao, doc_vendedor, data)\n
+                    INSERT INTO compra
+                    (id_compra, numero_cartao, doc_vendedor, data)
                     VALUES(?,?,?,?)
                     """;
 
@@ -75,9 +75,9 @@ public class CompraRepository implements Repository<Compra>{
             Statement stmt = con.createStatement();
 
             String sql = """
-                        SELECT c.*, c4.NOME, c3.NUMERO_CONTA FROM COMPRA c\n 
-                        INNER JOIN CARTAO c2 ON c.NUMERO_CARTAO = c2.NUMERO_CARTAO\n
-                        INNER JOIN CONTA c3 ON c3.NUMERO_CONTA  = c2.NUMERO_CONTA\n
+                        SELECT c.*, c4.NOME, c3.NUMERO_CONTA FROM COMPRA c
+                        INNER JOIN CARTAO c2 ON c.NUMERO_CARTAO = c2.NUMERO_CARTAO
+                        INNER JOIN CONTA c3 ON c3.NUMERO_CONTA  = c2.NUMERO_CONTA
                         INNER JOIN CLIENTE c4 ON c4.ID_CLIENTE  = c3.ID_CLIENTE
                     """;
 
@@ -110,9 +110,9 @@ public class CompraRepository implements Repository<Compra>{
             con = ConexaoBancoDeDados.getConnection();
 
             String sql = """
-                        SELECT c.*, c4.NOME, c3.NUMERO_CONTA FROM COMPRA c\n 
-                        INNER JOIN CARTAO c2 ON c.NUMERO_CARTAO = c2.NUMERO_CARTAO\n
-                        INNER JOIN CONTA c3 ON c3.NUMERO_CONTA  = c2.NUMERO_CONTA\n
+                        SELECT c.*, c4.NOME, c3.NUMERO_CONTA FROM COMPRA c
+                        INNER JOIN CARTAO c2 ON c.NUMERO_CARTAO = c2.NUMERO_CARTAO
+                        INNER JOIN CONTA c3 ON c3.NUMERO_CONTA  = c2.NUMERO_CONTA
                         INNER JOIN CLIENTE c4 ON c4.ID_CLIENTE  = c3.ID_CLIENTE
                         WHERE c.NUMERO_CARTAO = ?
                     """;

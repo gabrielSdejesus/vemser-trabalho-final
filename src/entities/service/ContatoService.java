@@ -9,7 +9,6 @@ import entities.repository.ContatoRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 public class ContatoService extends Service {
 
@@ -104,7 +103,7 @@ public class ContatoService extends Service {
                 System.out.println("Nenhum contato selecionado!");
             }
         } else {
-            System.out.println("Você tem apenas [1] contato e não pode excluí-lo!");
+            System.err.println("Você tem apenas [1] contato e não pode excluí-lo!");
         }
     }
 

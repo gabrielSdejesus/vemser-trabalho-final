@@ -212,8 +212,8 @@ public class CartaoRepository implements Repository<Cartao> {
             con = ConexaoBancoDeDados.getConnection();
 
             String sql = """
-                    SELECT *  FROM CARTAO c\n
-                    WHERE c.NUMERO_CONTA = ?\n
+                    SELECT *  FROM CARTAO c
+                    WHERE c.NUMERO_CONTA = ?
                     AND STATUS = 1
                     """;
 
