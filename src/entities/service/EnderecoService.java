@@ -201,7 +201,7 @@ public class EnderecoService extends Service{
                 }
                 if(adicionar){
                     try{
-                        if(this.enderecoRepository.editar(novoEndereco.getIdEndereco(), novoEndereco)){
+                        if(this.enderecoRepository.editar(conta.getCliente().getIdCliente(), novoEndereco)){
                             System.out.println("ENDEREÇO alterado com sucesso!");
                         }else{
                             System.err.println("Problemas ao editar o ENDEREÇO");
