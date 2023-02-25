@@ -24,7 +24,9 @@ public class EnderecoService extends Service{
         while(!enderecoInput.equalsIgnoreCase("ENCERRAR ENDEREÇOS")){
             System.out.println("Insira [ENCERRAR ENDEREÇOS] para parar de adicionar endereços do cliente");
             System.out.print("Insira o Logradouro do Endereço do cliente: ");
-            enderecoInput = SCANNER.nextLine();
+            do {
+                enderecoInput = SCANNER.nextLine();
+            } while (enderecoInput.equals(""));
 
             String cidade, estado, pais, cep;
 
@@ -36,14 +38,26 @@ public class EnderecoService extends Service{
                     break;
                 }
             }else{
+
                 System.out.print("Insira a Cidade do Endereço do cliente: ");
-                cidade = SCANNER.nextLine();
+                do {
+                    cidade = SCANNER.nextLine();
+                } while (cidade.equals(""));
+
                 System.out.print("Insira o Estado do Endereço do cliente: ");
-                estado = SCANNER.nextLine();
+                do {
+                    estado = SCANNER.nextLine().toUpperCase();
+                } while (estado.equals(""));
+
                 System.out.print("Insira o País do Endereço do cliente: ");
-                pais = SCANNER.nextLine();
+                do {
+                    pais = SCANNER.nextLine();
+                } while (pais.equals(""));
+
                 System.out.print("Insira o CEP do Endereço do cliente: ");
-                cep = SCANNER.nextLine();
+                do {
+                    cep = SCANNER.nextLine();
+                } while (cep.equals(""));
 
                 Cliente cliente = new Cliente();
                 cliente.setIdCliente(conta.getCliente().getIdCliente());
