@@ -66,20 +66,24 @@ public class ContaRepository implements Repository<Integer, Conta> {
         }
     }
 
-    public boolean reativarConta(Integer id) throws BancoDeDadosException {
+    public boolean reativarConta(String cpf) throws BancoDeDadosException {
         Connection con = null;
         try {
             con = ConexaoBancoDeDados.getConnection();
 
-            String sql = "UPDATE conta SET status = 1 WHERE numero_conta = ?";
+            String sql1 = "UPDATE CLIENTE C SET c.STATUS = 1 WHERE c.CPF_CLIENTE = ?";
+            String sql = "UPDATE CONTA C SET C.STATUS = 1 WHERE c.ID_CLIENTE =\n" +
+                    " (SELECT ID_CLIENTE FROM CLIENTE c2 WHERE C2.CPF_CLIENTE = ?)";
 
-            PreparedStatement stmt = con.prepareStatement(sql);
-
-            stmt.setInt(1, id);
-
-            // Executa-se a consulta
+            //reativar cliente
+            PreparedStatement stmt = con.prepareStatement(sql1);
+            stmt.setString(1, cpf);
             int res = stmt.executeUpdate();
-            System.out.println("reativarContaPorId.res=" + res);
+
+            //reativar conta
+            stmt = con.prepareStatement(sql);
+            stmt.setString(1, cpf);
+            res += stmt.executeUpdate();
 
             return res > 0;
         } catch (SQLException e) {

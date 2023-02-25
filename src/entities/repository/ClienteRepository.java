@@ -39,14 +39,14 @@ public class ClienteRepository implements Repository<Integer, Cliente> {
 
             String sql = """
                     INSERT INTO cliente\n 
-                    VALUES(?, ?, ?, ?)
+                    (id_cliente, cpf_cliente, nome)
+                    VALUES(?, ?, ?)
                     """;
 
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setInt(1, cliente.getIdCliente());
             stmt.setString(2, cliente.getCpf());
             stmt.setString(3, cliente.getNome());
-            stmt.setInt(4, cliente.getStatus().getStatus());
 
             int res = stmt.executeUpdate();
             System.out.println("adicionarCliente.res=" + res);
@@ -145,7 +145,7 @@ public class ClienteRepository implements Repository<Integer, Cliente> {
             con = ConexaoBancoDeDados.getConnection();
             Statement stmt = con.createStatement();
 
-            String sql = "SELECT * FROM cliente WHERE status = 1";
+            String sql = "SELECT * FROM cliente";
 
             ResultSet res = stmt.executeQuery(sql);
 

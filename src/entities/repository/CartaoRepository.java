@@ -34,25 +34,30 @@ public class CartaoRepository implements Repository<String, Cartao> {
 
             String proximoId = this.getProximoId(con);
             cartao.setNumeroCartao(String.valueOf(proximoId));
+            StringBuilder sql = new StringBuilder();
+            sql.append("INSERT INTO");
+            sql.append(" cartao (NUMERO_CARTAO, NUMERO_CONTA, DATA_EXPEDICAO, CODIGO_SEGURANCA, TIPO, VENCIMENTO");
 
-            String sql = """
-                    INSERT INTO cartao (NUMERO_CARTAO, NUMERO_CONTA, DATA_EXPEDICAO, CODIGO_SEGURANCA, TIPO, VENCIMENTO, LIMITE)\n 
-                    VALUES(?, ?, ?, ?, ?, ?, ?)
-                    """;
+            if(cartao.getClass() == CartaoDeDebito.class){
+                sql.append(")");
+                sql.append(" VALUES(?, ?, ?, ?, ?, ?)");
+            }
 
-            PreparedStatement stmt = con.prepareStatement(sql);
+            if(cartao.getClass() == CartaoDeCredito.class){
+                sql.append(", LIMITE)");
+                sql.append(" VALUES(?, ?, ?, ?, ?, ?, ?)");
+            }
+
+            PreparedStatement stmt = con.prepareStatement(sql.toString());
             stmt.setString(1, cartao.getNumeroCartao());
             stmt.setInt(2, cartao.getConta().getNumeroConta());
             stmt.setDate(3, Date.valueOf(cartao.getDataExpedicao()));
             stmt.setInt(4, cartao.getCodigoSeguranca());
             stmt.setInt(5, cartao.getTipo().getTipo());
             stmt.setDate(6, Date.valueOf(cartao.getVencimento()));
-            stmt.setInt(7, cartao.getStatus().getStatus());
 
             if(cartao.getClass().equals(CartaoDeCredito.class)){
                 stmt.setDouble(7, ((CartaoDeCredito) cartao).getLimite());
-            } else {
-                stmt.setString(7, null);
             }
 
             int res = stmt.executeUpdate();
