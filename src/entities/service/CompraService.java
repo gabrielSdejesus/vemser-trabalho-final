@@ -45,7 +45,17 @@ public class CompraService extends Service{
         double valorTotalAtual = 0;
 
         if (cartoes != null) {
-            int i = Integer.parseInt(SCANNER.nextLine());
+            StringBuilder message = new StringBuilder("\nSelecione o CARTÃO para realizar a COMPRA:\n");
+            for (int i = 0; i < cartoes.size(); i++) {
+                if (cartoes.get(i) != null) {
+                    message.append("Cartão [").append(i + 1).append("] -> ").append(cartoes.get(i).getTipo() == TipoCartao.DEBITO ? "Débito" : "Crédito");
+                    //pular uma linha para exibição
+                    if(i == 0){
+                        message.append("\n");
+                    }
+                }
+            }
+            int i = askInt(String.valueOf(message));
             i--;
             Item item = new Item();
             if(i < cartoes.size()

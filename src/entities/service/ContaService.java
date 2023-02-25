@@ -135,6 +135,7 @@ public class ContaService extends Service{
         if(valor > 0){
             conta.setSaldo(conta.getSaldo()+valor);
             this.editar(conta.getNumeroConta(), conta);
+            System.out.println("Depósito concluído!");
         }else{
             System.err.println("Valor inválido");
         }
