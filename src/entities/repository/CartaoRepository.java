@@ -60,8 +60,8 @@ public class CartaoRepository implements Repository<Cartao> {
                 stmt.setDouble(7, ((CartaoDeCredito) cartao).getLimite());
             }
 
-            int res = stmt.executeUpdate();
-            System.out.println("adicionarCartao.res=" + res);
+            // Executar consulta
+            stmt.executeUpdate();
             return cartao;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -88,10 +88,8 @@ public class CartaoRepository implements Repository<Cartao> {
 
             stmt.setString(1, id);
 
-            // Executa-se a consulta
+            // Executar consulta
             int res = stmt.executeUpdate();
-            System.out.println("removerCartaoPorId.res=" + res);
-
             return res > 0;
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
@@ -157,10 +155,8 @@ public class CartaoRepository implements Repository<Cartao> {
 
             stmt.setString(index, id);
 
-            // Executa-se a consulta
+            // Executar consulta
             int res = stmt.executeUpdate();
-            System.out.println("editarCartao.res=" + res);
-
             return res > 0;
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());

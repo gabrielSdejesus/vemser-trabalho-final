@@ -50,9 +50,10 @@ public class ContatoRepository implements Repository<Contato>{
             stmt.setString(3, contato.getTelefone());
             stmt.setString(4, contato.getEmail());
 
-            int res = stmt.executeUpdate();
-            System.out.println("adicionarContato.res=" + res);
+            // Executar consulta
+            stmt.executeUpdate();
             return contato;
+
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
         } finally {
@@ -77,11 +78,10 @@ public class ContatoRepository implements Repository<Contato>{
 
             stmt.setInt(1, id);
 
-            // Executa-se a consulta
+            // Executar consulta
             int res = stmt.executeUpdate();
-            System.out.println("removerContatoPorId.res=" + res);
-
             return res > 0;
+
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
         } finally {
@@ -133,11 +133,10 @@ public class ContatoRepository implements Repository<Contato>{
             stmt.setInt(index++, id);
             stmt.setInt(index, contato.getIdContato());
 
-            // Executa-se a consulta
+            // Executar consulta
             int res = stmt.executeUpdate();
-            System.out.println("editarContato.res=" + res);
-
             return res > 0;
+
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
         } finally {

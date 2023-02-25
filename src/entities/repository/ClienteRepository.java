@@ -48,8 +48,8 @@ public class ClienteRepository implements Repository<Cliente> {
             stmt.setString(2, cliente.getCpf());
             stmt.setString(3, cliente.getNome());
 
-            int res = stmt.executeUpdate();
-            System.out.println("adicionarCliente.res=" + res);
+            // Executar consulta
+            stmt.executeUpdate();
             return cliente;
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
@@ -72,9 +72,9 @@ public class ClienteRepository implements Repository<Cliente> {
             String sql = "UPDATE CLIENTE SET STATUS = 0 WHERE ID_CLIENTE = ? ";
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setInt(1, id);
-            int res = stmt.executeUpdate();
 
-            System.out.println("removerClientePorID.res=" + res);
+            // Executar consulta
+            int res = stmt.executeUpdate();
             return res > 0;
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
@@ -120,9 +120,8 @@ public class ClienteRepository implements Repository<Cliente> {
 
             stmt.setInt(index, id);
 
+            // Executar consulta
             int res = stmt.executeUpdate();
-            System.out.println("editarCliente.res=" + res);
-
             return res > 0;
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());

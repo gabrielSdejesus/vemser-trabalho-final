@@ -49,8 +49,8 @@ public class ContaRepository implements Repository<Conta> {
             stmt.setDouble(6, conta.getChequeEspecial());
             stmt.setInt(7, conta.getStatus().getStatus());
 
-            int res = stmt.executeUpdate();
-            System.out.println("adicionarConta.res=" + res);
+            // Executar consulta
+            stmt.executeUpdate();
             return conta;
 
         } catch (SQLException e) {
@@ -110,10 +110,8 @@ public class ContaRepository implements Repository<Conta> {
 
             stmt.setInt(1, id);
 
-            // Executa-se a consulta
+            // Executar consulta
             int res = stmt.executeUpdate();
-            System.out.println("removerClientePorId.res=" + res);
-
             return res > 0;
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
@@ -176,10 +174,8 @@ public class ContaRepository implements Repository<Conta> {
 
             stmt.setInt(index, id);
 
-            // Executa-se a consulta
+            // Executar consulta
             int res = stmt.executeUpdate();
-            System.out.println("editarConta.res=" + res);
-
             return res > 0;
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());

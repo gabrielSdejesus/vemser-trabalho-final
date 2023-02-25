@@ -65,9 +65,10 @@ public class ItemRepository implements Repository<Item>{
             stmt.setDouble(4, item.getValor());
             stmt.setInt(5, item.getQuantidade());
 
-            int res = stmt.executeUpdate();
-            System.out.println("adicionarItem.res=" + res);
+            // Executar consulta
+            stmt.executeUpdate();
             return item;
+
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
         } finally {

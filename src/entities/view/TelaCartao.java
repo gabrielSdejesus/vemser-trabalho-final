@@ -3,11 +3,9 @@ package entities.view;
 import entities.model.*;
 import entities.service.CartaoService;
 
-import java.util.Scanner;
-
 public class TelaCartao extends Tela {
     public static void exibirTelaCartao(){
-        System.out.println("\nVocê está na Tela de Cartão");
+        System.out.println("Você está na Tela de Cartão");
         TelaCartao.tratarInput();
     }
 
@@ -37,7 +35,7 @@ public class TelaCartao extends Tela {
             case 3 -> {
                 login = Tela.login();
                 if (login != null) {
-                    cartaoService.cadastrarCartao(login);
+                    cartaoService.cadastrarCartao(login, null);
                 }else{
                     System.err.println("Login mal-sucedido");
                 }

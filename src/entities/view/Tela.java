@@ -31,7 +31,7 @@ public abstract class Tela {
     }
 
     static void redirecionarParaTela(int tela){
-        System.out.println("\n");
+        System.out.println();
         switch(tela){
             case 1 -> TelaPrincipal.exibirTelaPrincipal();
             case 2 -> TelaCompras.exibirCompras();

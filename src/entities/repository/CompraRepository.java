@@ -50,8 +50,8 @@ public class CompraRepository implements Repository<Compra>{
             stmt.setString(3, compra.getDocVendedor());
             stmt.setDate(4, Date.valueOf(compra.getData()));
 
-            int res = stmt.executeUpdate();
-            System.out.println("adicionarCompra.res=" + res);
+            // Executar consulta
+            stmt.executeUpdate();
             return compra;
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());

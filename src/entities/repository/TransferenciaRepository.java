@@ -50,9 +50,10 @@ public class TransferenciaRepository implements Repository<Transferencia> {
             stmt.setInt(3, transferencia.getContaRecebeu().getNumeroConta());
             stmt.setDouble(4, transferencia.getValor());
 
-            int res = stmt.executeUpdate();
-            System.out.println("adicionarTransferencia.res=" + res);
+            // Executar consulta
+            stmt.executeUpdate();
             return transferencia;
+
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
         } finally {

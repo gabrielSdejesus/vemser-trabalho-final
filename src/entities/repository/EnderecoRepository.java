@@ -52,9 +52,10 @@ public class EnderecoRepository implements Repository<Endereco> {
             stmt.setString(6, endereco.getPais());
             stmt.setString(7, endereco.getCep());
 
-            int res = stmt.executeUpdate();
-            System.out.println("adicionarEndereco.res=" + res);
+            // Executar consulta
+            stmt.executeUpdate();
             return endereco;
+
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
         } finally {
@@ -79,10 +80,10 @@ public class EnderecoRepository implements Repository<Endereco> {
 
             stmt.setInt(1, id);
 
+            // Executar consulta
             int res = stmt.executeUpdate();
-            System.out.println("removerEnderecoPorId.res=" + res);
-
             return res > 0;
+
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
         } finally {
@@ -157,10 +158,10 @@ public class EnderecoRepository implements Repository<Endereco> {
             stmt.setInt(index++, id);
             stmt.setInt(index, endereco.getIdEndereco());
 
+            // Executar consulta
             int res = stmt.executeUpdate();
-            System.out.println("editarEndereco.res=" + res);
-
             return res > 0;
+
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
         } finally {
