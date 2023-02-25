@@ -1,8 +1,7 @@
 package entities.view;
 
-import entities.service.ClienteService;
-import entities.service.ContaService;
-import entities.service.TransferenciaService;
+import entities.model.Conta;
+import entities.service.*;
 
 public class TelaAdministrador extends Tela {
     public static void exibirTelaAdministrador(){
@@ -11,14 +10,18 @@ public class TelaAdministrador extends Tela {
     }
 
     public static void tratarInput() {
-        int input = pedirInput("[1] -> Cadastrar um novo CLIENTE com CONTA\n[2] -> Deletar CLIENTE\n[3] -> Deletar CONTA\n[4] -> Alterar Cliente\n[5] -> Exibir todas as transferências\n[6] -> Voltar para a Tela Principal");
+        int input = pedirInput("[1] -> Cadastrar um novo CLIENTE com CONTA\n[2] -> Deletar CONTA e CLIENTE\n[3] -> Alterar Cliente\n[4] -> Exibir todas as transferências\n[5] -> Voltar para a Tela Principal");
         ClienteService clienteService = new ClienteService();
         ContaService contaService = new ContaService();
         TransferenciaService transferenciaService = new TransferenciaService();
+        ContatoService contatoService = new ContatoService();
+        EnderecoService enderecoService = new EnderecoService();
         switch(input){
             case 1 ->{
                 if(Tela.loginAdm()){
-                    clienteService.exibirCliente(clienteService.adicionarCliente().getIdCliente());
+                    Conta conta = contaService.adicionar();
+                    contatoService.adicionarContato(conta);
+                    enderecoService.adicionarEndereco(conta);
                 }else{
                     System.err.println("Senha administrativa inválida!\n");
                 }
@@ -26,7 +29,7 @@ public class TelaAdministrador extends Tela {
             }
             case 2 -> {
                 if(Tela.loginAdm()){
-                    clienteService.deletarCliente();
+                    contaService.removerConta();
                 }else{
                     System.err.println("Senha administrativa inválida!");
                 }
@@ -34,7 +37,7 @@ public class TelaAdministrador extends Tela {
             }
             case 3 -> {
                 if(Tela.loginAdm()){
-                    contaService.removerConta();
+                    clienteService.alterarCliente();
                 }else{
                     System.err.println("Senha administrativa inválida!");
                 }
@@ -42,21 +45,13 @@ public class TelaAdministrador extends Tela {
             }
             case 4 -> {
                 if(Tela.loginAdm()){
-                    clienteService.alterarCliente();
-                }else{
-                    System.err.println("Senha administrativa inválida!");
-                }
-                exibirTelaAdministrador();
-            }
-            case 5 -> {
-                if(Tela.loginAdm()){
                     transferenciaService.listarTransferencias();
                 }else{
                     System.err.println("Senha administrativa inválida!");
                 }
                 exibirTelaAdministrador();
             }
-            case 6 -> Tela.redirecionarParaTela(1);
+            case 5 -> Tela.redirecionarParaTela(1);
             default -> {
                 System.out.println("Opção inválida!");
                 exibirTelaAdministrador();

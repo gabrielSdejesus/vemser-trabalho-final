@@ -17,35 +17,39 @@ public class ContaService extends Service{
         this.contaRepository = new ContaRepository();
     }
 
-    public void adicionar() {
-        while (true) {
-            int agencia = ThreadLocalRandom.current().nextInt(10, 99);
-            String senha;
+    public Conta adicionar() {
+        int agencia = ThreadLocalRandom.current().nextInt(10, 99);
+        String senha;
 
-            try {
-                Cliente cliente = new ClienteService().adicionarCliente();
+        try {
+            Cliente cliente = new ClienteService().adicionarCliente();
 
-                while (true) {
-                    System.out.print("Insira a senha: ");
-                    senha = SCANNER.nextLine().trim().replaceAll(" ", "");
-                    if (senha.length() == 6 && !Pattern.matches("[a-zA-Z!@#$%^&*(),.?\":{}|<>]+", senha)) {
-                        break;
-                    }
-                    System.out.println("A senha não possui 6 digitos ou não é composta apenas por números! Tente novamente.");
+            while (true) {
+                System.out.print("Insira a senha: ");
+                senha = SCANNER.nextLine().trim().replaceAll(" ", "");
+                if (senha.length() == 6 && !Pattern.matches("[a-zA-Z!@#$%^&*(),.?\":{}|<>]+", senha)) {
+                    break;
                 }
-
-                Conta conta = new Conta();
-                conta.setAgencia(agencia);
-                conta.setCliente(cliente);
-                conta.setSenha(senha);
-
-                contaRepository.adicionar(conta);
-
-            } catch (BancoDeDadosException e) {
-                e.printStackTrace();
-                break;
+                System.out.println("A senha não possui 6 digitos ou não é composta apenas por números! Tente novamente.");
             }
+
+            Conta conta = new Conta();
+            conta.setAgencia(agencia);
+            conta.setCliente(cliente);
+            conta.setSenha(senha);
+            conta.setSaldo(0d);
+            conta.setStatus(Status.ATIVO);
+            conta.setChequeEspecial(0d);
+
+            conta = contaRepository.adicionar(conta);
+            if(conta != null){
+                System.out.println("Número da sua CONTA: "+conta.getNumeroConta());
+            }
+            return conta;
+        } catch (BancoDeDadosException e) {
+            e.printStackTrace();
         }
+        return null;
     }
 
     public void listar() {
@@ -72,13 +76,19 @@ public class ContaService extends Service{
             if(numeroConta != -1){
                 if(contaRepository.remover(numeroConta)) {
                     System.out.println("Conta removida com sucesso!");
+                    ClienteService clienteService = new ClienteService();
+                    Conta conta = this.contaRepository.consultarPorNumeroConta(numeroConta);
+                    clienteService.deletarCliente(conta.getCliente().getIdCliente());
+                    CartaoService cartaoService = new CartaoService();
+                    for(Cartao cartao:cartaoService.returnCartoes(conta)){
+                        cartaoService.deletarCartao(cartao);
+                    }
                 }
             }
         } catch (BancoDeDadosException e) {
             e.printStackTrace();
         }
     }
-
 
     public Conta retornarConta(int numeroConta, String senhaConta){
         Conta conta;

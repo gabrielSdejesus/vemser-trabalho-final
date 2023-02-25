@@ -3,6 +3,7 @@ package entities.service;
 import entities.exception.BancoDeDadosException;
 import entities.model.Cliente;
 import entities.repository.ClienteRepository;
+import entities.repository.ContaRepository;
 
 import java.util.List;
 import java.util.regex.Pattern;
@@ -58,7 +59,9 @@ public class ClienteService extends Service{
             inputClienteEscolhido = askInt(String.valueOf(message));
 
             if(inputClienteEscolhido > 0 && inputClienteEscolhido <= clientes.size()){
-                if(this.clienteRepository.remover(clientes.get(inputClienteEscolhido).getIdCliente())){
+                if(this.clienteRepository.remover(clientes.get(inputClienteEscolhido-1).getIdCliente())){
+                    ContaService contaService = new ContaService();
+                    contaService.removerConta();
                     System.out.println("CLIENTE removido com sucesso!");
                 }else{
                     System.err.println("Problemas ao remover o CLIENTE!");
@@ -67,6 +70,18 @@ public class ClienteService extends Service{
                 System.err.println("Esse número não representa um CLIENTE!");
             }
 
+        }catch (BancoDeDadosException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void deletarCliente(int idCliente){
+        try{
+            if(this.clienteRepository.remover(idCliente)){
+                System.out.println("CLIENTE removido com sucesso!");
+            }else{
+                System.err.println("Problemas ao remover o CLIENTE!");
+            }
         }catch (BancoDeDadosException e){
             e.printStackTrace();
         }
@@ -85,10 +100,10 @@ public class ClienteService extends Service{
             inputClienteEscolhido = askInt(String.valueOf(message));
 
             if(inputClienteEscolhido > 0 && inputClienteEscolhido <= clientes.size()){
-                Cliente novoCliente = clientes.get(inputClienteEscolhido);
+                Cliente novoCliente = clientes.get(inputClienteEscolhido-1);
 
                 inputClienteEscolhido = askInt("Selecione a alteração que quer fazer no Contato:\n[1] Nome\n[2] CPF\n[3] Cancelar");
-                if (inputClienteEscolhido < 1 || inputClienteEscolhido >= 3){
+                if (inputClienteEscolhido < 0 || inputClienteEscolhido >= 3){
                     System.out.println("Operação cancelada!");
                 }else{
                     boolean editar = true;
