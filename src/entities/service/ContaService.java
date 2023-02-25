@@ -52,12 +52,15 @@ public class ContaService extends Service{
         return null;
     }
 
-    public void listar() {
+    public List<Conta> listar() {
         try {
-            contaRepository.listar().forEach(System.out::println);
+            List<Conta> contas = contaRepository.listar();
+            contas.forEach(System.out::println);
+            return contas;
         } catch (BancoDeDadosException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     public void editar(Integer numeroConta, Conta conta) {
@@ -71,18 +74,24 @@ public class ContaService extends Service{
 
     public void removerConta() {
         try{
-            this.listar();
+            List<Conta> contas = this.listar();
             int numeroConta = askInt("Insira o número da CONTA que deseja DELETAR:");
             if(numeroConta != -1){
+                Conta conta = new Conta();
+                for(Conta c: contas){
+                    if(c.getNumeroConta() == numeroConta){
+                        conta = c;
+                        break;
+                    }
+                }
+                CartaoService cartaoService = new CartaoService();
+                for(Cartao cartao:cartaoService.returnCartoes(conta)){
+                    cartaoService.deletarCartao(cartao);
+                }
                 if(contaRepository.remover(numeroConta)) {
                     System.out.println("Conta removida com sucesso!");
                     ClienteService clienteService = new ClienteService();
-                    Conta conta = this.contaRepository.consultarPorNumeroConta(numeroConta);
                     clienteService.deletarCliente(conta.getCliente().getIdCliente());
-                    CartaoService cartaoService = new CartaoService();
-                    for(Cartao cartao:cartaoService.returnCartoes(conta)){
-                        cartaoService.deletarCartao(cartao);
-                    }
                 }
             }
         } catch (BancoDeDadosException e) {

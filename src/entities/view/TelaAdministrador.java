@@ -1,6 +1,8 @@
 package entities.view;
 
+import entities.model.Cartao;
 import entities.model.Conta;
+import entities.model.TipoCartao;
 import entities.service.*;
 
 public class TelaAdministrador extends Tela {
@@ -17,12 +19,14 @@ public class TelaAdministrador extends Tela {
         TransferenciaService transferenciaService = new TransferenciaService();
         ContatoService contatoService = new ContatoService();
         EnderecoService enderecoService = new EnderecoService();
+        CartaoService cartaoService = new CartaoService();
         switch(input){
             case 1 ->{
                 if(Tela.loginAdm()){
                     Conta conta = contaService.adicionar();
                     contatoService.adicionarContato(conta);
                     enderecoService.adicionarEndereco(conta);
+                    cartaoService.cadastrarCartao(conta, TipoCartao.DEBITO);
                 }else{
                     System.err.println("Senha administrativa inválida!\n");
                 }
