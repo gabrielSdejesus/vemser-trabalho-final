@@ -248,7 +248,7 @@ public class ContaService extends Service{
         while (true) {
             System.out.print("Insira a nova senha: ");
             novaSenha = SCANNER.nextLine().trim().replaceAll(" ", "");
-            if (novaSenha.length() == 6 && !Pattern.matches("[a-zA-Z!@#$%^&*(),.?\":{}|<>]+", novaSenha)) {
+            if (novaSenha.length() == 6 && novaSenha.matches("[0-9]+")) {
                 conta.setSenha(novaSenha);
                 break;
             } else if (novaSenha.length() == 0) {
