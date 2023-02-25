@@ -29,7 +29,7 @@ public class ContatoService extends Service{
         inputAlteracaoContato = askInt(String.valueOf(message));
 
         if(inputAlteracaoContato > 0 && inputAlteracaoContato <= contatos.size()){
-            Contato novoContato = contatos.get(inputAlteracaoContato);
+            Contato novoContato = contatos.get(inputAlteracaoContato - 1);
 
             System.out.println("Selecione a alteração que quer fazer no Contato:");
             System.out.println("[1] Telefone");
