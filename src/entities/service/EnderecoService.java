@@ -8,6 +8,7 @@ import entities.repository.EnderecoRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class EnderecoService extends Service{
 
@@ -112,7 +113,7 @@ public class EnderecoService extends Service{
         inputAlteracaoEndereco = askInt(String.valueOf(message));
 
         if(inputAlteracaoEndereco > 0 && inputAlteracaoEndereco <= enderecos.size()){
-            Endereco novoEndereco = enderecos.get(inputAlteracaoEndereco);
+            Endereco novoEndereco = enderecos.get(inputAlteracaoEndereco-1);
 
             System.out.println("Selecione a alteração que quer fazer no Endereço:");
             System.out.println("[1] Logradouro");
@@ -141,20 +142,44 @@ public class EnderecoService extends Service{
                         }
                     }
                     case 3 -> {
-                        novoEndereco.setEstado(askString("Insira o novo [Estado]: "));
+                        while (true) {
+                            String novoEstado = askString("Insira a sigla do novo [Estado] (ex. SP): ");
+                            if(novoEstado.length() == 1 || novoEstado.length() > 2) {
+                                System.err.println("Sigla inválida! Tente novamente.");
+                            } else {
+                                novoEndereco.setEstado(novoEstado.toUpperCase());
+                                break;
+                            }
+                        }
                         if(novoEndereco.getEstado().equals("")){
                             adicionar = false;
                         }
                     }
                     case 4 -> {
-                        novoEndereco.setPais(askString("Insira o novo [País]: "));
+                        while (true) {
+                            String novoPais = askString("Insira o novo [País]: ").toUpperCase();
+                            if (!novoPais.matches("[a-zA-Z]+")) {
+                                System.err.println("Nome de país inválido! Tente novamente");
+                            } else {
+                                novoEndereco.setPais(novoPais);
+                                break;
+                            }
+                        }
                         if(novoEndereco.getPais().equals("")){
                             adicionar = false;
                         }
                     }
                     case 5 -> {
-                        novoEndereco.setCep(askString("Insira o novo [CEP]: "));
-                        if(novoEndereco.getCep().equals("")){
+                        while (true) {
+                            String novoCep = askString("Insira o novo [CEP]: ");
+                            if (!novoCep.matches("[0-9]+")) {
+                                System.err.println("CEP inválido! Tente novamente");
+                            } else {
+                                novoEndereco.setCep(novoCep);
+                                break;
+                            }
+                        }
+                        if(novoEndereco.getPais().equals("")){
                             adicionar = false;
                         }
                     }

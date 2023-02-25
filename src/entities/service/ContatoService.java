@@ -47,8 +47,13 @@ public class ContatoService extends Service{
                         String novoTelefone;
                         while (true) {
                             novoTelefone = askString("Insira o novo [Telefone] (apenas números): ");
-                            if (Pattern.matches("[a-zA-Z!@#$%^&*(),.?\":{}|<>]", novoTelefone)) {
-                                System.err.println("Número inválido! Tente novamente.");
+                            if (!novoTelefone.equals("")) {
+                                if (!novoTelefone.matches("[0-9]+")) {
+                                    System.err.println("Número inválido! Tente novamente.");
+                                } else {
+                                    novoContato.setTelefone(novoTelefone);
+                                    break;
+                                }
                             } else {
                                 novoContato.setTelefone(novoTelefone);
                                 break;
@@ -62,8 +67,13 @@ public class ContatoService extends Service{
                         String novoEmail;
                         while (true) {
                             novoEmail = askString("Insira o novo [Email]: ");
-                            if (!Pattern.matches("^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$", novoEmail)) {
-                                System.err.println("Email inválido! Tente novamente.");
+                            if (!novoEmail.equals("")) {
+                                if (!novoEmail.matches("^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$")) {
+                                    System.err.println("Email inválido! Tente novamente.");
+                                } else {
+                                    novoContato.setEmail(novoEmail);
+                                    break;
+                                }
                             } else {
                                 novoContato.setEmail(novoEmail);
                                 break;
