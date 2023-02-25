@@ -10,7 +10,7 @@ public class TelaMovimentacoes extends Tela {
     }
 
     public static void tratarInput() {
-        int input = pedirInput("[1] -> DEPOSITAR\n[2] -> SACAR\n[3] -> TRANSFERIR\n[4] -> PAGAR uma conta externa\n[5] -> Voltar para a Tela Principal");
+        int input = pedirInput("[1] -> DEPOSITAR\n[2] -> SACAR\n[3] -> PAGAR uma conta externa\n[4] -> Voltar para a Tela Principal");
         ContaService contaService = new ContaService();
         Conta login;
         switch(input){
@@ -35,22 +35,13 @@ public class TelaMovimentacoes extends Tela {
             case 3 -> {
                 login = Tela.login();
                 if(login != null){
-                    contaService.transferir(login);
-                }else{
-                    System.err.println("Login mal-sucedido");
-                }
-                exibirTelaMovimentacoes();
-            }
-            case 4 -> {
-                login = Tela.login();
-                if(login != null){
                     contaService.pagar(login);
                 }else{
                     System.err.println("Login mal-sucedido");
                 }
                 exibirTelaMovimentacoes();
             }
-            case 5 -> Tela.redirecionarParaTela(1);
+            case 4 -> Tela.redirecionarParaTela(1);
             default -> {
                 System.err.println("Opção inválida!");
                 exibirTelaMovimentacoes();

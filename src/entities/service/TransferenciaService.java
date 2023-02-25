@@ -16,17 +16,13 @@ public class TransferenciaService extends Service{
         this.transferenciaRepository = new TransferenciaRepository();
     }
 
-    public void adicionarTransferencia(Conta conta){
+    public void adicionarTransferencia(Conta contaEnviou, Conta contaRecebeu, double valor){
         Transferencia transferencia = new Transferencia();
         try{
-            transferencia.setValor(askDouble("Insira o valor: "));
-
-            if(transferencia.getValor() != -1){
-                transferencia.setContaEnviou(conta);
-
-                Conta contaRecebeu = new Conta();
-                contaRecebeu.setNumeroConta(askInt("Insira o número da conta que receberá o valor: "));
-                if(contaRecebeu.getNumeroConta() != -1){
+            transferencia.setValor(valor);
+            if(transferencia.getValor() > 0){
+                transferencia.setContaEnviou(contaEnviou);
+                if(contaRecebeu.getNumeroConta() > 0){
                     transferencia.setContaRecebeu(contaRecebeu);
 
                     transferencia = transferenciaRepository.adicionar(transferencia);

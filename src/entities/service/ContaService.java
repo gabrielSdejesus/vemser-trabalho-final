@@ -162,7 +162,8 @@ public class ContaService extends Service{
 
                         System.err.println("Transferência concluída!");
                         System.out.printf("Saldo atual: R$ %.2f\n", conta.getSaldo());
-
+                        TransferenciaService transferenciaService = new TransferenciaService();
+                        transferenciaService.adicionarTransferencia(conta, contaRecebeu, valor);
                     }catch(BancoDeDadosException e){
                         e.printStackTrace();
                     }
@@ -175,7 +176,6 @@ public class ContaService extends Service{
         }else{
             System.err.println("Valor inválido");
         }
-
     }
 
     public void pagar(Conta conta){
