@@ -138,14 +138,14 @@ public class ClienteRepository implements Repository<Integer, Cliente> {
     }
 
     @Override
-    public List<Cliente> listar() throws BancoDeDadosException {
-        List<Cliente> clientes = new ArrayList<>();
+    public ArrayList<Cliente> listar() throws BancoDeDadosException {
+        ArrayList<Cliente> clientes = new ArrayList<>();
         Connection con = null;
         try {
             con = ConexaoBancoDeDados.getConnection();
             Statement stmt = con.createStatement();
 
-            String sql = "SELECT * FROM cliente";
+            String sql = "SELECT * FROM cliente WHERE status = 1";
 
             ResultSet res = stmt.executeQuery(sql);
 

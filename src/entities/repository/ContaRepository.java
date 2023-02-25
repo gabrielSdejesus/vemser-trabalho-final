@@ -35,7 +35,7 @@ public class ContaRepository implements Repository<Integer, Conta> {
             conta.setNumeroConta(proximoId);
 
             String sql = """
-                    INSERT INTO conta\n 
+                    INSERT INTO conta
                     VALUES(?, ?, ?, ?, ?, ?, ?)
                     """;
 
@@ -79,7 +79,7 @@ public class ContaRepository implements Repository<Integer, Conta> {
 
             // Executa-se a consulta
             int res = stmt.executeUpdate();
-            System.out.println("removerClientePorId.res=" + res);
+            System.out.println("reativarContaPorId.res=" + res);
 
             return res > 0;
         } catch (SQLException e) {
@@ -136,15 +136,15 @@ public class ContaRepository implements Repository<Integer, Conta> {
                 sql.append(" SENHA = ?,");
             }
 
-            if(conta.getAgencia().toString().matches("\\d{4}")){
+            if(conta.getAgencia() != null && conta.getAgencia().toString().matches("\\d{4}")){
                 sql.append(" AGENCIA = ?,");
             }
 
-            if(conta.getSaldo() > 0){
+            if(conta.getSaldo() != null && conta.getSaldo() > 0){
                 sql.append(" SALDO = ?,");
             }
 
-            if(conta.getChequeEspecial() > 0){
+            if(conta.getChequeEspecial() != null && conta.getChequeEspecial() > 0){
                 sql.append(" CHEQUE_ESPECIAL = ?,");
             }
 
@@ -155,19 +155,19 @@ public class ContaRepository implements Repository<Integer, Conta> {
 
             int index = 1;
             if(conta.getSenha() != null){
-                stmt.setString(1, conta.getSenha());
+                stmt.setString(index++, conta.getSenha());
             }
 
             if(conta.getAgencia().toString().matches("\\d{4}")){
-                stmt.setInt(2, conta.getAgencia());
+                stmt.setInt(index++, conta.getAgencia());
             }
 
             if(conta.getSaldo() > 0){
-                stmt.setDouble(3, conta.getSaldo());
+                stmt.setDouble(index++, conta.getSaldo());
             }
 
             if(conta.getChequeEspecial() > 0){
-                stmt.setDouble(4, conta.getChequeEspecial());
+                stmt.setDouble(index++, conta.getChequeEspecial());
             }
 
             stmt.setInt(index, id);
@@ -226,9 +226,10 @@ public class ContaRepository implements Repository<Integer, Conta> {
             con = ConexaoBancoDeDados.getConnection();
             Conta conta = new Conta();
 
-            String sql = "SELECT * FROM CONTA c\n " +
-                    " LEFT JOIN CLIENTE c2 ON c.ID_CLIENTE = c2.ID_CLIENTE\n" +
-                    " WHERE numero_conta = ? AND c.STATUS = 1";
+            String sql = """
+                    SELECT * FROM CONTA c
+                      LEFT JOIN CLIENTE c2 ON c.ID_CLIENTE = c2.ID_CLIENTE
+                     WHERE numero_conta = ? AND c.STATUS = 1""";
 
             // Executa-se a consulta
             PreparedStatement stmt = con.prepareStatement(sql);

@@ -5,6 +5,7 @@ import entities.model.Cliente;
 import entities.repository.ClienteRepository;
 import entities.repository.ContaRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -152,6 +153,15 @@ public class ClienteService extends Service{
                 System.err.println("Problemas ao exibir CLIENTE!");
             }
         }catch (BancoDeDadosException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void listarClientes() {
+        try {
+            ArrayList<Cliente> clientes = clienteRepository.listar();
+            clientes.forEach(System.out::println);
+        } catch (BancoDeDadosException e) {
             e.printStackTrace();
         }
     }

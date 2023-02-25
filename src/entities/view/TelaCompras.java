@@ -4,6 +4,8 @@ import entities.model.*;
 import entities.service.CartaoService;
 import entities.service.CompraService;
 
+import java.util.ArrayList;
+
 public class TelaCompras extends Tela {
     public static void exibirCompras(){
         System.out.println("\nVocê está na Tela de Compras");
@@ -19,8 +21,13 @@ public class TelaCompras extends Tela {
                 login = Tela.login();
                 if(login != null){
                     CartaoService cartaoService = new CartaoService();
-                    for(Cartao cartao: cartaoService.returnCartoes(login)){
-                        compraService.exibirComprasCartao(cartao);
+                    ArrayList<Cartao> cartoes = cartaoService.returnCartoes(login);
+                    if (cartoes != null) {
+                        for(Cartao cartao: cartoes) {
+                            compraService.exibirComprasCartao(cartao);
+                        }
+                    } else {
+                        System.out.println("\n\tNão há compras nesta conta.");
                     }
                 }else{
                     System.err.println("Login mal-sucedido");

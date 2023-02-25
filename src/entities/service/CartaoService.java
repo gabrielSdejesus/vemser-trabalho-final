@@ -22,30 +22,32 @@ public class CartaoService extends Service {
         List<Cartao> cartoes = this.returnCartoes(conta);
         int cartao = -1;
 
-        for (int i = 0; i < cartoes.size(); i++) {
-            if (cartoes.get(i).getTipo() == tipo) {
-                cartao = i;
-                System.out.println("\t\nExibindo dados do cartão [" + (i + 1) + "]:");
-                System.out.println(
-                        "Tipo do cartão: " + ((tipo == TipoCartao.DEBITO) ? "DÉBITO" : "CRÉDITO") +
-                                "Número da conta do cartão: " + cartoes.get(i).getConta().getNumeroConta() +
-                                "Número do cartão: " + cartoes.get(i).getNumeroCartao() +
-                                "Vencimento do cartão: " + cartoes.get(i).getVencimento() +
-                                "Código de segurança do cartão: " + cartoes.get(i).getCodigoSeguranca() +
-                                "Data de expedição: " + cartoes.get(i).getDataExpedicao());
-                CompraService compraService = new CompraService();
-                compraService.exibirComprasCartao(cartoes.get(i));
-                break;
+        if (cartoes != null) {
+            for (int i = 0; i < cartoes.size(); i++) {
+                if (cartoes.get(i).getTipo() == tipo) {
+                    cartao = i;
+                    System.out.println("\t\nExibindo dados do cartão [" + (i + 1) + "]:");
+                    System.out.println(
+                            "Tipo do cartão: " + ((tipo == TipoCartao.DEBITO) ? "DÉBITO" : "CRÉDITO") + "\n" +
+                                    "Número da conta do cartão: " + cartoes.get(i).getConta().getNumeroConta() + "\n" +
+                                    "Número do cartão: " + cartoes.get(i).getNumeroCartao() + "\n" +
+                                    "Vencimento do cartão: " + cartoes.get(i).getVencimento() + "\n" +
+                                    "Código de segurança do cartão: " + cartoes.get(i).getCodigoSeguranca() + "\n" +
+                                    "Data de expedição: " + cartoes.get(i).getDataExpedicao());
+                    CompraService compraService = new CompraService();
+                    compraService.exibirComprasCartao(cartoes.get(i));
+                    break;
+                }
             }
-        }
-        if (cartao == -1) {
-            System.out.println("\tVocê não possui nenhum cartão de " + ((tipo == TipoCartao.DEBITO) ? "DÉBITO" : "CRÉDITO") + "\n");
+            if (cartao == -1) {
+                System.out.println("\tVocê não possui nenhum cartão de " + ((tipo == TipoCartao.DEBITO) ? "DÉBITO" : "CRÉDITO") + "\n");
+            }
         }
     }
 
     public void cadastrarCartao(Conta conta) {
         List<Cartao> cartoes = this.returnCartoes(conta);
-        if (cartoes.size() == 2) {
+        if (cartoes != null && cartoes.size() == 2) {
             System.err.println("Você não pode ADICIONAR mais CARTÕES, só é possível ter no MÁXIMO 2 CARTÕES");
         } else {
             int tipoCartao;
@@ -118,7 +120,7 @@ public class CartaoService extends Service {
             StringBuilder message = new StringBuilder("Selecione o CARTÃO para REMOVER:\n");
             for (int i = 0; i < cartoes.size(); i++) {
                 if (cartoes.get(i) != null) {
-                    message.append("Cartão [").append(i + 1).append("] -> ").append(cartoes.get(i).getTipo() == TipoCartao.DEBITO ? "Débito" : "Crédito");
+                    message.append("Cartão [").append(i + 1).append("] -> ").append(cartoes.get(i).getTipo() == TipoCartao.DEBITO ? "Débito" : "Crédito").append("\n");
                 }
             }
             cartao = askInt(String.valueOf(message)) - 1;
@@ -150,7 +152,7 @@ public class CartaoService extends Service {
         try {
             if (cartao.getTipo() == TipoCartao.CREDITO) {
                 CartaoDeCredito cartaoDeCredito = (CartaoDeCredito) cartao;
-                if (cartaoDeCredito.getLimite() != 1000 && this.cartaoRepository.remover(cartao.getNumeroCartao())) {
+                if (cartaoDeCredito.getLimite() != 1000 && this.cartaoRepository.remover(cartaoDeCredito.getNumeroCartao())) {
                     System.out.println("CARTÃO removido com sucesso!");
                 } else {
                     System.err.println("Problemas na deleção do CARTÃO");
@@ -167,8 +169,8 @@ public class CartaoService extends Service {
         }
     }
 
-    public List<Cartao> returnCartoes(Conta conta) {
-        List<Cartao> cartoes = new ArrayList<>();
+    public ArrayList<Cartao> returnCartoes(Conta conta) {
+        ArrayList<Cartao> cartoes = new ArrayList<>();
         try {
             cartoes = this.cartaoRepository.listarCartoesPorNumeroConta(conta);
         } catch (BancoDeDadosException e) {

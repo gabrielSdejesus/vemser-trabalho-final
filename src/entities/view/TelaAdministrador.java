@@ -10,7 +10,8 @@ public class TelaAdministrador extends Tela {
     }
 
     public static void tratarInput() {
-        int input = pedirInput("[1] -> Cadastrar um novo CLIENTE com CONTA\n[2] -> Deletar CONTA e CLIENTE\n[3] -> Alterar Cliente\n[4] -> Exibir todas as transferências\n[5] -> Voltar para a Tela Principal");
+        int input = pedirInput("[1] -> Cadastrar um novo CLIENTE com CONTA\n[2] -> Deletar CONTA e CLIENTE\n[3] -> Alterar Cliente\n" +
+                "[4] -> Exibir todas as transferências\n[5] -> Exibir todos os clientes\n[6] -> Exibir todas as contas\n[0] -> Voltar para a Tela Principal");
         ClienteService clienteService = new ClienteService();
         ContaService contaService = new ContaService();
         TransferenciaService transferenciaService = new TransferenciaService();
@@ -51,7 +52,23 @@ public class TelaAdministrador extends Tela {
                 }
                 exibirTelaAdministrador();
             }
-            case 5 -> Tela.redirecionarParaTela(1);
+            case 5 -> {
+                if(Tela.loginAdm()){
+                    clienteService.listarClientes();
+                }else{
+                    System.err.println("Senha administrativa inválida!");
+                }
+                exibirTelaAdministrador();
+            }
+            case 6 -> {
+                if(Tela.loginAdm()){
+                    contaService.listar();
+                }else{
+                    System.err.println("Senha administrativa inválida!");
+                }
+                exibirTelaAdministrador();
+            }
+            case 0 -> Tela.redirecionarParaTela(1);
             default -> {
                 System.out.println("Opção inválida!");
                 exibirTelaAdministrador();

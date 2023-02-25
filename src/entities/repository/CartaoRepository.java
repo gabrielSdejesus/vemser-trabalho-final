@@ -36,8 +36,8 @@ public class CartaoRepository implements Repository<String, Cartao> {
             cartao.setNumeroCartao(String.valueOf(proximoId));
 
             String sql = """
-                    INSERT INTO cartao\n 
-                    VALUES(?, ?, ?, ?, ?, ?, ?, ?)
+                    INSERT INTO cartao (NUMERO_CARTAO, NUMERO_CONTA, DATA_EXPEDICAO, CODIGO_SEGURANCA, TIPO, VENCIMENTO, LIMITE)\n 
+                    VALUES(?, ?, ?, ?, ?, ?, ?)
                     """;
 
             PreparedStatement stmt = con.prepareStatement(sql);
@@ -59,6 +59,7 @@ public class CartaoRepository implements Repository<String, Cartao> {
             System.out.println("adicionarCartao.res=" + res);
             return cartao;
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new BancoDeDadosException(e.getCause());
         } finally {
             try {
@@ -76,7 +77,7 @@ public class CartaoRepository implements Repository<String, Cartao> {
         try {
             con = ConexaoBancoDeDados.getConnection();
 
-            String sql = "UPDATE CARTAO SET STATUS = 0 WHERE ID_CARTAO = ?";
+            String sql = "UPDATE CARTAO SET STATUS = 0 WHERE NUMERO_CARTAO = ?";
 
             PreparedStatement stmt = con.prepareStatement(sql);
 
@@ -203,8 +204,8 @@ public class CartaoRepository implements Repository<String, Cartao> {
         }
     }
 
-    public List<Cartao> listarCartoesPorNumeroConta(Conta conta) throws BancoDeDadosException{
-        List<Cartao> cartoes = new ArrayList<>();
+    public ArrayList<Cartao> listarCartoesPorNumeroConta(Conta conta) throws BancoDeDadosException{
+        ArrayList<Cartao> cartoes = new ArrayList<>();
         Connection con = null;
         try {
             con = ConexaoBancoDeDados.getConnection();

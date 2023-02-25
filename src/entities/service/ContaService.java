@@ -142,30 +142,35 @@ public class ContaService extends Service{
     public void transferir(Conta conta){
         double valor = askDouble("Insira o valor da transferência: ");
         if(valor != -1){
-            int numeroConta = askInt("Insira o número da conta que receberá a transferência: ");
-            if(numeroConta != -1){
-                try{
-                    Conta contaRecebeu = this.contaRepository.consultarPorNumeroConta(numeroConta);
+            if (valor <= conta.getSaldo()) {
+                int numeroConta = askInt("Insira o número da conta que receberá a transferência: ");
+                if(numeroConta != -1){
+                    try{
+                        Conta contaRecebeu = this.contaRepository.consultarPorNumeroConta(numeroConta);
 
-                    contaRecebeu.setSaldo(contaRecebeu.getSaldo()+valor);
+                        try {
+                            contaRecebeu.setSaldo(contaRecebeu.getSaldo()+valor);
+                        } catch (NullPointerException e) {
+                            System.err.println("A conta de destino não existe!");
+                        }
 
-                    this.editar(numeroConta, contaRecebeu);
+                        this.editar(numeroConta, contaRecebeu);
 
-                    if(conta.getSaldo()-valor < 0){
-                        System.err.println("Saldo insuficiente!");
-                    }else{
                         conta.setSaldo(conta.getSaldo()-valor);
 
                         this.editar(conta.getNumeroConta(), conta);
 
                         System.err.println("Transferência concluída!");
                         System.out.printf("Saldo atual: R$ %.2f\n", conta.getSaldo());
+
+                    }catch(BancoDeDadosException e){
+                        e.printStackTrace();
                     }
-                }catch(BancoDeDadosException e){
-                    e.printStackTrace();
+                }else{
+                    System.err.println("Valor inválido");
                 }
-            }else{
-                System.err.println("Valor inválido");
+            } else {
+                System.err.println("Saldo insuficiente!");
             }
         }else{
             System.err.println("Valor inválido");

@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class ConexaoBancoDeDados {
 
-    private static final String SERVER = "vemser-dbc.dbccompany.com.br";
+    private static final String SERVER = "189.45.56.34";
     private static final String PORT = "25000"; // Porta TCP padrão do Oracle
     private static final String DATABASE = "xe";
 
