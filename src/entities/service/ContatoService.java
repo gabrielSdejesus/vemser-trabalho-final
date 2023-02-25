@@ -9,6 +9,7 @@ import entities.repository.ContatoRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class ContatoService extends Service{
 
@@ -43,13 +44,32 @@ public class ContatoService extends Service{
                 boolean editar = true;
                 switch(tipoAlteracaoContato){
                     case 1 -> {
-                        novoContato.setTelefone(askString("Insira o novo [Telefone]: "));
+                        String novoTelefone;
+                        while (true) {
+                            novoTelefone = askString("Insira o novo [Telefone] (apenas números): ");
+                            if (Pattern.matches("[a-zA-Z!@#$%^&*(),.?\":{}|<>]", novoTelefone)) {
+                                System.err.println("Número inválido! Tente novamente.");
+                            } else {
+                                novoContato.setTelefone(novoTelefone);
+                                break;
+                            }
+                        }
                         if(novoContato.getTelefone().equals("")){
                             editar = false;
                         }
                     }
                     case 2 -> {
-                        novoContato.setEmail(askString("Insira o novo [Email]: "));
+                        String novoEmail;
+                        while (true) {
+                            novoEmail = askString("Insira o novo [Email]: ");
+                            if (!Pattern.matches("^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$", novoEmail)) {
+                                System.err.println("Email inválido! Tente novamente.");
+                            } else {
+                                novoContato.setEmail(novoEmail);
+                                break;
+                            }
+                        }
+
                         if(novoContato.getEmail().equals("")){
                             editar = false;
                         }
