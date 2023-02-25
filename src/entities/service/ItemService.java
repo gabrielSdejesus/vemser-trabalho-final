@@ -25,7 +25,7 @@ public class ItemService extends Service {
 
     public void listar() {
         try {
-            ArrayList<Item> itens = itemRepository.listar();
+            List<Item> itens = itemRepository.listar();
             for(Item item : itens) {
                 System.out.println(item);
             }
@@ -36,7 +36,7 @@ public class ItemService extends Service {
 
     public void listarItensPorIdCompra(Integer idCompra) {
         try {
-            ArrayList<Item> itens = itemRepository.listarItensPorIdCompra(idCompra);
+            List<Item> itens = itemRepository.listarItensPorIdCompra(idCompra);
             for(Item item : itens) {
                 System.out.println(item);
             }

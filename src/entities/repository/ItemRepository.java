@@ -82,8 +82,8 @@ public class ItemRepository implements Repository<Item>{
     }
 
     @Override
-    public ArrayList<Item> listar() throws BancoDeDadosException {
-        ArrayList<Item> itens = new ArrayList<>();
+    public List<Item> listar() throws BancoDeDadosException {
+        List<Item> itens = new ArrayList<>();
         Connection con = null;
         try {
             con = ConexaoBancoDeDados.getConnection();
@@ -116,8 +116,8 @@ public class ItemRepository implements Repository<Item>{
         }
     }
 
-    public ArrayList<Item> listarItensPorIdCompra(Integer idCompra) throws BancoDeDadosException {
-        ArrayList<Item> itens = new ArrayList<>();
+    public List<Item> listarItensPorIdCompra(Integer idCompra) throws BancoDeDadosException {
+        List<Item> itens = new ArrayList<>();
         Connection con = null;
         try {
             con = ConexaoBancoDeDados.getConnection();

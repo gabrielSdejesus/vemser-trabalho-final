@@ -138,8 +138,8 @@ public class ClienteRepository implements Repository<Cliente> {
     }
 
     @Override
-    public ArrayList<Cliente> listar() throws BancoDeDadosException {
-        ArrayList<Cliente> clientes = new ArrayList<>();
+    public List<Cliente> listar() throws BancoDeDadosException {
+        List<Cliente> clientes = new ArrayList<>();
         Connection con = null;
         try {
             con = ConexaoBancoDeDados.getConnection();
