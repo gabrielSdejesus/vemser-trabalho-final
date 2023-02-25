@@ -9,9 +9,10 @@ import java.util.Scanner;
 public abstract class Tela {
     static Conta login(){
         int numeroConta = Service.askInt("Insira o número da sua conta: ");
+
         if(numeroConta != -1) {
             String senhaConta = Service.askString("Insira a senha da sua conta: ");
-            if (senhaConta.equals("")) {
+            if (!senhaConta.equals("")) {
                 ContaService contaService = new ContaService();
                 Conta conta = contaService.retornarConta(numeroConta, senhaConta);
                 if (conta != null) {

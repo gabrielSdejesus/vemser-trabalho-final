@@ -30,7 +30,7 @@ public class ItemRepository implements Repository<Integer, Item>{
 
     public Integer getUltimoIdCompra(Connection connection) throws SQLException {
         try {
-            String sql = "SELECT SEQ_COMPRA.CURRVAL mysequence from DUAL";
+            String sql = "SELECT MAX(ID_COMPRA) FROM COMPRA";
             Statement stmt = connection.createStatement();
             ResultSet res = stmt.executeQuery(sql);
 
