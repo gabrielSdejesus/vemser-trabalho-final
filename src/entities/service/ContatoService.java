@@ -61,7 +61,7 @@ public class ContatoService extends Service {
                 }
                 if (editar) {
                     try {
-                        if (this.contatoRepository.editar(novoContato.getIdContato(), novoContato)) {
+                        if (this.contatoRepository.editar(conta.getCliente().getIdCliente(), novoContato)) {
                             System.out.println("CONTATO alterado com sucesso!");
                         } else {
                             System.err.println("Problemas ao editar o CONTATO");
