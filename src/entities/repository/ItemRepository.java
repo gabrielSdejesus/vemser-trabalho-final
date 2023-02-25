@@ -35,7 +35,7 @@ public class ItemRepository implements Repository<Integer, Item>{
             ResultSet res = stmt.executeQuery(sql);
 
             if (res.next()) {
-                return res.getInt("mysequence");
+                return res.getInt("MAX(ID_COMPRA)");
             }
 
             return null;
