@@ -7,6 +7,7 @@ import entities.repository.TransferenciaRepository;
 
 import java.sql.SQLException;
 import java.util.InputMismatchException;
+import java.util.List;
 
 public class TransferenciaService extends Service{
 
@@ -49,7 +50,11 @@ public class TransferenciaService extends Service{
 
     public void listarTransferencias() {
         try {
-            transferenciaRepository.listar().forEach(System.out::println);
+            List<Transferencia> transferencias = transferenciaRepository.listar();
+            transferencias.forEach(System.out::println);
+            if(transferencias.size() == 0){
+                System.err.println("Nenhuma TRANSFERÊNCIA realizada no Banco De Dados!");
+            }
         } catch (BancoDeDadosException e) {
             e.printStackTrace();
         }

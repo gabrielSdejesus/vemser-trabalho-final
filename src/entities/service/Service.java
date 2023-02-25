@@ -14,9 +14,10 @@ public class Service {
             SCANNER.nextLine();
         } catch (InputMismatchException e) {
             e.printStackTrace();
+            SCANNER.nextLine();
         }
         if(valor <= 0){
-            System.out.println("Input inválido!");
+            System.err.println("Input inválido!");
             return -1;
         }else{
             return valor;
@@ -31,9 +32,10 @@ public class Service {
             SCANNER.nextLine();
         } catch (InputMismatchException e) {
             e.printStackTrace();
+            SCANNER.nextLine();
         }
         if(valor <= 0){
-            System.out.println("Input inválido!");
+            System.err.println("Input inválido!");
             return -1;
         }else{
             return valor;
@@ -47,9 +49,10 @@ public class Service {
             valor = SCANNER.nextLine();
         } catch (InputMismatchException e) {
             e.printStackTrace();
+            SCANNER.nextLine();
         }
         if(valor.equals("")){
-            System.out.println("Input inválido!");
+            System.err.println("Input inválido!");
             return "";
         }else{
             return valor;

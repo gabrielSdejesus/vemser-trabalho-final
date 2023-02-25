@@ -104,9 +104,15 @@ public class ContaService extends Service{
         Integer numero = numeroConta;
         try{
             conta = this.contaRepository.consultarPorNumeroConta(numero);
-            if(conta != null && conta.getSenha().equals(senhaConta)){
+            if(conta != null && conta.getSenha() != null && conta.getSenha().equals(senhaConta)){
                 return conta;
             }else{
+                assert conta != null;
+                if(conta.getSenha() == null){
+                    System.err.println("Conta desativada!");
+                }else{
+                    System.err.println("Número de conta ou senha inválida");
+                }
                 return null;
             }
         }catch(SQLException e){
@@ -126,7 +132,7 @@ public class ContaService extends Service{
 
     public void depositar(Conta conta){
         double valor = askDouble("Insira o valor do Depósito: ");
-        if(valor != -1){
+        if(valor > 0){
             conta.setSaldo(conta.getSaldo()+valor);
             this.editar(conta.getNumeroConta(), conta);
         }else{
@@ -136,7 +142,7 @@ public class ContaService extends Service{
 
     public void sacar(Conta conta){
         double valor = askDouble("Insira o valor do Saque: ");
-        if(valor != -1){
+        if(valor > 0){
             if(conta.getSaldo()-valor+conta.getChequeEspecial() < 0){
                 System.err.println("Saldo insuficiente!");
             }else{
@@ -150,10 +156,10 @@ public class ContaService extends Service{
 
     public void transferir(Conta conta){
         double valor = askDouble("Insira o valor da transferência: ");
-        if(valor != -1){
+        if(valor > 0){
             if (valor <= conta.getSaldo()) {
                 int numeroConta = askInt("Insira o número da conta que receberá a transferência: ");
-                if(numeroConta != -1){
+                if(numeroConta > 0){
                     try{
                         Conta contaRecebeu = this.contaRepository.consultarPorNumeroConta(numeroConta);
 
@@ -189,20 +195,20 @@ public class ContaService extends Service{
 
     public void pagar(Conta conta){
         double valor = askDouble("Insira o valor do pagamento: ");
-        if(valor != -1){
+        if(valor > 0){
             CartaoService cartaoService = new CartaoService();
             List<Cartao> cartoes = cartaoService.returnCartoes(conta);
             Cartao cartao;
 
-            StringBuilder message = new StringBuilder("Selecione o cartão para efetuar o pagamento:");
+            StringBuilder message = new StringBuilder("Selecione um cartão para efetuar o pagamento:\n");
             for(int i=0;i<cartoes.size();i++){
                 if(cartoes.get(i) != null){
-                    message.append("Cartão [").append(i + 1).append("] -> ").append(cartoes.get(i).getTipo() == TipoCartao.DEBITO ? "Débito" : "Crédito").append(":");
+                    message.append("Cartão [").append(i + 1).append("] -> ").append(cartoes.get(i).getTipo() == TipoCartao.DEBITO ? "Débito" : "Crédito").append(":\n");
                 }
             }
             int input = askInt(String.valueOf(message)) - 1;
 
-            if(input > 0 && input <= cartoes.size()){
+            if(input >= 0 && input <= cartoes.size()){
                 cartao = cartoes.get(input);
 
                 if(cartao.getTipo() == TipoCartao.CREDITO){

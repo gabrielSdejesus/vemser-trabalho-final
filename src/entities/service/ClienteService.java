@@ -47,7 +47,7 @@ public class ClienteService extends Service{
         }
     }
 
-    public void deletarCliente(){
+    /*public void deletarCliente(){
         try{
             List<Cliente> clientes = this.clienteRepository.listar();
 
@@ -74,7 +74,7 @@ public class ClienteService extends Service{
         }catch (BancoDeDadosException e){
             e.printStackTrace();
         }
-    }
+    }*/
 
     public void deletarCliente(int idCliente){
         try{
@@ -110,7 +110,7 @@ public class ClienteService extends Service{
                     boolean editar = true;
                     switch(inputClienteEscolhido){
                         case 1 -> {
-                            novoCliente.setNome(askString("Insira o novo [Nome]: "));
+                            novoCliente.setNome(askString("Insira o novo [Nome]: ").toUpperCase());
                             if(novoCliente.getNome().equals("")){
                                 editar = false;
                             }

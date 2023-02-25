@@ -14,12 +14,7 @@ public abstract class Tela {
             String senhaConta = Service.askString("Insira a senha da sua conta: ");
             if (!senhaConta.equals("")) {
                 ContaService contaService = new ContaService();
-                Conta conta = contaService.retornarConta(numeroConta, senhaConta);
-                if (conta != null) {
-                    return conta;
-                } else {
-                    System.err.println("Número de conta ou senha inválida");
-                }
+                return contaService.retornarConta(numeroConta, senhaConta);
             }else{
                 return null;
             }
