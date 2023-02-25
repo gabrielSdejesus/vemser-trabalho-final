@@ -10,6 +10,7 @@ public class Service {
         double valor = -1;
         try{
             System.out.println(message);
+            System.out.print("Insira aqui: ");
             valor = SCANNER.nextDouble();
             SCANNER.nextLine();
         } catch (InputMismatchException e) {
@@ -28,6 +29,7 @@ public class Service {
         int valor = -1;
         try{
             System.out.println(message);
+            System.out.print("Insira aqui: ");
             valor = SCANNER.nextInt();
             SCANNER.nextLine();
         } catch (InputMismatchException e) {
@@ -35,7 +37,7 @@ public class Service {
             SCANNER.nextLine();
         }
         if(valor <= 0){
-            System.err.println("Input inválido!");
+            System.err.println("Input inválido!\n");
             return -1;
         }else{
             return valor;
@@ -46,6 +48,7 @@ public class Service {
         String valor = "";
         try{
             System.out.println(message);
+            System.out.print("Insira aqui: ");
             valor = SCANNER.nextLine();
         } catch (InputMismatchException e) {
             e.printStackTrace();

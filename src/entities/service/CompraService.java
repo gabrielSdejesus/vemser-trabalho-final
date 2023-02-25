@@ -28,7 +28,7 @@ public class CompraService extends Service{
                             "\nDocumento do vendedor: "+compra.getDocVendedor());
                 }
             }else{
-                System.out.println("\nSem compras feitas nesse cartão.");
+                System.err.println("\nSem compras feitas nesse cartão.\n");
             }
         }catch (BancoDeDadosException e){
             e.printStackTrace();

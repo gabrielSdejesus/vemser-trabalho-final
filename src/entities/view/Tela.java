@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 public abstract class Tela {
     static Conta login(){
-        int numeroConta = Service.askInt("Insira o número da sua conta: ");
+        int numeroConta = Service.askInt("\nInsira o número da sua conta: ");
 
         if(numeroConta != -1) {
             String senhaConta = Service.askString("Insira a senha da sua conta: ");
@@ -46,6 +46,7 @@ public abstract class Tela {
 
     protected static int pedirInput(String message){
         System.out.println(message);
+        System.out.print("Escolha: ");
         return Integer.parseInt(new Scanner(System.in).nextLine());
     }
 }

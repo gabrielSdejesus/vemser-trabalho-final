@@ -26,21 +26,21 @@ public class CartaoService extends Service {
             for (int i = 0; i < cartoes.size(); i++) {
                 if (cartoes.get(i).getTipo() == tipo) {
                     cartao = i;
-                    System.out.println("\t\nExibindo dados do cartão [" + (i + 1) + "]:");
-                    System.out.println(
-                            "Tipo do cartão: " + ((tipo == TipoCartao.DEBITO) ? "DÉBITO" : "CRÉDITO") + "\n" +
-                                    "Número da conta do cartão: " + cartoes.get(i).getConta().getNumeroConta() + "\n" +
-                                    "Número do cartão: " + cartoes.get(i).getNumeroCartao() + "\n" +
-                                    "Vencimento do cartão: " + cartoes.get(i).getVencimento() + "\n" +
-                                    "Código de segurança do cartão: " + cartoes.get(i).getCodigoSeguranca() + "\n" +
-                                    "Data de expedição: " + cartoes.get(i).getDataExpedicao());
+                    System.err.println("\t\t\nExibindo dados do cartão [" + (i + 1) + "]:");
+                    System.out.print(
+                            "\tTipo do cartão: " + ((tipo == TipoCartao.DEBITO) ? "DÉBITO" : "CRÉDITO") + "\n" +
+                                    "\tNúmero da conta do cartão: " + cartoes.get(i).getConta().getNumeroConta() + "\n" +
+                                    "\tNúmero do cartão: " + cartoes.get(i).getNumeroCartao() + "\n" +
+                                    "\tVencimento do cartão: " + cartoes.get(i).getVencimento() + "\n" +
+                                    "\tCódigo de segurança do cartão: " + cartoes.get(i).getCodigoSeguranca() + "\n" +
+                                    "\tData de expedição: " + cartoes.get(i).getDataExpedicao());
                     CompraService compraService = new CompraService();
                     compraService.exibirComprasCartao(cartoes.get(i));
                     break;
                 }
             }
             if (cartao == -1) {
-                System.out.println("\tVocê não possui nenhum cartão de " + ((tipo == TipoCartao.DEBITO) ? "DÉBITO" : "CRÉDITO") + "\n");
+                System.err.println("\tVocê não possui nenhum cartão de " + ((tipo == TipoCartao.DEBITO) ? "débito!" : "crédito!") + "\n");
             }
         }
     }
@@ -48,16 +48,20 @@ public class CartaoService extends Service {
     public void cadastrarCartao(Conta conta, TipoCartao tipoCartao) {
         List<Cartao> cartoes = this.returnCartoes(conta);
         if (cartoes != null && cartoes.size() == 2) {
-            System.err.println("Você não pode ADICIONAR mais CARTÕES, só é possível ter no MÁXIMO 2 CARTÕES");
-        }
+            System.err.println("Você não pode adicionar mais cartões, só é possível ter no máximo 2x cartões!\n");
+            return;
+        } else if(tipoCartao == null){
 
-        if(tipoCartao == null){
-
-            tipoCartao = TipoCartao.getTipoCartao(askInt("Insira o tipo do cartão:\n[1] DÉBITO\n[2] CRÉDITO\n[3] CANCELAR"))  ;
-            System.out.println(tipoCartao.getTipo());
-            if (tipoCartao.getTipo() < 1 || tipoCartao.getTipo() >= 3) {
-                System.out.println("Operação cancelada!");
+            //Lendo e passando o valor referente ao tipo do cartão
+            int valor = askInt("\nInsira o tipo do cartão:\n[1] DÉBITO\n[2] CRÉDITO\n[3] CANCELAR");
+            if (valor > 0 && valor < 3) {
+                tipoCartao = TipoCartao.getTipoCartao(valor);
+                System.out.println();
+            } else {
+                System.err.println("Operação cancelada!\n");
+                return;
             }
+
         } else {
             tipoCartao = TipoCartao.DEBITO;
         }
@@ -80,7 +84,7 @@ public class CartaoService extends Service {
                             System.out.println("\t\tTipo: " + cartaoDeCredito.getTipo());
                             System.out.println("\t\tVencimento: " + cartaoDeCredito.getVencimento());
                             System.out.println("\t\tData de expedição: " + cartaoDeCredito.getDataExpedicao());
-                            System.out.println("\t\tCódigo de segurança: " + cartaoDeCredito.getCodigoSeguranca());
+                            System.out.println("\t\tCódigo de segurança: " + cartaoDeCredito.getCodigoSeguranca() + "\n");
                         }
                     } catch (BancoDeDadosException e) {
                         e.printStackTrace();
@@ -102,7 +106,7 @@ public class CartaoService extends Service {
                             System.out.println("\t\tTipo: " + cartaoDeDebito.getTipo());
                             System.out.println("\t\tVencimento: " + cartaoDeDebito.getVencimento());
                             System.out.println("\t\tData de expedição: " + cartaoDeDebito.getDataExpedicao());
-                            System.out.println("\t\tCódigo de segurança: " + cartaoDeDebito.getCodigoSeguranca());
+                            System.out.println("\t\tCódigo de segurança: " + cartaoDeDebito.getCodigoSeguranca() + "\n");
                         }
                     } catch (BancoDeDadosException e) {
                         e.printStackTrace();
@@ -115,38 +119,44 @@ public class CartaoService extends Service {
     public void deletarCartao(Conta conta) {
         List<Cartao> cartoes = this.returnCartoes(conta);
         if (cartoes.size() == 1) {
-            System.err.println("Você não pode REMOVER mais CARTÕES, é NECESSÁRIO ter no MÍNIMO 1 CARTÃO");
+            System.err.println("Você não pode remover mais cartões, é necessário ter no mínimo 1x cartão!\n");
         } else {
             int cartao;
 
-            StringBuilder message = new StringBuilder("Selecione o CARTÃO para REMOVER:\n");
+            StringBuilder message = new StringBuilder("\nSelecione o cartão para remover:\n");
             for (int i = 0; i < cartoes.size(); i++) {
                 if (cartoes.get(i) != null) {
-                    message.append("Cartão [").append(i + 1).append("] -> ").append(cartoes.get(i).getTipo() == TipoCartao.DEBITO ? "Débito" : "Crédito").append("\n");
+                    message.append("Cartão [").append(i + 1).append("] -> ").append(cartoes.get(i).getTipo() == TipoCartao.DEBITO ? "Débito" : "Crédito");
+                    //pular uma linha para exibição
+                    if(i == 0){
+                        message.append("\n");
+                    }
                 }
             }
-            System.out.print("Escolha:");
+
             cartao = askInt(String.valueOf(message)) - 1;
             if (cartao > -1 && cartao < cartoes.size()) {
                 try {
                     if (cartoes.get(cartao).getTipo() == TipoCartao.CREDITO) {
                         CartaoDeCredito cartaoDeCredito = (CartaoDeCredito) cartoes.get(cartao);
                         if (cartaoDeCredito.getLimite() == 1000 && this.cartaoRepository.remover(cartoes.get(cartao).getNumeroCartao())) {
-                            System.out.println("CARTÃO removido com sucesso!");
+                            System.err.println("Cartão removido com sucesso!\n");
                         } else {
-                            System.err.println("Não é possível deletar o cartão!");
+                            System.err.println("Não é possível deletar o cartão!\n");
                         }
                     } else {
                         if (this.cartaoRepository.remover(cartoes.get(cartao).getNumeroCartao())) {
-                            System.out.println("CARTÃO removido com sucesso!");
+                            System.err.println("Cartão removido com sucesso!\n");
                         } else {
-                            System.err.println("Problemas na deleção do CARTÃO");
+                            System.err.println("Não é possível deletar o cartão!\n");
                         }
                     }
 
                 } catch (BancoDeDadosException e) {
                     e.printStackTrace();
                 }
+            } else if (cartao > 1){
+                System.err.println("Opção inválida!\n");
             }
         }
     }

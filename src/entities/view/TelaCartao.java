@@ -5,6 +5,13 @@ import entities.service.CartaoService;
 
 public class TelaCartao extends Tela {
     public static void exibirTelaCartao(){
+
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
         System.out.println("Você está na Tela de Cartão");
         TelaCartao.tratarInput();
     }
