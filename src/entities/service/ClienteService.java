@@ -159,7 +159,7 @@ public class ClienteService extends Service{
 
     public void listarClientes() {
         try {
-            ArrayList<Cliente> clientes = clienteRepository.listar();
+            List<Cliente> clientes = clienteRepository.listar();
             clientes.forEach(System.out::println);
         } catch (BancoDeDadosException e) {
             e.printStackTrace();
