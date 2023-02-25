@@ -3,10 +3,9 @@ package entities.repository;
 import entities.exception.BancoDeDadosException;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 
-public interface Repository<CHAVE, OBJECT> {
+public interface Repository<OBJECT> {
 
     Object getProximoId(Connection connection) throws BancoDeDadosException;
 

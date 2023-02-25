@@ -9,7 +9,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContatoRepository implements Repository<Integer, Contato>{
+public class ContatoRepository implements Repository<Contato>{
 
     @Override
     public Integer getProximoId(Connection connection) throws BancoDeDadosException {

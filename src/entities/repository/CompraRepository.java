@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CompraRepository implements Repository<Integer, Compra>{
+public class CompraRepository implements Repository<Compra>{
 
     @Override
     public Integer getProximoId(Connection connection) throws BancoDeDadosException {

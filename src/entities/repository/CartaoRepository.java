@@ -7,7 +7,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CartaoRepository implements Repository<String, Cartao> {
+public class CartaoRepository implements Repository<Cartao> {
     
     @Override
     public String getProximoId(Connection connection) throws BancoDeDadosException {

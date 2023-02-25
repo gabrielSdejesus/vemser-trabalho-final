@@ -7,7 +7,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContaRepository implements Repository<Integer, Conta> {
+public class ContaRepository implements Repository<Conta> {
     @Override
     public Integer getProximoId(Connection connection) throws BancoDeDadosException {
         try {

@@ -8,7 +8,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EnderecoRepository implements Repository<Integer, Endereco> {
+public class EnderecoRepository implements Repository<Endereco> {
 
     @Override
     public Integer getProximoId(Connection connection) throws BancoDeDadosException {
