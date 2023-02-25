@@ -5,6 +5,7 @@ import entities.service.CartaoService;
 import entities.service.CompraService;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class TelaCompras extends Tela {
     public static void exibirCompras(){
@@ -21,7 +22,7 @@ public class TelaCompras extends Tela {
                 login = Tela.login();
                 if(login != null){
                     CartaoService cartaoService = new CartaoService();
-                    ArrayList<Cartao> cartoes = cartaoService.returnCartoes(login);
+                    List<Cartao> cartoes = cartaoService.returnCartoes(login);
                     if (cartoes != null) {
                         for(Cartao cartao: cartoes) {
                             compraService.exibirComprasCartao(cartao);

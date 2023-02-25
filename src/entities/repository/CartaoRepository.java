@@ -209,8 +209,8 @@ public class CartaoRepository implements Repository<String, Cartao> {
         }
     }
 
-    public ArrayList<Cartao> listarCartoesPorNumeroConta(Conta conta) throws BancoDeDadosException{
-        ArrayList<Cartao> cartoes = new ArrayList<>();
+    public List<Cartao> listarCartoesPorNumeroConta(Conta conta) throws BancoDeDadosException{
+        List<Cartao> cartoes = new ArrayList<>();
         Connection con = null;
         try {
             con = ConexaoBancoDeDados.getConnection();

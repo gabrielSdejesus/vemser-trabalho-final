@@ -226,8 +226,8 @@ public class CartaoService extends Service {
         }
     }
 
-    public ArrayList<Cartao> returnCartoes(Conta conta) {
-        ArrayList<Cartao> cartoes = new ArrayList<>();
+    public List<Cartao> returnCartoes(Conta conta) {
+        List<Cartao> cartoes = new ArrayList<>();
         try {
             cartoes = this.cartaoRepository.listarCartoesPorNumeroConta(conta);
         } catch (BancoDeDadosException e) {

@@ -104,6 +104,7 @@ public class ContaService extends Service{
         Integer numero = numeroConta;
         try{
             conta = this.contaRepository.consultarPorNumeroConta(numero);
+            System.out.println(conta.getNumeroConta());
             if(conta != null && conta.getSenha() != null && conta.getSenha().equals(senhaConta)){
                 return conta;
             }else{
