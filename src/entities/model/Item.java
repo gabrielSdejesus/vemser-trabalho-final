@@ -1,30 +1,64 @@
 package entities.model;
 
-import entities.interfaces.Exibicao;
+public class Item {
 
-public class Item implements Exibicao {
-    private String nomeItem;
-    private double valor, quantidade;
+    private Integer idItem;
+    private Compra compra;
+    private String nome;
+    private Double valor;
+    private Integer quantidade;
 
     public Item() {
     }
 
-    public Item(String nomeItem, double valor, double quantidade) {
-        this.nomeItem = nomeItem;
+    public Integer getIdItem() {
+        return idItem;
+    }
+
+    public void setIdItem(Integer idItem) {
+        this.idItem = idItem;
+    }
+
+    public Compra getCompra() {
+        return compra;
+    }
+
+    public void setCompra(Compra compra) {
+        this.compra = compra;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public Double getValor() {
+        return valor;
+    }
+
+    public void setValor(Double valor) {
         this.valor = valor;
+    }
+
+    public Integer getQuantidade() {
+        return quantidade;
+    }
+
+    public void setQuantidade(Integer quantidade) {
         this.quantidade = quantidade;
     }
 
-    public double returnPrecoItem(){
-        return valor*quantidade;
-    }
-
     @Override
-    public void exibir() {
-        System.out.printf("\t\tItem: %s; Valor unitário: R$%.2f; Quantidade: %.2f; Valor total: R$%.2f\n", nomeItem, valor, quantidade, this.returnPrecoItem());
-    }
-
-    public String getNomeItem() {
-        return nomeItem;
+    public String toString() {
+        return "Item{" +
+                "idItem=" + idItem +
+                ", idCompra=" + compra.getIdCompra() +
+                ", nome='" + nome + '\'' +
+                ", valor=" + valor +
+                ", quantidade=" + quantidade +
+                '}';
     }
 }

@@ -1,43 +1,66 @@
 package entities.model;
 
-import entities.interfaces.Exibicao;
-
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Compra implements Exibicao {
-    private String docVendedor;
-    private Date data;
-    private ArrayList<Item> itens;
+public class Compra {
 
-    public Compra(String docVendedor, Date data, ArrayList<Item> itens) {
-        this.docVendedor = docVendedor;
-        this.data = data;
-        this.itens = itens;
+    private Integer idCompra;
+    private Cartao cartao;
+    private String docVendedor;
+    private LocalDate data;
+
+    public Compra() {
     }
 
-    public double returnValorTotal(){
-        double total = 0;
-        for(Item item: itens){
-            total += item.returnPrecoItem();
-        }
-        return total;
+    public Compra(Integer idCompra, Cartao cartao, String docVendedor, LocalDate data) {
+        this.cartao = cartao;
+        this.docVendedor = docVendedor;
+        this.data = data;
+    }
+
+    public Integer getIdCompra() {
+        return idCompra;
+    }
+
+    public void setIdCompra(Integer idCompra) {
+        this.idCompra = idCompra;
+    }
+
+    public Cartao getCartao() {
+        return cartao;
+    }
+
+    public void setCartao(Cartao cartao) {
+        this.cartao = cartao;
+    }
+
+    public String getDocVendedor() {
+        return docVendedor;
+    }
+
+    public void setDocVendedor(String docVendedor) {
+        this.docVendedor = docVendedor;
+    }
+
+    public LocalDate getData() {
+        return data;
+    }
+
+    public void setData(LocalDate data) {
+        this.data = data;
     }
 
     @Override
-    public void exibir(){
-        System.out.println("\n\tDocumento do vendedor: "+docVendedor);
-        System.out.println("\tData da compra: "+data);
-        System.out.println("\tItens da compra:");
-        for(Item item: itens){
-            item.exibir();
-        }
+    public String toString() {
+        return "Compra{" +
+                "idCompra=" + idCompra +
+                ", nDoCartao=" + cartao.getNumeroCartao() +
+                ", nomeDoCliente= " + cartao.getConta().getCliente().getNome() +
+                ", docVendedor='" + docVendedor + '\'' +
+                ", data=" + data +
+                '}';
     }
-
-    public LocalDate getData(){
-        return data.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-    }
-
 }

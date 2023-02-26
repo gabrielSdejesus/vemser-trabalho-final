@@ -1,31 +1,23 @@
-package entities.interfaces;
+package entities.view;
 
-import entities.controller.BancoDeDados;
 import entities.model.Conta;
-import entities.view.*;
+import entities.service.ContaService;
+import entities.service.Service;
 
 import java.util.Scanner;
 
-public interface Tela {
-    static void tratarInput(int input){
-        // cada classe que implementa essa inteface deve refazer esse método da sua forma
-    }
-    static int pedirInput(){
-        // cada classe que implementa essa inteface deve refazer esse método da sua forma
-        return 0;
-    }
+public abstract class Tela {
     static Conta login(){
-        Scanner scanner = new Scanner(System.in);
-        String senhaConta, numeroConta;
-        System.out.print("Insira o número da sua conta: ");
-        numeroConta = scanner.nextLine();
-        System.out.print("Insira a senha da sua conta: ");
-        senhaConta = scanner.nextLine();
-        Conta conta = BancoDeDados.consultarNumeroDaConta(numeroConta);
-        if(conta != null && conta.verificarSenha(senhaConta)){
-            return conta;
-        }else{
-            System.err.println("Número de conta ou senha inválida");
+        int numeroConta = Service.askInt("\nInsira o número da sua conta: ");
+
+        if(numeroConta != -1) {
+            String senhaConta = Service.askString("Insira a senha da sua conta: ");
+            if (!senhaConta.equals("")) {
+                ContaService contaService = new ContaService();
+                return contaService.retornarConta(numeroConta, senhaConta);
+            }else{
+                return null;
+            }
         }
         return null;
     }
@@ -39,7 +31,7 @@ public interface Tela {
     }
 
     static void redirecionarParaTela(int tela){
-        System.out.println("\n");
+        System.out.println();
         switch(tela){
             case 1 -> TelaPrincipal.exibirTelaPrincipal();
             case 2 -> TelaCompras.exibirCompras();
@@ -49,6 +41,16 @@ public interface Tela {
             case 6 -> TelaMovimentacoes.exibirTelaMovimentacoes();
             case 7 -> TelaAdministrador.exibirTelaAdministrador();
             default -> System.err.println("Número da tela incorreta, erro na Inteface Tela");
+        }
+    }
+
+    protected static int pedirInput(String message){
+        System.out.println(message);
+        System.out.print("Escolha: ");
+        try {
+            return Integer.parseInt(new Scanner(System.in).nextLine());
+        }catch (NumberFormatException e){
+            return 0;
         }
     }
 }
