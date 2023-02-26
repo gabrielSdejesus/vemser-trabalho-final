@@ -247,7 +247,9 @@ public class ContaRepository implements Repository<Conta> {
             while (res.next()) {
                 conta = getContaFromResultSet(res);
             }
-
+            if(conta.getAgencia() == null){
+                return null;
+            }
             return conta;
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());

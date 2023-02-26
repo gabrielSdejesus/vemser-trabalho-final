@@ -163,22 +163,26 @@ public class ContaService extends Service{
                     try{
                         Conta contaRecebeu = this.contaRepository.consultarPorNumeroConta(numeroConta);
 
-                        try {
-                            contaRecebeu.setSaldo(contaRecebeu.getSaldo()+valor);
-                        } catch (NullPointerException e) {
+                        if(contaRecebeu != null){
+                            try {
+                                contaRecebeu.setSaldo(contaRecebeu.getSaldo()+valor);
+                            } catch (NullPointerException e) {
+                                System.err.println("A conta de destino não existe!");
+                            }
+
+                            this.editar(numeroConta, contaRecebeu);
+
+                            conta.setSaldo(conta.getSaldo()-valor);
+
+                            this.editar(conta.getNumeroConta(), conta);
+
+                            System.err.println("Transferência concluída!");
+                            System.out.printf("Saldo atual: R$ %.2f\n", conta.getSaldo());
+                            TransferenciaService transferenciaService = new TransferenciaService();
+                            transferenciaService.adicionarTransferencia(conta, contaRecebeu, valor);
+                        }else{
                             System.err.println("A conta de destino não existe!");
                         }
-
-                        this.editar(numeroConta, contaRecebeu);
-
-                        conta.setSaldo(conta.getSaldo()-valor);
-
-                        this.editar(conta.getNumeroConta(), conta);
-
-                        System.err.println("Transferência concluída!");
-                        System.out.printf("Saldo atual: R$ %.2f\n", conta.getSaldo());
-                        TransferenciaService transferenciaService = new TransferenciaService();
-                        transferenciaService.adicionarTransferencia(conta, contaRecebeu, valor);
                     }catch(BancoDeDadosException e){
                         e.printStackTrace();
                     }
