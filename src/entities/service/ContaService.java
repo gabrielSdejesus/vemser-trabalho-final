@@ -3,7 +3,6 @@ package entities.service;
 import entities.exception.BancoDeDadosException;
 import entities.model.*;
 import entities.repository.ContaRepository;
-
 import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;

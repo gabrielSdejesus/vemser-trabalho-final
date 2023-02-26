@@ -4,9 +4,6 @@ import entities.exception.BancoDeDadosException;
 import entities.model.Conta;
 import entities.model.Transferencia;
 import entities.repository.TransferenciaRepository;
-
-import java.sql.SQLException;
-import java.util.InputMismatchException;
 import java.util.List;
 
 public class TransferenciaService extends Service{
