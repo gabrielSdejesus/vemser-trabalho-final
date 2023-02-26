@@ -6,6 +6,14 @@ import java.util.Scanner;
 public abstract class Service {
     protected static final Scanner SCANNER = new Scanner(System.in);
 
+    public static void tempoParaExibir(int numero){
+        try {
+            Thread.sleep(numero);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static double askDouble(String message){
         double valor = -1;
         try{
@@ -33,11 +41,10 @@ public abstract class Service {
             valor = SCANNER.nextInt();
             SCANNER.nextLine();
         } catch (InputMismatchException e) {
-            e.printStackTrace();
             SCANNER.nextLine();
         }
         if(valor <= 0){
-            System.err.println("Input inválido!\n");
+            System.err.println("Entrada inválida!");
             return -1;
         }else{
             return valor;

@@ -103,14 +103,13 @@ public class ContaService extends Service{
         Integer numero = numeroConta;
         try{
             conta = this.contaRepository.consultarPorNumeroConta(numero);
-            if(conta != null && conta.getSenha() != null && conta.getSenha().equals(senhaConta)){
+            if(conta != null && conta.getSenha() != null && conta.getSenha().equals(senhaConta) && conta.getStatus() == Status.ATIVO){
                 return conta;
             }else{
-                assert conta != null;
-                if(conta.getSenha() == null){
-                    System.err.println("Conta desativada!");
+                if(conta == null){
+                    System.err.println("Número de conta ou senha inválida!");
                 }else{
-                    System.err.println("Número de conta ou senha inválida");
+                    System.err.println("Conta desativada!");
                 }
                 return null;
             }

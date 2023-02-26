@@ -17,29 +17,34 @@ public class CartaoService extends Service {
         this.cartaoRepository = new CartaoRepository();
     }
 
-    public void exibirExtrato(Conta conta, TipoCartao tipo) {
+    public void exibirCartao(Conta conta, TipoCartao tipo) {
         List<Cartao> cartoes = this.returnCartoes(conta);
-        int cartao = -1;
+        int index = 1;
 
-        if (cartoes != null) {
-            for (int i = 0; i < cartoes.size(); i++) {
-                if (cartoes.get(i).getTipo() == tipo) {
-                    cartao = i;
-                    System.err.println("\t\t\nExibindo dados do cartão [" + (i + 1) + "]:");
-                    System.out.print(
-                            "\tTipo do cartão: " + ((tipo == TipoCartao.DEBITO) ? "DÉBITO" : "CRÉDITO") + "\n" +
-                                    "\tNúmero da conta do cartão: " + cartoes.get(i).getConta().getNumeroConta() + "\n" +
-                                    "\tNúmero do cartão: " + cartoes.get(i).getNumeroCartao() + "\n" +
-                                    "\tVencimento do cartão: " + cartoes.get(i).getVencimento() + "\n" +
-                                    "\tCódigo de segurança do cartão: " + cartoes.get(i).getCodigoSeguranca() + "\n" +
-                                    "\tData de expedição: " + cartoes.get(i).getDataExpedicao());
-                    CompraService compraService = new CompraService();
-                    compraService.exibirComprasCartao(cartoes.get(i));
-                    break;
+        if (cartoes.size() > 0) {
+            for(Cartao cartao: cartoes){
+                if (cartao.getTipo() == tipo) {
+                    System.err.println("\t\t\nExibindo dados do cartão [" + (index) + "]:");
+                    StringBuilder string = new StringBuilder();
+                    string.append("\tTipo do cartão: " + ((tipo == TipoCartao.DEBITO) ? "DÉBITO" : "CRÉDITO") + "\n");
+                    string.append("\tNúmero da conta do cartão: " + cartao.getConta().getNumeroConta() + "\n");
+                    string.append("\tNúmero do cartão: " + cartao.getNumeroCartao() + "\n");
+                    string.append("\tCódigo de segurança do cartão: " + cartao.getCodigoSeguranca() + "\n");
+                    string.append("\tData de expedição: " + cartao.getDataExpedicao() + "\n");
+
+                    if(cartao.getTipo() == TipoCartao.CREDITO){
+                        CartaoDeCredito cdc = (CartaoDeCredito) cartao;
+                        string.append("\tLimite do cartão: 1000\n");
+                        string.append("\tLimite disponível: " + cdc.getLimite() + "\n");
+                    }
+
+                    Service.tempoParaExibir(100);
+                    System.out.println(string);
+                    index++;
                 }
             }
-            if (cartao == -1) {
-                System.err.println("\tVocê não possui nenhum cartão de " + ((tipo == TipoCartao.DEBITO) ? "débito!" : "crédito!") + "\n");
+            if (index == 1) {
+                System.err.println("Você não possui nenhum cartão de " + ((tipo == TipoCartao.DEBITO) ? "débito!" : "crédito!") + "\n");
             }
         }
     }
@@ -52,7 +57,7 @@ public class CartaoService extends Service {
         } else if(tipoCartao == null){
 
             //Lendo e passando o valor referente ao tipo do cartão
-            int valor = askInt("\nInsira o tipo do cartão:\n[1] DÉBITO\n[2] CRÉDITO\n[3] CANCELAR");
+            int valor = askInt("\nInsira o tipo do cartão:\n[1] Débito\n[2] Crédito\n[3] Cancelar");
             if (valor > 0 && valor < 3) {
                 tipoCartao = TipoCartao.getTipoCartao(valor);
                 System.out.println();
@@ -60,9 +65,6 @@ public class CartaoService extends Service {
                 System.err.println("Operação cancelada!\n");
                 return;
             }
-
-        } else {
-            tipoCartao = TipoCartao.DEBITO;
         }
             switch (tipoCartao) {
                 case CREDITO -> {
@@ -76,8 +78,8 @@ public class CartaoService extends Service {
                     try {
                         cartaoDeCredito = (CartaoDeCredito) this.cartaoRepository.adicionar(cartaoDeCredito);
                         if (cartaoDeCredito != null) {
-                            System.out.println("Novo CARTÃO de CRÉDITO adicionado com sucesso!");
-                            System.out.println("\tDados do CARTÃO: ");
+                            System.err.println("Novo cartão de crédito adicionado com sucesso!");
+                            System.out.println("\tDados do cartão: ");
                             System.out.println("\t\tNúmero da conta que possui o cartão: " + cartaoDeCredito.getConta().getNumeroConta());
                             System.out.println("\t\tLimite: " + cartaoDeCredito.getLimite());
                             System.out.println("\t\tTipo: " + cartaoDeCredito.getTipo());

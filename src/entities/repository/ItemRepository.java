@@ -125,7 +125,7 @@ public class ItemRepository implements Repository<Item>{
             String sql = "SELECT * FROM item WHERE id_compra = ?";
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setInt(1, idCompra);
-            ResultSet res = stmt.executeQuery(sql);
+            ResultSet res = stmt.executeQuery();
 
             while(res.next()) {
                 Item item = getItemFromResultSet(res);

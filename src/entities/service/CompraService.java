@@ -3,13 +3,14 @@ package entities.service;
 import entities.exception.BancoDeDadosException;
 import entities.model.*;
 import entities.repository.CompraRepository;
+import entities.repository.ItemRepository;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CompraService extends Service{
-    private CompraRepository compraRepository;
+    private final CompraRepository compraRepository;
 
     public CompraService() {
         this.compraRepository = new CompraRepository();
@@ -17,18 +18,33 @@ public class CompraService extends Service{
 
     public void exibirComprasCartao(Cartao cartao) {
         try{
+            ItemRepository itemRepository = new ItemRepository();
             List<Compra> compras = new ArrayList<>(this.compraRepository.listarPorCartao(cartao.getNumeroCartao()));
 
-            if(compras.size() != 0){
-                for(Compra compra:compras){
-                    System.out.println("Id da compra: "+compra.getIdCompra()+
-                            "\nData da compra: "+compra.getData()+
-                            "\nCartão usado na compra: "+compra.getCartao()+
-                            "\nDocumento do vendedor: "+compra.getDocVendedor());
-                }
-            }else{
-                System.err.println("\nSem compras feitas nesse cartão.\n");
+            if(compras.size() == 0){
+                System.out.println("\nCartão: " + "[" + cartao.getTipo() + "]" + "\nNúmero do cartão: " + cartao.getNumeroCartao());
+                Service.tempoParaExibir(100);
+                System.err.println("Sem compras feitas nesse cartão.\n");
             }
+
+            if(compras.size() > 0){
+                for(Compra compra:compras){
+                    List<Item> itens = itemRepository.listarItensPorIdCompra(compra.getIdCompra());
+                    System.out.println(
+                            "\nCartão: " + "[" + cartao.getTipo() + "]" +
+                            "\nNúmero do cartão: " + cartao.getNumeroCartao() +
+                            "\nData da compra: " + compra.getData() +
+                            "\nDocumento do vendedor: "+ compra.getDocVendedor() +
+                            "\n\tItens");
+
+                    for (Item it: itens) {
+                        System.out.println("\tNome: " + it.getNome() +
+                                "\n\tValor: " + it.getValor() +
+                                "\n\tQuantidade: " + it.getQuantidade() + "\n");
+                    }
+                }
+            }
+
         }catch (BancoDeDadosException e){
             e.printStackTrace();
         }
@@ -109,7 +125,7 @@ public class CompraService extends Service{
                     if(cartao.getClass().equals(CartaoDeCredito.class)){
                         ((CartaoDeCredito) cartao).setLimite(((CartaoDeCredito) cartao).getLimite()-valorTotalAtual);
                         if(cartaoService.editarCartao(cartao.getNumeroCartao(), cartao)){
-                            System.out.println("Limite do cartão de CRÉDITO ATUALIZADO!");
+                            //System.out.println("Limite do cartão de CRÉDITO ATUALIZADO!");
                         }else{
                             System.err.println("Problemas ao atualizar o limite do cartão de crédito");
                             return;
@@ -119,7 +135,7 @@ public class CompraService extends Service{
                             conta.setSaldo(conta.getSaldo()-valorTotalAtual);
                             contaService.editar(conta.getNumeroConta(), conta);
                         }else{
-                            System.err.println("Saldo insuficiente!");
+                            System.err.println("Saldo insuficiente!\n");
                             return;
                         }
                     }
@@ -148,7 +164,7 @@ public class CompraService extends Service{
                     ItemService itemService = new ItemService();
                     itemService.adicionar(itens);
                     /////
-                    System.out.println("\nCompra realizada!");
+                    System.err.println("Compra realizada!\n");
                 }
             } else {
                 System.err.println("Este número não representa nenhum cartão.");

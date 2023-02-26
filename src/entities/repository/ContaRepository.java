@@ -236,7 +236,7 @@ public class ContaRepository implements Repository<Conta> {
             String sql = """
                     SELECT * FROM CONTA c
                     LEFT JOIN CLIENTE c2 ON c.ID_CLIENTE = c2.ID_CLIENTE
-                    WHERE numero_conta = ? AND c.STATUS = 1
+                    WHERE numero_conta = ?
                      """;
 
             // Executa-se a consulta
