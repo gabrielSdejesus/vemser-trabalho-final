@@ -6,6 +6,7 @@ import entities.service.*;
 
 public class TelaAdministrador extends Tela {
     public static void exibirTelaAdministrador(){
+        Service.tempoParaExibir(500);
         System.out.println("Você está na Tela de Administrador");
         TelaAdministrador.tratarInput();
     }
@@ -88,7 +89,7 @@ public class TelaAdministrador extends Tela {
             }
             case 0 -> Tela.redirecionarParaTela(1);
             default -> {
-                System.out.println("Opção inválida!");
+                System.err.println("Opção inválida!\n");
                 exibirTelaAdministrador();
             }
         }

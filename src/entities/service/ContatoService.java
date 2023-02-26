@@ -20,59 +20,78 @@ public class ContatoService extends Service {
 
     public void alterarContato(Conta conta) {
         List<Contato> contatos = this.retornarContatosDoCliente(conta);
-        int inputAlteracaoContato, tipoAlteracaoContato;
+        int inputAlteracaoContato, tipoAlteracaoContato = 0;
 
-        StringBuilder message = new StringBuilder("Selecione um contato para alterar:\n");
+        StringBuilder message = new StringBuilder("\nSelecione um contato para alterar:\n");
         for (int i = 0; i < contatos.size(); i++) {
-            message.append("[").append(i + 1).append("] Telefone: ").append(contatos.get(i).getTelefone()).append("; Email: ").append(contatos.get(i).getEmail()).append("\n");
+            message.append("[").append(i + 1).append("] Telefone: ").append(contatos.get(i).getTelefone()).append("; Email: ").append(contatos.get(i).getEmail());
+            if(i != (contatos.size() - 1)){
+                message.append("\n");
+            }
         }
         inputAlteracaoContato = askInt(String.valueOf(message));
 
-        if (inputAlteracaoContato > 0 && inputAlteracaoContato <= contatos.size()) {
-            Contato novoContato = contatos.get(inputAlteracaoContato - 1);
+        if(inputAlteracaoContato > contatos.size()){
+            System.err.println("Opção inválida!\n");
+            return;
+        }
 
-            System.out.println("Selecione a alteração que quer fazer no Contato:");
-            System.out.println("[1] Telefone");
-            System.out.println("[2] Email");
-            System.out.println("[3] Cancelar - Voltar para tela de perfil");
+        do{
+            if (inputAlteracaoContato > 0) {
+                Contato novoContato = contatos.get(inputAlteracaoContato - 1);
 
-            tipoAlteracaoContato = Integer.parseInt(SCANNER.nextLine());
-            if (tipoAlteracaoContato < 1 || tipoAlteracaoContato >= 3) {
-                System.out.println("Operação cancelada!");
-            } else {
-                boolean editar = true;
-                switch (tipoAlteracaoContato) {
-                    case 1 -> {
-                        String novoTelefone = this.pedirTelefone();
-                        novoContato.setTelefone(novoTelefone);
-                        if (novoContato.getTelefone().equals("")) {
-                            editar = false;
-                        }
-                    }
-                    case 2 -> {
-                        String novoEmail = this.pedirEmail();
-                        novoContato.setEmail(novoEmail);
-                        if (novoContato.getEmail().equals("")) {
-                            editar = false;
-                        }
-                    }
-                    default -> System.err.println("Erro bizarro!");
+                System.out.println("\nSelecione a alteração que quer fazer no Contato:");
+                System.out.println("[1] Telefone");
+                System.out.println("[2] Email");
+                System.out.println("[3] Cancelar - Voltar para tela de perfil");
+
+                System.out.print("Insira aqui: ");
+                tipoAlteracaoContato = Integer.parseInt(SCANNER.nextLine());
+
+                //retornar para tela perfil se == 3 [cancelar]
+                if (tipoAlteracaoContato == 3) {
+                    System.out.println();
+                    return;
                 }
-                if (editar) {
-                    try {
-                        if (this.contatoRepository.editar(conta.getCliente().getIdCliente(), novoContato)) {
-                            System.out.println("CONTATO alterado com sucesso!");
-                        } else {
-                            System.err.println("Problemas ao editar o CONTATO");
+
+                if(tipoAlteracaoContato == 1 || tipoAlteracaoContato == 2){
+                    boolean editar = true;
+                    switch (tipoAlteracaoContato) {
+                        case 1 -> {
+                            String novoTelefone = this.pedirTelefone();
+                            novoContato.setTelefone(novoTelefone);
+                            if (novoContato.getTelefone().equals("")) {
+                                editar = false;
+                            }
                         }
-                    } catch (BancoDeDadosException e) {
-                        e.printStackTrace();
+                        case 2 -> {
+                            String novoEmail = this.pedirEmail();
+                            novoContato.setEmail(novoEmail);
+                            if (novoContato.getEmail().equals("")) {
+                                editar = false;
+                            }
+                        }
+                        default -> System.err.println("Erro bizarro!");
+                    }
+                    if (editar) {
+                        try {
+                            if (this.contatoRepository.editar(conta.getCliente().getIdCliente(), novoContato)) {
+                                System.err.println("Dados alterados com sucesso!\n");
+                            } else {
+                                System.err.println("Problemas ao editar contato!\n");
+                            }
+                        } catch (BancoDeDadosException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
-        } else {
-            System.out.println("Nenhum contato selecionado!");
-        }
+            if(tipoAlteracaoContato > 3){
+                System.err.println("Opção inválida!\n");
+            }
+        }while(tipoAlteracaoContato > 3);
+
+
     }
 
     public void deletarContato(Conta conta) {
@@ -165,10 +184,10 @@ public class ContatoService extends Service {
     private String pedirTelefone() {
         String telefone;
         while (true) {
-            telefone = askString("Insira o [Telefone] (apenas números): ");
+            telefone = askString("\nInsira o [Telefone] (ex: 07812345678): ");
             if (!telefone.equals("")) {
-                if (!telefone.matches("[0-9]+")) {
-                    System.err.println("Número inválido! Tente novamente.");
+                if (!telefone.matches("[0-9]{12}")) {
+                    System.err.println("Número inválido! Tente novamente.\n");
                 } else {
                     break;
                 }
@@ -181,10 +200,10 @@ public class ContatoService extends Service {
     private String pedirEmail() {
         String email;
         while (true) {
-            email = askString("Insira o [Email]: ");
+            email = askString("\nInsira o [Email]: (ex: nome@gmail.com): ");
             if (!email.equals("")) {
                 if (!email.matches("^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$")) {
-                    System.err.println("Email inválido! Tente novamente.");
+                    System.err.println("Email inválido! Tente novamente.\n");
                 } else {
                     break;
                 }

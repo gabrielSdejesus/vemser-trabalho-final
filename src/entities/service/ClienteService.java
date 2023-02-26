@@ -116,10 +116,10 @@ public class ClienteService extends Service{
         try{
             Cliente cliente = this.clienteRepository.consultarPorIdCliente(idCliente);
             if(cliente != null){
-                System.out.println("Nome do CLIENTE: "+cliente.getNome());
-                System.out.println("CPF do CLIENTE: "+cliente.getCpf());
+                System.out.println("\n\tDados Pessoais\n" + "\tNome: "+ cliente.getNome());
+                System.out.println("\tCPF: "+ cliente.getCpf() + "\n");
             }else{
-                System.err.println("Problemas ao exibir CLIENTE!");
+                System.err.println("Dados de cliente não encontrado!\n");
             }
         }catch (BancoDeDadosException e){
             e.printStackTrace();

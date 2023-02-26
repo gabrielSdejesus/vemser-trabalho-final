@@ -11,7 +11,9 @@ public class TelaTransferencias extends Tela {
     }
 
     public static void tratarInput() {
-        int input = TelaTransferencias.pedirInput("[1] -> Insira seus dados de login para VISUALIZAR suas TRANSFERÊNCIAS\n[2] -> TRANSFERIR para outra conta\n[3] -> Voltar para a Tela Principal");
+        int input = TelaTransferencias.pedirInput("[1] -> Insira seus dados de login para VISUALIZAR suas TRANSFERÊNCIAS\n" +
+                "[2] -> TRANSFERIR para outra conta\n" +
+                "[0] -> Voltar para a Tela Principal");
         TransferenciaService transferenciaService = new TransferenciaService();
         ContaService contaService = new ContaService();
         Conta login;
@@ -34,9 +36,9 @@ public class TelaTransferencias extends Tela {
                 }
                 exibirTransferencias();
             }
-            case 3 -> Tela.redirecionarParaTela(1);
+            case 0 -> Tela.redirecionarParaTela(1);
             default -> {
-                System.err.println("Opção inválida!");
+                System.err.println("Opção inválida!\n");
                 exibirTransferencias();
             }
         }

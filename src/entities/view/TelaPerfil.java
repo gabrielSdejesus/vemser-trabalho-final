@@ -1,19 +1,26 @@
 package entities.view;
 
 import entities.model.Conta;
-import entities.service.ClienteService;
-import entities.service.ContaService;
-import entities.service.ContatoService;
-import entities.service.EnderecoService;
+import entities.service.*;
 
 public class TelaPerfil extends Tela {
     public static void exibirTelaPerfil(){
+        Service.tempoParaExibir(500);
         System.out.println("Você está na Tela de Perfil");
         TelaPerfil.tratarInput();
     }
 
     public static void tratarInput() {
-        int input = pedirInput("[1] -> Insira seus dados de LOGIN para exibir seus dados de CLIENTE\n[2] -> Insira seus dados de LOGIN para exibir os dados da sua CONTA\n[3] -> Alterar CONTATO do CLIENTE\n[4] -> Alterar ENDEREÇO do CLIENTE\n[5] -> Deletar CONTATO do CLIENTE\n[6] -> Deletar ENDEREÇO do CLIENTE\n[7] -> Cadastrar novo CONTATO em CLIENTE\n[8] -> Cadastrar novo ENDEREÇO em CLIENTE\n[9] -> Alterar SENHA\n[10] -> Voltar para a Tela Principal");
+        int input = pedirInput("[1] -> Exibir dados pessoais\n" +
+                "[2] -> Exibir dados da conta\n" +
+                "[3] -> Alterar contato\n" +
+                "[4] -> Alterar endereço\n" +
+                "[5] -> Deletar contato\n" +
+                "[6] -> Deletar endereço\n" +
+                "[7] -> Cadastrar novo contato\n" +
+                "[8] -> Cadastrar novo endereço\n" +
+                "[9] -> Alterar minha senha\n" +
+                "[0] -> Voltar para a Tela Principal");
         ClienteService clienteService = new ClienteService();
         ContaService contaService = new ContaService();
         EnderecoService enderecoService = new EnderecoService();
@@ -43,7 +50,7 @@ public class TelaPerfil extends Tela {
                 if(login != null){
                     contatoService.alterarContato(login);
                 }else{
-                    System.err.println("Login mal-sucedido\n");
+                    System.err.println("Login mal-sucedido");
                 }
                 exibirTelaPerfil();
             }
@@ -52,7 +59,7 @@ public class TelaPerfil extends Tela {
                 if(login != null){
                     enderecoService.alterarEndereco(login);
                 }else{
-                    System.out.println("Login mal-sucedido\n");
+                    System.err.println("Login mal-sucedido");
                 }
                 exibirTelaPerfil();
             }
@@ -61,7 +68,7 @@ public class TelaPerfil extends Tela {
                 if(login != null) {
                     contatoService.deletarContato(login);
                 }else{
-                    System.out.println("Login mal-sucedido\n");
+                    System.err.println("Login mal-sucedido");
                 }
                 exibirTelaPerfil();
             }
@@ -70,7 +77,7 @@ public class TelaPerfil extends Tela {
                 if(login != null) {
                     enderecoService.deletarEndereco(login);
                 }else{
-                    System.err.println("Login mal-sucedido\n");
+                    System.err.println("Login mal-sucedido");
                 }
                 exibirTelaPerfil();
             }
@@ -79,7 +86,7 @@ public class TelaPerfil extends Tela {
                 if(login != null) {
                     contatoService.adicionarContato(login);
                 }else{
-                    System.err.println("Login mal-sucedido\n");
+                    System.err.println("Login mal-sucedido");
                 }
                 exibirTelaPerfil();
             }
@@ -88,7 +95,7 @@ public class TelaPerfil extends Tela {
                 if(login != null) {
                     enderecoService.adicionarEndereco(login);
                 }else{
-                    System.err.println("Login mal-sucedido\n");
+                    System.err.println("Login mal-sucedido");
                 }
                 exibirTelaPerfil();
             }
@@ -97,13 +104,13 @@ public class TelaPerfil extends Tela {
                 if(login != null) {
                     contaService.alterarSenha(login);
                 }else{
-                    System.err.println("Login mal-sucedido\n");
+                    System.err.println("Login mal-sucedido");
                 }
                 exibirTelaPerfil();
             }
-            case 10 -> Tela.redirecionarParaTela(1);
+            case 0 -> Tela.redirecionarParaTela(1);
             default -> {
-                System.out.println("Opção inválida!");
+                System.err.println("Opção inválida!\n");
                 exibirTelaPerfil();
             }
         }

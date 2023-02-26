@@ -17,7 +17,7 @@ public class TelaCompras extends Tela {
     public static void tratarInput() {
         int input = pedirInput("[1] -> Exibir compras da sua conta\n" +
                 "[2] -> Adicionar uma compra\n" +
-                "[3] -> Voltar para a Tela Principal");
+                "[0] -> Voltar para a Tela Principal");
         CompraService compraService = new CompraService();
         Conta login;
         switch(input){
@@ -34,7 +34,7 @@ public class TelaCompras extends Tela {
                         System.out.println("\n\tNão há compras nesta conta.");
                     }
                 }else{
-                    System.err.println("Login mal-sucedido\n");
+                    System.err.println("\nLogin mal-sucedido");
                 }
                 exibirCompras();
             }
@@ -43,11 +43,11 @@ public class TelaCompras extends Tela {
                 if(login != null){
                     compraService.adicionarCompra(login);
                 } else {
-                    System.out.println("Login mal-sucedido\n");
+                    System.err.println("\nLogin mal-sucedido");
                 }
                 exibirCompras();
             }
-            case 3 -> Tela.redirecionarParaTela(1);
+            case 0 -> Tela.redirecionarParaTela(1);
             default -> {
                 System.err.println("Opção inválida!\n");
                 exibirCompras();

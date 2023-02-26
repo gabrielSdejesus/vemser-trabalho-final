@@ -47,6 +47,10 @@ public abstract class Tela {
     protected static int pedirInput(String message){
         System.out.println(message);
         System.out.print("Escolha: ");
-        return Integer.parseInt(new Scanner(System.in).nextLine());
+        try {
+            return Integer.parseInt(new Scanner(System.in).nextLine());
+        }catch (NumberFormatException e){
+            return 0;
+        }
     }
 }

@@ -106,12 +106,18 @@ public class ContaService extends Service{
             if(conta != null && conta.getSenha() != null && conta.getSenha().equals(senhaConta) && conta.getStatus() == Status.ATIVO){
                 return conta;
             }else{
+
+                //retorna null se não existe conta alguma ou algum dado está errado
                 if(conta == null){
                     System.err.println("Número de conta ou senha inválida!");
-                }else{
-                    System.err.println("Conta desativada!");
+                    return null;
                 }
-                return null;
+
+                //a conta já existiu porém ela está inativa
+                if(conta.getStatus() == Status.INATIVO){
+                    System.err.println("Conta desativada!\n");
+                    return null;
+                }
             }
         }catch(SQLException e){
             e.printStackTrace();
@@ -120,11 +126,11 @@ public class ContaService extends Service{
     }
 
     public void exibirConta(Conta conta){
-        System.out.println("Número da CONTA: "+conta.getNumeroConta());
-        System.out.println("Nome do CLIENTE da CONTA: "+conta.getCliente().getNome());
-        System.out.println("Saldo: "+conta.getSaldo());
-        System.out.println("Agência: "+conta.getAgencia());
-        System.out.println("Cheque especial: "+conta.getChequeEspecial());
+        System.out.println("\n" + "\tNúmero da conta: "+conta.getNumeroConta());
+        System.out.println("\tNome do cliente da conta: "+conta.getCliente().getNome());
+        System.out.println("\tSaldo: "+conta.getSaldo());
+        System.out.println("\tAgência: "+conta.getAgencia());
+        System.out.println("\tCheque especial: "+conta.getChequeEspecial() + "\n");
     }
 
     public void depositar(Conta conta){

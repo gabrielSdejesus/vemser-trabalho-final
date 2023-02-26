@@ -16,7 +16,7 @@ public class TelaCartao extends Tela {
                 "[2] -> Exibir informações do(s) cartão(s) de débito\n" +
                 "[3] -> Adicionar cartão\n" +
                 "[4] -> Excluir cartão\n" +
-                "[5] -> Voltar para a Tela Principal");
+                "[0] -> Voltar para a Tela Principal");
         Conta login;
         CartaoService cartaoService = new CartaoService();
         switch(input){
@@ -25,7 +25,7 @@ public class TelaCartao extends Tela {
                 if (login != null) {
                     cartaoService.exibirCartao(login, TipoCartao.CREDITO);
                 } else {
-                    System.err.println("Login mal-sucedido\n");
+                    System.err.println("Login mal-sucedido");
                 }
                 exibirTelaCartao();
             }
@@ -34,7 +34,7 @@ public class TelaCartao extends Tela {
                 if(login != null){
                     cartaoService.exibirCartao(login, TipoCartao.DEBITO);
                 }else {
-                    System.err.println("Login mal-sucedido\n");
+                    System.err.println("Login mal-sucedido");
                 }
                 exibirTelaCartao();
             }
@@ -43,7 +43,7 @@ public class TelaCartao extends Tela {
                 if (login != null) {
                     cartaoService.cadastrarCartao(login, null);
                 }else{
-                    System.err.println("Login mal-sucedido\n");
+                    System.err.println("Login mal-sucedido");
                 }
                 exibirTelaCartao();
             }
@@ -52,13 +52,13 @@ public class TelaCartao extends Tela {
                 if (login != null) {
                     cartaoService.deletarCartao(login);
                 }else{
-                    System.err.println("Login mal-sucedido\n");
+                    System.err.println("Login mal-sucedido");
                 }
                 exibirTelaCartao();
             }
-            case 5 -> Tela.redirecionarParaTela(1);
+            case 0 -> Tela.redirecionarParaTela(1);
             default -> {
-                System.out.println("Opção inválida!\n");
+                System.err.println("Opção inválida!\n");
                 exibirTelaCartao();
             }
         }

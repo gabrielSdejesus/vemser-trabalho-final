@@ -44,7 +44,7 @@ public abstract class Service {
             SCANNER.nextLine();
         }
         if(valor <= 0){
-            System.err.println("Entrada inválida!");
+            System.err.println("Entrada inválida!\n");
             return -1;
         }else{
             return valor;
