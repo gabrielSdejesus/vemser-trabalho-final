@@ -28,20 +28,19 @@ public class TransferenciaService extends Service{
 
                     transferencia = transferenciaRepository.adicionar(transferencia);
                     if(transferencia != null){
-                        System.out.println("Transferência realizada com sucesso!");
+                        System.err.println("\nTransferência realizada com sucesso!");
                         System.out.println("\tDados da transferência:");
-                        System.out.println("\t\tId da transferência: "+transferencia.getIdTransferencia());
-                        System.out.println("\t\tValor da transferência: "+transferencia.getValor());
-                        System.out.println("\t\tNúmero da conta que enviou: "+transferencia.getContaEnviou().getNumeroConta());
-                        System.out.println("\t\tNúmero da conta que recebeu: "+transferencia.getContaRecebeu().getNumeroConta());
+                        System.out.println("\t\tValor da transferência: "+ transferencia.getValor());
+                        System.out.println("\t\tNº da conta que enviou: "+ transferencia.getContaEnviou().getNumeroConta());
+                        System.out.println("\t\tNº da conta que recebeu: "+ transferencia.getContaRecebeu().getNumeroConta() + "\n") ;
                     }else{
-                        System.err.println("Erro ao concluir transferência!");
+                        System.err.println("\nErro ao concluir transferência!");
                     }
                 }else{
-                    System.err.println("Número da conta inválido!");
+                    System.err.println("\nNúmero da conta inválido!");
                 }
             }else{
-                System.err.println("Valor inválido!");
+                System.err.println("\nValor inválido!");
             }
         }catch(BancoDeDadosException e){
             e.printStackTrace();
@@ -53,7 +52,7 @@ public class TransferenciaService extends Service{
             List<Transferencia> transferencias = transferenciaRepository.listar();
             transferencias.forEach(System.out::println);
             if(transferencias.size() == 0){
-                System.err.println("Nenhuma TRANSFERÊNCIA realizada no Banco De Dados!");
+                System.err.println("\nNenhuma TRANSFERÊNCIA realizada no Banco De Dados!");
             }
         } catch (BancoDeDadosException e) {
             e.printStackTrace();

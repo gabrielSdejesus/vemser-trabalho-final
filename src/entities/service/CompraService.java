@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CompraService extends Service{
-    private final CompraRepository compraRepository;
+    private CompraRepository compraRepository;
 
     public CompraService() {
         this.compraRepository = new CompraRepository();

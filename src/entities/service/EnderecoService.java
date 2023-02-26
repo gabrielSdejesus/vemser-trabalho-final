@@ -20,8 +20,8 @@ public class EnderecoService extends Service{
     public void adicionarEndereco(Conta conta){
         String enderecoInput = "";
         ArrayList<Endereco> enderecos = new ArrayList<>();
-        while(!enderecoInput.equalsIgnoreCase("ENCERRAR ENDEREÇOS")){
-            System.out.println("Insira [ENCERRAR ENDEREÇOS] para parar de adicionar endereços do cliente");
+        while(!enderecoInput.equalsIgnoreCase("SAIR")){
+            System.out.println("\nInsira SAIR para parar de adicionar endereços do cliente");
             System.out.print("Insira o Logradouro do Endereço do cliente: ");
             do {
                 enderecoInput = SCANNER.nextLine();
@@ -29,11 +29,12 @@ public class EnderecoService extends Service{
 
             String cidade, estado, pais, cep;
 
-            if(enderecoInput.equalsIgnoreCase("ENCERRAR ENDEREÇOS")){
+            if(enderecoInput.equalsIgnoreCase("SAIR")){
                 if (enderecos.size()<1){
-                    System.out.println("Você deve adicionar ao menos um Endereço!");
+                    System.err.println("Você deve adicionar ao menos um Endereço!");
                     enderecoInput = "";
                 }else{
+                    System.out.println();
                     break;
                 }
             }else{
@@ -70,7 +71,7 @@ public class EnderecoService extends Service{
                 endereco.setPais(pais);
 
                 enderecos.add(endereco);
-                System.out.println("\tEndereço adicionado!");
+                System.err.println("Endereço adicionado!");
             }
         }
         if(enderecos.size() > 0){
@@ -89,131 +90,150 @@ public class EnderecoService extends Service{
         int inputExclusaoEndereco;
 
         if(enderecos.size() > 1){
-            StringBuilder message = new StringBuilder("Selecione um endereço para deletar:\n");
+            StringBuilder message = new StringBuilder("\nSelecione um endereço para deletar:\n");
             for(int i=0;i<enderecos.size();i++){
-                message.append("[").append(i + 1).append("] Logradouro: ").append(enderecos.get(i).getLogradouro()).append("; Cidade: ").append(enderecos.get(i).getCidade()).append("; Estado: ").append(enderecos.get(i).getEstado()).append("; País: ").append(enderecos.get(i).getPais()).append("; CEP: ").append(enderecos.get(i).getCep()).append("\n");
+                message.append("[").append(i + 1).append("] Logradouro: ").append(enderecos.get(i).getLogradouro()).append("; Cidade: ").append(enderecos.get(i).getCidade()).append("; Estado: ").append(enderecos.get(i).getEstado()).append("; País: ").append(enderecos.get(i).getPais()).append("; CEP: ").append(enderecos.get(i).getCep());
+                if(i != (enderecos.size() - 1)){
+                    message.append("\n");
+                }
             }
+
 
             inputExclusaoEndereco = askInt(String.valueOf(message));
 
             if (inputExclusaoEndereco > 0 && inputExclusaoEndereco <= enderecos.size()) {
                 try{
                     if(this.enderecoRepository.remover(enderecos.get(inputExclusaoEndereco-1).getIdEndereco())){
-                        System.out.println("ENDEREÇO removido com sucesso!");
+                        System.err.println("\nEndereço removido com sucesso!");
                     }else{
-                        System.out.println("Falha ao deletar ENDEREÇO!");
+                        System.err.println("\nFalha ao deletar endereço!");
                     }
                 }catch(BancoDeDadosException e){
                     e.printStackTrace();
                 }
             }else{
-                System.out.println("Nenhum endereço selecionado!");
+                System.err.println("\nNenhum endereço selecionado!");
             }
         }else{
-            System.err.println("Você tem apenas [1] endereço e não pode exluí-lo!");
+            System.err.println("\nVocê tem apenas [1] endereço e não pode exluí-lo!");
         }
     }
 
     public void alterarEndereco(Conta conta){
         List<Endereco> enderecos = this.retornarEnderecosDoCliente(conta);
-        int inputAlteracaoEndereco, tipoAlteracaoEndereco;
+        int inputAlteracaoEndereco, tipoAlteracaoEndereco = 0;
 
-        StringBuilder message = new StringBuilder("Selecione um endereço para alterar:\n");
+        StringBuilder message = new StringBuilder("\nSelecione um endereço para alterar:\n");
         for(int i=0;i<enderecos.size();i++){
-            message.append("[").append(i + 1).append("] Logradouro: ").append(enderecos.get(i).getLogradouro()).append("; Cidade: ").append(enderecos.get(i).getCidade()).append("; Estado: ").append(enderecos.get(i).getEstado()).append("; País: ").append(enderecos.get(i).getPais()).append("; CEP: ").append(enderecos.get(i).getCep()).append("\n");
+            message.append("[").append(i + 1).append("] Logradouro: ").append(enderecos.get(i).getLogradouro()).append("; Cidade: ").append(enderecos.get(i).getCidade()).append("; Estado: ").append(enderecos.get(i).getEstado()).append("; País: ").append(enderecos.get(i).getPais()).append("; CEP: ").append(enderecos.get(i).getCep());
+            if(i != (enderecos.size() - 1)){
+                message.append("\n");
+            }
         }
 
         inputAlteracaoEndereco = askInt(String.valueOf(message));
+        if(inputAlteracaoEndereco > enderecos.size()){
+            System.err.println("Opção inválida!\n");
+            return;
+        }
 
-        if(inputAlteracaoEndereco > 0 && inputAlteracaoEndereco <= enderecos.size()){
-            Endereco novoEndereco = enderecos.get(inputAlteracaoEndereco-1);
+        do{
+            if(inputAlteracaoEndereco > 0){
+                Endereco novoEndereco = enderecos.get(inputAlteracaoEndereco-1);
 
-            System.out.println("Selecione a alteração que quer fazer no Endereço:");
-            System.out.println("[1] Logradouro");
-            System.out.println("[2] Cidade");
-            System.out.println("[3] Estado");
-            System.out.println("[4] País");
-            System.out.println("[5] CEP");
-            System.out.println("[6] Cancelar - Voltar para tela de perfil");
+                System.out.println("\nSelecione a alteração que quer fazer no Endereço:");
+                System.out.println("[1] Logradouro");
+                System.out.println("[2] Cidade");
+                System.out.println("[3] Estado");
+                System.out.println("[4] País");
+                System.out.println("[5] CEP");
+                System.out.println("[0] Cancelar - Voltar para tela de perfil");
 
-            tipoAlteracaoEndereco = Integer.parseInt(SCANNER.nextLine());
-            if (tipoAlteracaoEndereco < 1 || tipoAlteracaoEndereco >= 6){
-                System.out.println("Operação cancelada!");
-            }else{
-                boolean adicionar = true;
-                switch(tipoAlteracaoEndereco){
-                    case 1 -> {
-                        novoEndereco.setLogradouro(askString("Insira o novo [Logradouro]: "));
-                        if(novoEndereco.getLogradouro().equals("")){
-                            adicionar = false;
-                        }
-                    }
-                    case 2 -> {
-                        novoEndereco.setCidade(askString("Insira a nova [Cidade]: "));
-                        if(novoEndereco.getCidade().equals("")){
-                            adicionar = false;
-                        }
-                    }
-                    case 3 -> {
-                        while (true) {
-                            String novoEstado = askString("Insira a sigla do novo [Estado] (ex. SP): ");
-                            if(novoEstado.length() == 1 || novoEstado.length() > 2) {
-                                System.err.println("Sigla inválida! Tente novamente.");
-                            } else {
-                                novoEndereco.setEstado(novoEstado.toUpperCase());
-                                break;
-                            }
-                        }
-                        if(novoEndereco.getEstado().equals("")){
-                            adicionar = false;
-                        }
-                    }
-                    case 4 -> {
-                        while (true) {
-                            String novoPais = askString("Insira o novo [País]: ").toUpperCase();
-                            if (!novoPais.matches("[a-zA-Z]+")) {
-                                System.err.println("Nome de país inválido! Tente novamente");
-                            } else {
-                                novoEndereco.setPais(novoPais);
-                                break;
-                            }
-                        }
-                        if(novoEndereco.getPais().equals("")){
-                            adicionar = false;
-                        }
-                    }
-                    case 5 -> {
-                        while (true) {
-                            String novoCep = askString("Insira o novo [CEP]: ");
-                            if (!novoCep.matches("[0-9]+")) {
-                                System.err.println("CEP inválido! Tente novamente");
-                            } else {
-                                novoEndereco.setCep(novoCep);
-                                break;
-                            }
-                        }
-                        if(novoEndereco.getPais().equals("")){
-                            adicionar = false;
-                        }
-                    }
-                    default -> System.err.println("Erro bizarro!");
+                System.out.print("Insira aqui: ");
+                tipoAlteracaoEndereco = Integer.parseInt(SCANNER.nextLine());
+
+                if(tipoAlteracaoEndereco == 0){
+                    System.out.println();
+                    return;
                 }
-                if(adicionar){
-                    try{
-                        if(this.enderecoRepository.editar(conta.getCliente().getIdCliente(), novoEndereco)){
-                            System.out.println("ENDEREÇO alterado com sucesso!");
-                        }else{
-                            System.err.println("Problemas ao editar o ENDEREÇO");
+
+              if (tipoAlteracaoEndereco > 0 && tipoAlteracaoEndereco < 6){
+                    boolean adicionar = true;
+                    switch(tipoAlteracaoEndereco){
+                        case 1 -> {
+                            novoEndereco.setLogradouro(askString("Insira o novo [Logradouro]: "));
+                            if(novoEndereco.getLogradouro().equals("")){
+                                adicionar = false;
+                            }
                         }
-                    }catch(BancoDeDadosException e){
-                        e.printStackTrace();
+                        case 2 -> {
+                            novoEndereco.setCidade(askString("Insira a nova [Cidade]: "));
+                            if(novoEndereco.getCidade().equals("")){
+                                adicionar = false;
+                            }
+                        }
+                        case 3 -> {
+                            while (true) {
+                                String novoEstado = askString("Insira a sigla do novo [Estado] (ex. SP): ");
+                                if(novoEstado.length() == 1 || novoEstado.length() > 2) {
+                                    System.err.println("\nSigla inválida! Tente novamente.");
+                                } else {
+                                    novoEndereco.setEstado(novoEstado.toUpperCase());
+                                    break;
+                                }
+                            }
+                            if(novoEndereco.getEstado().equals("")){
+                                adicionar = false;
+                            }
+                        }
+                        case 4 -> {
+                            while (true) {
+                                String novoPais = askString("Insira o novo [País]: ").toUpperCase();
+                                if (!novoPais.matches("[a-zA-Z]+")) {
+                                    System.err.println("\nNome de país inválido! Tente novamente");
+                                } else {
+                                    novoEndereco.setPais(novoPais);
+                                    break;
+                                }
+                            }
+                            if(novoEndereco.getPais().equals("")){
+                                adicionar = false;
+                            }
+                        }
+                        case 5 -> {
+                            while (true) {
+                                String novoCep = askString("Insira o novo [CEP]: ");
+                                if (!novoCep.matches("[0-9]+")) {
+                                    System.err.println("\nCEP inválido! Tente novamente");
+                                } else {
+                                    novoEndereco.setCep(novoCep);
+                                    break;
+                                }
+                            }
+                            if(novoEndereco.getPais().equals("")){
+                                adicionar = false;
+                            }
+                        }
+                        default -> System.err.println("Erro bizarro!");
                     }
+                    if(adicionar){
+                        try{
+                            if(this.enderecoRepository.editar(conta.getCliente().getIdCliente(), novoEndereco)){
+                                System.err.println("\nEndereço alterado com sucesso!");
+                            }else{
+                                System.err.println("\nProblemas ao editar o ENDEREÇO");
+                            }
+                        }catch(BancoDeDadosException e){
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                if(tipoAlteracaoEndereco > 5){
+                    System.err.println("Opção inválida!");
                 }
             }
-        }else{
-            System.out.println("Nenhum endereço selecionado!");
-        }
-    }
+        }while(tipoAlteracaoEndereco > 5);
+    } 
 
     public List<Endereco> retornarEnderecosDoCliente(Conta conta){
         List<Endereco> enderecos;

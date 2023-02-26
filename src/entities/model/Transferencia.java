@@ -50,13 +50,12 @@ public class Transferencia{
 
     @Override
     public String toString() {
-        return "Transferencia{" +
-                "idTransferencia=" + idTransferencia +
-                ", contaEnviou=" + contaEnviou.getNumeroConta() +
-                ", nomeEnviou=" + contaEnviou.getCliente().getNome() +
-                ", contaRecebeu=" + contaRecebeu.getNumeroConta() +
-                ", nomeRecebeu=" + contaRecebeu.getCliente().getNome() +
-                ", valor=" + valor +
-                '}';
+        String sql = "\nTransferência" +
+                "\n\tNome de quem enviou: " + contaEnviou.getCliente().getNome() +
+                "\n\tNº da conta que enviou: " + contaEnviou.getNumeroConta() +
+                "\n\tNome de quem recebeu: " + contaRecebeu.getCliente().getNome() +
+                "\n\tNº da conta que recebeu: " + contaRecebeu.getNumeroConta() +
+                "\n\tValor: R$" + valor + "\n";
+        return sql;
     }
 }

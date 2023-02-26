@@ -99,11 +99,13 @@ public class ContatoService extends Service {
         int inputExclusaoContato;
 
         if (contatos.size() > 1) {
-            StringBuilder message = new StringBuilder("Selecione um contato para deletar:\n");
+            StringBuilder message = new StringBuilder("\nSelecione um contato para deletar:\n");
 
-            System.out.println("Selecione um contato para deletar:");
             for (int i = 0; i < contatos.size(); i++) {
                 message.append("[").append(i + 1).append("] Telefone: ").append(contatos.get(i).getTelefone()).append("; Email: ").append(contatos.get(i).getEmail());
+                if(i != (contatos.size() - 1)){
+                    message.append("\n");
+                }
             }
 
             inputExclusaoContato = askInt(String.valueOf(message));
@@ -111,18 +113,18 @@ public class ContatoService extends Service {
             if (inputExclusaoContato > 0 && inputExclusaoContato <= contatos.size()) {
                 try {
                     if (this.contatoRepository.remover(contatos.get(inputExclusaoContato - 1).getIdContato())) {
-                        System.out.println("CONTATO removido com sucesso!");
+                        System.err.println("\nContato removido com sucesso!");
                     } else {
-                        System.out.println("Falha ao deletar CONTATO!");
+                        System.err.println("\nFalha ao deletar CONTATO!");
                     }
                 } catch (BancoDeDadosException e) {
                     e.printStackTrace();
                 }
             } else {
-                System.out.println("Nenhum contato selecionado!");
+                System.err.println("\nNenhum contato selecionado!");
             }
         } else {
-            System.err.println("Você tem apenas [1] contato e não pode excluí-lo!");
+            System.err.println("\nVocê tem apenas [1] contato e não pode excluí-lo!");
         }
     }
 
@@ -130,7 +132,7 @@ public class ContatoService extends Service {
         String contatoInput = "";
         List<Contato> contatos = new ArrayList<>();
 
-        while (!contatoInput.equalsIgnoreCase("ENCERRAR CONTATOS")) {
+        while (!contatoInput.equalsIgnoreCase("SAIR")) {
 
             String telefone;
             do {
@@ -151,9 +153,9 @@ public class ContatoService extends Service {
             contato.setTelefone(telefone);
 
             contatos.add(contato);
-            System.out.println("\tContato adicionado!");
+            System.out.println("\n\tContato adicionado!");
 
-            System.out.println("Digite \"ENCERRAR CONTATOS\" para parar de adicionar contatos.");
+            System.out.println("Digite \"SAIR\" para parar de adicionar contatos.");
             contatoInput = SCANNER.nextLine().strip();
         }
 
@@ -184,14 +186,10 @@ public class ContatoService extends Service {
     private String pedirTelefone() {
         String telefone;
         while (true) {
-            telefone = askString("\nInsira o [Telefone] (ex: 07812345678): ");
-            if (!telefone.equals("")) {
-                if (!telefone.matches("[0-9]{12}")) {
-                    System.err.println("Número inválido! Tente novamente.\n");
-                } else {
-                    break;
-                }
-            } else {
+            telefone = askString("\nInsira o [Telefone] (ex: 078123456789): ");
+            if (!telefone.equals("") && !telefone.matches("[0-9]{12}")) {
+                System.err.println("Número inválido! Tente novamente.\n");
+            } else{
                 break;
             }
         }

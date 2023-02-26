@@ -17,7 +17,7 @@ public class ContaService extends Service{
     }
 
     public Conta adicionar() {
-        int agencia = ThreadLocalRandom.current().nextInt(10, 99);
+        int agencia = ThreadLocalRandom.current().nextInt(1000, 9999);
         String senha;
 
         try {
@@ -42,7 +42,7 @@ public class ContaService extends Service{
 
             conta = contaRepository.adicionar(conta);
             if(conta != null){
-                System.out.println("Número da sua CONTA: "+conta.getNumeroConta());
+                System.err.println("Número da sua conta: "+conta.getNumeroConta());
             }
             return conta;
         } catch (BancoDeDadosException e) {
@@ -53,8 +53,10 @@ public class ContaService extends Service{
 
     public List<Conta> listar() {
         try {
+            System.out.println();
             List<Conta> contas = contaRepository.listar();
             contas.forEach(System.out::println);
+            System.out.println();
             return contas;
         } catch (BancoDeDadosException e) {
             e.printStackTrace();
@@ -71,10 +73,12 @@ public class ContaService extends Service{
 
     }
 
+    //função exclusiva do administrador
     public void removerConta() {
         try{
             List<Conta> contas = this.listar();
-            int numeroConta = askInt("Insira o número da CONTA que deseja DELETAR:");
+            int numeroConta = askInt("Insira o número da conta que deseja remover:");
+
             if(numeroConta != -1){
                 Conta conta = new Conta();
                 for(Conta c: contas){
@@ -83,16 +87,32 @@ public class ContaService extends Service{
                         break;
                     }
                 }
-                CartaoService cartaoService = new CartaoService();
-                for(Cartao cartao:cartaoService.returnCartoes(conta)){
-                    cartaoService.deletarCartao(cartao);
+
+                //verificar se a conta já está inativa
+                if(conta.getStatus() == Status.INATIVO){
+                    System.err.println("\nEstá conta já está inativa!");
+                    return;
                 }
+
+                //deletar cartão
+                CartaoService cartaoService = new CartaoService();
+                List<Cartao> cartoes = cartaoService.returnCartoes(conta);
+                if(cartoes != null){
+                    for(Cartao cartao: cartoes){
+                        cartaoService.deletarCartao(cartao);
+                    }
+                }
+
+                //deletar conta
                 if(contaRepository.remover(numeroConta)) {
-                    System.out.println("Conta removida com sucesso!");
                     ClienteService clienteService = new ClienteService();
                     clienteService.deletarCliente(conta.getCliente().getIdCliente());
+                    Service.tempoParaExibir(100);
+                    System.err.println("Conta removida com sucesso!");
                 }
             }
+
+
         } catch (BancoDeDadosException e) {
             e.printStackTrace();
         }
@@ -138,7 +158,7 @@ public class ContaService extends Service{
         if(valor > 0){
             conta.setSaldo(conta.getSaldo()+valor);
             this.editar(conta.getNumeroConta(), conta);
-            System.out.println("Depósito concluído!");
+            System.err.println("\nDepósito concluído!");
         }else{
             System.err.println("Valor inválido");
         }
@@ -148,14 +168,14 @@ public class ContaService extends Service{
         double valor = askDouble("Insira o valor do Saque: ");
         if(valor > 0){
             if(conta.getSaldo()-valor+conta.getChequeEspecial() < 0){
-                System.err.println("Saldo insuficiente!");
+                System.err.println("\nSaldo insuficiente!");
             }else{
                 conta.setSaldo(conta.getSaldo()-valor);
                 this.editar(conta.getNumeroConta(), conta);
-                System.out.println("Saque concluído!\n");
+                System.err.println("\nSaque concluído!");
             }
         }else{
-            System.err.println("Valor inválido");
+            System.err.println("\nValor inválido");
         }
     }
 
@@ -181,28 +201,28 @@ public class ContaService extends Service{
 
                             this.editar(conta.getNumeroConta(), conta);
 
-                            System.err.println("Transferência concluída!");
-                            System.out.printf("Saldo atual: R$ %.2f\n", conta.getSaldo());
+                            System.err.printf("\nSaldo atual: R$ %.2f", conta.getSaldo());
                             TransferenciaService transferenciaService = new TransferenciaService();
                             transferenciaService.adicionarTransferencia(conta, contaRecebeu, valor);
                         }else{
-                            System.err.println("A conta de destino não existe!");
+                            System.err.println("\nA conta de destino não existe!");
                         }
                     }catch(BancoDeDadosException e){
                         e.printStackTrace();
                     }
                 }else{
-                    System.err.println("Valor inválido");
+                    System.err.println("\nValor inválido");
                 }
             } else {
-                System.err.println("Saldo insuficiente!");
+                System.err.println("\nSaldo insuficiente!");
             }
         }else{
-            System.err.println("Valor inválido");
+            System.err.println("\nValor inválido");
         }
     }
 
     public void pagar(Conta conta){
+
         double valor = askDouble("Insira o valor do pagamento: ");
         if(valor > 0){
             CartaoService cartaoService = new CartaoService();
@@ -212,7 +232,11 @@ public class ContaService extends Service{
             StringBuilder message = new StringBuilder("Selecione um cartão para efetuar o pagamento:\n");
             for(int i=0;i<cartoes.size();i++){
                 if(cartoes.get(i) != null){
-                    message.append("Cartão [").append(i + 1).append("] -> ").append(cartoes.get(i).getTipo() == TipoCartao.DEBITO ? "Débito" : "Crédito").append("\n");
+                    message.append("Cartão [").append(i + 1).append("] -> ").append(cartoes.get(i).getTipo() == TipoCartao.DEBITO ? "Débito" : "Crédito");
+                }
+                //pular uma linha para exibição
+                if(i == 0){
+                    message.append("\n");
                 }
             }
             int input = askInt(String.valueOf(message)) - 1;
@@ -222,31 +246,29 @@ public class ContaService extends Service{
 
                 if(cartao.getTipo() == TipoCartao.CREDITO){
                     if(((CartaoDeCredito) cartao).getLimite()-valor < 0){
-                        System.err.println("Limite insuficiente!");
+                        System.err.println("\nLimite insuficiente!");
                     }else{
                         ((CartaoDeCredito) cartao).setLimite(((CartaoDeCredito) cartao).getLimite()-valor);
                         if(cartaoService.editarCartao(cartao.getNumeroCartao(), cartao)){
-                            System.out.println("Limite do cartão de CRÉDITO ATUALIZADO!");
-                            System.out.printf("Limite restante: R$%.2f", ((CartaoDeCredito) cartao).getLimite());
+                            System.out.println("\nLimite do cartão de crédito atualizado!");
+                            System.out.printf("\nLimite restante: R$%.2f", ((CartaoDeCredito) cartao).getLimite());
                         }else{
-                            System.err.println("Problemas ao atualizar o limite do cartão de crédito");
+                            System.err.println("\nProblemas ao atualizar o limite do cartão de crédito");
                         }
                     }
                 }else{
                     if(conta.getSaldo()-valor < 0){
-                        System.out.println("Saldo insuficiente!");
+                        System.out.println("\nSaldo insuficiente!");
                     }else{
                         conta.setSaldo(conta.getSaldo()-valor);
 
                         this.editar(conta.getNumeroConta(), conta);
 
-                        System.err.println("Pagamento concluído!");
-                        System.out.printf("Saldo atual: R$ %.2f\n", conta.getSaldo());
+                        System.err.println("\nPagamento concluído!");
+                        System.err.printf("Saldo atual: R$ %.2f\n", conta.getSaldo());
                     }
                 }
             }
-        }else{
-            System.err.println("Valor inválido");
         }
     }
 
@@ -262,15 +284,15 @@ public class ContaService extends Service{
             } else if (novaSenha.length() == 0) {
                 break;
             }
-            System.out.println("A senha não possui 6 digitos ou não é composta apenas por números! Tente novamente.");
+            System.err.println("\nA senha não possui 6 digitos ou não é composta apenas por números! Tente novamente.");
         }
         conta.setSenha(novaSenha);
 
         try{
             if(this.contaRepository.editar(conta.getNumeroConta(), conta)){
-                System.out.println("Senha atualizada com sucesso!");
+                System.err.println("\nSenha atualizada com sucesso!");
             }else{
-                System.err.println("Problema ao atualizar senha!");
+                System.err.println("\nProblema ao atualizar senha!");
             }
         }catch(BancoDeDadosException e){
             e.printStackTrace();
@@ -278,12 +300,12 @@ public class ContaService extends Service{
     }
 
     public void reativarConta(){
-        String cpf = askString("Insira o CPF para REATIVAR a CONTA e o CLIENTE:");
+        String cpf = askString("\nInsira o CPF para reativar a conta e o cliente:");
         try{
             if(this.contaRepository.reativarConta(cpf)){
-                System.out.println("CONTA e CLIENTE reativados!");
+                System.err.println("\nConta e cliente reativados!");
             }else{
-                System.err.println("Falha ao reativar CONTA e CLIENTE!");
+                System.err.println("ERR: Erro ao reativar conta e cliente!");
             }
         }catch(BancoDeDadosException e){
             e.printStackTrace();

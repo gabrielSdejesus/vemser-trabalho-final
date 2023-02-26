@@ -7,14 +7,14 @@ import entities.service.Service;
 public class TelaMovimentacoes extends Tela {
     public static void exibirTelaMovimentacoes(){
         Service.tempoParaExibir(500);
-        System.out.println("\nVocê está na Tela de Movimentações");
+        System.out.println("Você está na Tela de Movimentações");
         TelaMovimentacoes.tratarInput();
     }
 
     public static void tratarInput() {
-        int input = pedirInput("[1] -> DEPOSITAR\n" +
-                "[2] -> SACAR\n" +
-                "[3] -> PAGAR uma conta externa\n" +
+        int input = pedirInput("[1] -> Depositar\n" +
+                "[2] -> Sacar\n" +
+                "[3] -> Pagar uma conta externa\n" +
                 "[0] -> Voltar para a Tela Principal");
         ContaService contaService = new ContaService();
         Conta login;
@@ -24,7 +24,7 @@ public class TelaMovimentacoes extends Tela {
                 if(login != null){
                     contaService.depositar(login);
                 }else{
-                    System.err.println("Login mal-sucedido");
+                    System.err.println("\nLogin mal-sucedido");
                 }
                 exibirTelaMovimentacoes();
             }
@@ -33,7 +33,7 @@ public class TelaMovimentacoes extends Tela {
                 if(login != null){
                     contaService.sacar(login);
                 }else{
-                    System.err.println("Login mal-sucedido");
+                    System.err.println("\nLogin mal-sucedido");
                 }
                 exibirTelaMovimentacoes();
             }
@@ -42,7 +42,7 @@ public class TelaMovimentacoes extends Tela {
                 if(login != null){
                     contaService.pagar(login);
                 }else{
-                    System.err.println("Login mal-sucedido");
+                    System.err.println("\nLogin mal-sucedido");
                 }
                 exibirTelaMovimentacoes();
             }

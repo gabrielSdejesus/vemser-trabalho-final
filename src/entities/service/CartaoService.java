@@ -162,20 +162,22 @@ public class CartaoService extends Service {
         }
     }
 
+
+    //função exclusiva do administrador
     public void deletarCartao(Cartao cartao) {
         try {
             if (cartao.getTipo() == TipoCartao.CREDITO) {
                 CartaoDeCredito cartaoDeCredito = (CartaoDeCredito) cartao;
-                if (cartaoDeCredito.getLimite() != 1000 && this.cartaoRepository.remover(cartaoDeCredito.getNumeroCartao())) {
-                    System.out.println("CARTÃO removido com sucesso!");
+                if (cartaoDeCredito.getLimite() == 1000 && this.cartaoRepository.remover(cartaoDeCredito.getNumeroCartao())) {
+                    System.err.println("Cartão removido com sucesso!");
                 } else {
-                    System.err.println("Problemas na deleção do CARTÃO");
+                    System.err.println("ERR: Problemas na deleção do cartão: CRÉDITO!");
                 }
             } else {
                 if (this.cartaoRepository.remover(cartao.getNumeroCartao())) {
-                    System.out.println("CARTÃO removido com sucesso!");
+                    System.err.println("Cartão removido com sucesso!");
                 } else {
-                    System.err.println("Problemas na deleção do CARTÃO");
+                    System.err.println("ERR: Problemas na deleção do cartão: DÉBITO!");
                 }
             }
         } catch (BancoDeDadosException e) {

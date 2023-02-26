@@ -22,11 +22,10 @@ public abstract class Service {
             valor = SCANNER.nextDouble();
             SCANNER.nextLine();
         } catch (InputMismatchException e) {
-            e.printStackTrace();
             SCANNER.nextLine();
         }
         if(valor <= 0){
-            System.err.println("Input inválido!");
+            System.err.println("\nEntrada inválida!");
             return -1;
         }else{
             return valor;
@@ -44,7 +43,7 @@ public abstract class Service {
             SCANNER.nextLine();
         }
         if(valor <= 0){
-            System.err.println("Entrada inválida!\n");
+            System.err.println("\nEntrada inválida!");
             return -1;
         }else{
             return valor;
@@ -58,11 +57,10 @@ public abstract class Service {
             System.out.print("Insira aqui: ");
             valor = SCANNER.nextLine();
         } catch (InputMismatchException e) {
-            e.printStackTrace();
             SCANNER.nextLine();
         }
         if(valor.equals("")){
-            System.err.println("Input inválido!");
+            System.err.println("\nEntrada inválida!");
             return "";
         }else{
             return valor;

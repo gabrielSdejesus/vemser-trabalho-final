@@ -32,7 +32,7 @@ public class TelaPerfil extends Tela {
                 if(login != null){
                     clienteService.exibirCliente(login.getCliente().getIdCliente());
                 }else{
-                    System.err.println("Login mal-sucedido");
+                    System.err.println("\nLogin mal-sucedido");
                 }
                 exibirTelaPerfil();
             }
@@ -41,7 +41,7 @@ public class TelaPerfil extends Tela {
                 if(login != null){
                     contaService.exibirConta(login);
                 }else{
-                    System.err.println("Login mal-sucedido");
+                    System.err.println("\nLogin mal-sucedido");
                 }
                 exibirTelaPerfil();
             }
@@ -50,7 +50,7 @@ public class TelaPerfil extends Tela {
                 if(login != null){
                     contatoService.alterarContato(login);
                 }else{
-                    System.err.println("Login mal-sucedido");
+                    System.err.println("\nLogin mal-sucedido");
                 }
                 exibirTelaPerfil();
             }
@@ -59,7 +59,7 @@ public class TelaPerfil extends Tela {
                 if(login != null){
                     enderecoService.alterarEndereco(login);
                 }else{
-                    System.err.println("Login mal-sucedido");
+                    System.err.println("\nLogin mal-sucedido");
                 }
                 exibirTelaPerfil();
             }
@@ -68,7 +68,7 @@ public class TelaPerfil extends Tela {
                 if(login != null) {
                     contatoService.deletarContato(login);
                 }else{
-                    System.err.println("Login mal-sucedido");
+                    System.err.println("\nLogin mal-sucedido");
                 }
                 exibirTelaPerfil();
             }
@@ -77,7 +77,7 @@ public class TelaPerfil extends Tela {
                 if(login != null) {
                     enderecoService.deletarEndereco(login);
                 }else{
-                    System.err.println("Login mal-sucedido");
+                    System.err.println("\nLogin mal-sucedido");
                 }
                 exibirTelaPerfil();
             }
@@ -86,7 +86,7 @@ public class TelaPerfil extends Tela {
                 if(login != null) {
                     contatoService.adicionarContato(login);
                 }else{
-                    System.err.println("Login mal-sucedido");
+                    System.err.println("\nLogin mal-sucedido");
                 }
                 exibirTelaPerfil();
             }
@@ -95,7 +95,7 @@ public class TelaPerfil extends Tela {
                 if(login != null) {
                     enderecoService.adicionarEndereco(login);
                 }else{
-                    System.err.println("Login mal-sucedido");
+                    System.err.println("\nLogin mal-sucedido");
                 }
                 exibirTelaPerfil();
             }
@@ -104,7 +104,7 @@ public class TelaPerfil extends Tela {
                 if(login != null) {
                     contaService.alterarSenha(login);
                 }else{
-                    System.err.println("Login mal-sucedido");
+                    System.err.println("\nLogin mal-sucedido");
                 }
                 exibirTelaPerfil();
             }

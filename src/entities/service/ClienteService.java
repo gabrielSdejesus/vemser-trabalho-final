@@ -18,7 +18,7 @@ public class ClienteService extends Service{
         String nomeCliente, cpfCliente;
 
         while (true) {
-            System.out.print("Insira o nome do cliente: ");
+            System.out.print("\nInsira o nome do cliente: ");
             nomeCliente = SCANNER.nextLine().strip().toUpperCase();
             if (Pattern.matches("[0-9!@#$%^&*(),.?\":{}|<>]", nomeCliente)) {
                 System.out.println("Nome inválido! Insira novamente.");
@@ -45,12 +45,13 @@ public class ClienteService extends Service{
         }
     }
 
+
     public void deletarCliente(int idCliente){
         try{
             if(this.clienteRepository.remover(idCliente)){
-                System.out.println("CLIENTE removido com sucesso!");
+                System.err.println("Cliente removido com sucesso!");
             }else{
-                System.err.println("Problemas ao remover o CLIENTE!");
+                System.err.println("ERR: Problemas ao remover o cliente!");
             }
         }catch (BancoDeDadosException e){
             e.printStackTrace();
@@ -128,8 +129,10 @@ public class ClienteService extends Service{
 
     public void listarClientes() {
         try {
+            System.out.println();
             List<Cliente> clientes = clienteRepository.listar();
             clientes.forEach(System.out::println);
+            System.out.println();
         } catch (BancoDeDadosException e) {
             e.printStackTrace();
         }
