@@ -87,7 +87,7 @@ public class ClienteService extends Service{
                         }
                         case 2 -> {
                             novoCliente.setCpf(askString("Insira o novo [CPF]: "));
-                            if(novoCliente.getCpf().equals("")){
+                            if(novoCliente.getCpf().equals("") || novoCliente.getCpf().length() != 12){
                                 editar = false;
                             }
                         }
@@ -103,6 +103,8 @@ public class ClienteService extends Service{
                         }catch(BancoDeDadosException e){
                             e.printStackTrace();
                         }
+                    }else{
+                        System.err.println("Valor inserido inválido!");
                     }
                 }
             }else{

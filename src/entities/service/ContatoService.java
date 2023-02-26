@@ -60,7 +60,7 @@ public class ContatoService extends Service {
                         case 1 -> {
                             String novoTelefone = this.pedirTelefone();
                             novoContato.setTelefone(novoTelefone);
-                            if (novoContato.getTelefone().equals("")) {
+                            if (novoContato.getTelefone().equals("") || novoContato.getTelefone().length() != 12) {
                                 editar = false;
                             }
                         }
@@ -83,6 +83,8 @@ public class ContatoService extends Service {
                         } catch (BancoDeDadosException e) {
                             e.printStackTrace();
                         }
+                    }else{
+                        System.err.println("Valor inserido inválido!");
                     }
                 }
             }
@@ -137,7 +139,10 @@ public class ContatoService extends Service {
             String telefone;
             do {
                 telefone = this.pedirTelefone();
-            } while (telefone.equals(""));
+                if(telefone.length() != 12){
+                    System.err.println("Telefone inválido!");
+                }
+            } while (telefone.length() != 12);
 
             String email;
             do {

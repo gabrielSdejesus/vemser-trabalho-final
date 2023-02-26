@@ -19,12 +19,14 @@ public class EnderecoService extends Service{
 
     public void adicionarEndereco(Conta conta){
         String enderecoInput = "";
-        ArrayList<Endereco> enderecos = new ArrayList<>();
+        List<Endereco> enderecos = new ArrayList<>();
         while(!enderecoInput.equalsIgnoreCase("SAIR")){
             System.out.println("\nInsira SAIR para parar de adicionar endereços do cliente");
-            System.out.print("Insira o Logradouro do Endereço do cliente: ");
             do {
-                enderecoInput = SCANNER.nextLine();
+                enderecoInput = askString("Insira o Logradouro do Endereço do cliente: ");
+                if(enderecoInput.equals("")){
+                    System.err.println("Valor inválido! Tente novamente!");
+                }
             } while (enderecoInput.equals(""));
 
             String cidade, estado, pais, cep;
@@ -39,25 +41,24 @@ public class EnderecoService extends Service{
                 }
             }else{
 
-                System.out.print("Insira a Cidade do Endereço do cliente: ");
                 do {
-                    cidade = SCANNER.nextLine();
+                    cidade = askString("Insira a Cidade do Endereço do cliente: ");
                 } while (cidade.equals(""));
 
-                System.out.print("Insira o Estado do Endereço do cliente: ");
                 do {
-                    estado = SCANNER.nextLine().toUpperCase();
+                    estado = askString("Insira o Estado do Endereço do cliente: ");
                 } while (estado.equals(""));
 
-                System.out.print("Insira o País do Endereço do cliente: ");
                 do {
-                    pais = SCANNER.nextLine();
+                    pais = askString("Insira o País do Endereço do cliente: ");
                 } while (pais.equals(""));
 
-                System.out.print("Insira o CEP do Endereço do cliente: ");
                 do {
-                    cep = SCANNER.nextLine();
-                } while (cep.equals(""));
+                    cep = askString("Insira o CEP do Endereço do cliente: ");
+                    if(cep.length() != 8){
+                        System.err.println("CEP inválido!");
+                    }
+                } while (cep.length() != 8);
 
                 Cliente cliente = new Cliente();
                 cliente.setIdCliente(conta.getCliente().getIdCliente());
@@ -173,45 +174,33 @@ public class EnderecoService extends Service{
                             }
                         }
                         case 3 -> {
-                            while (true) {
-                                String novoEstado = askString("Insira a sigla do novo [Estado] (ex. SP): ");
-                                if(novoEstado.length() == 1 || novoEstado.length() > 2) {
-                                    System.err.println("\nSigla inválida! Tente novamente.");
-                                } else {
-                                    novoEndereco.setEstado(novoEstado.toUpperCase());
-                                    break;
-                                }
+                            String novoEstado = askString("Insira o novo [Estado]: ");
+                            if (novoEstado.equals("")) {
+                                adicionar = false;
+                            } else {
+                                novoEndereco.setEstado(novoEstado);
                             }
                             if(novoEndereco.getEstado().equals("")){
                                 adicionar = false;
                             }
                         }
                         case 4 -> {
-                            while (true) {
-                                String novoPais = askString("Insira o novo [País]: ").toUpperCase();
-                                if (!novoPais.matches("[a-zA-Z]+")) {
-                                    System.err.println("\nNome de país inválido! Tente novamente");
-                                } else {
-                                    novoEndereco.setPais(novoPais);
-                                    break;
-                                }
+                            String novoPais = askString("Insira o novo [País]: ").toUpperCase();
+                            if (!novoPais.matches("[a-zA-Z]+") || novoEndereco.getPais().equals("")) {
+                                adicionar = false;
+                            } else {
+                                novoEndereco.setPais(novoPais);
                             }
                             if(novoEndereco.getPais().equals("")){
                                 adicionar = false;
                             }
                         }
                         case 5 -> {
-                            while (true) {
-                                String novoCep = askString("Insira o novo [CEP]: ");
-                                if (!novoCep.matches("[0-9]+")) {
-                                    System.err.println("\nCEP inválido! Tente novamente");
-                                } else {
-                                    novoEndereco.setCep(novoCep);
-                                    break;
-                                }
-                            }
-                            if(novoEndereco.getPais().equals("")){
+                            String novoCep = askString("Insira o novo [CEP]: ");
+                            if (!novoCep.matches("[0-9]+") || novoCep.length() != 8) {
                                 adicionar = false;
+                            } else {
+                                novoEndereco.setCep(novoCep);
                             }
                         }
                         default -> System.err.println("Erro bizarro!");
@@ -226,6 +215,8 @@ public class EnderecoService extends Service{
                         }catch(BancoDeDadosException e){
                             e.printStackTrace();
                         }
+                    }else{
+                        System.err.println("Valor inserido inválido! Tente novamente");
                     }
                 }
                 if(tipoAlteracaoEndereco > 5){
