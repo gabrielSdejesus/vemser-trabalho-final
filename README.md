@@ -23,3 +23,5 @@ O sistema exige que apenas um administrador cadastre ou exclua uma conta, após,
 
 1. Diagrama de classes: [Diagrama de Classes do projeto](https://lucid.app/lucidchart/17d33946-0d38-4544-8578-e02af91a9943/edit?invitationId=inv_0c6d8cd4-f4ac-44ed-8890-a31e96c56b54)
 2. Diagrama de telas: [Diagrama de telas](https://lucid.app/lucidchart/d76289db-ddc4-47f1-9db6-11c56f979e26/edit?viewport_loc=-2332%2C-1759%2C3284%2C1998%2C0_0&invitationId=inv_a48637ca-1036-40cd-a5a3-01af67cee05a)
+3. Fluxograma da aplicação: [Fluxograma da aplicação](https://lucid.app/lucidchart/a82dee08-c4c8-4a4a-9d18-d4f6937c4830/edit?viewport_loc=-2426%2C-1087%2C7500%2C3672%2C0_0&invitationId=inv_eaf31799-6a65-4c16-b4b6-7b361476e8a3)
+4. Diagrama ER: [Diagrama ER](https://lucid.app/lucidchart/3b89c914-2b90-4162-8adf-1196b90de0ee/edit?viewport_loc=-205%2C-92%2C3053%2C1495%2CZvKdXZheBP8n&invitationId=inv_ab1a5a66-b987-4e9b-a49a-1135ae3dcb16)
