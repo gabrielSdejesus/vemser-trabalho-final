@@ -3,7 +3,6 @@ package entities.view;
 import entities.model.Conta;
 import entities.service.ContaService;
 import entities.service.Service;
-
 import java.util.Scanner;
 
 public abstract class Tela {

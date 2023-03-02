@@ -4,7 +4,6 @@ import entities.exception.BancoDeDadosException;
 import entities.model.Cliente;
 import entities.model.Conta;
 import entities.model.Contato;
-import entities.model.Endereco;
 import entities.repository.ContatoRepository;
 
 import java.util.ArrayList;

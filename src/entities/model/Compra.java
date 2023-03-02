@@ -1,9 +1,6 @@
 package entities.model;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
 
 public class Compra {
 
