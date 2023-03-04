@@ -44,8 +44,12 @@ public class CartaoService extends Servico {
         }
     }
 
-    public CartaoDTO atualizar(Integer numeroCartao, CartaoCreateDTO cartaoCreateDTO) {
-        return null;
+    public CartaoDTO atualizar(Long numeroCartao, CartaoCreateDTO cartaoCreateDTO) throws RegraDeNegocioException, BancoDeDadosException {
+        if (cartaoRepository.getPorNumeroCartao(numeroCartao).equals(null)) {
+            throw new RegraDeNegocioException("Cartão não existe!");
+        }
+        Cartao cartaoEditado = cartaoRepository.editar(numeroCartao, cartaoCreateDTO);
+        return objectMapper.convertValue(cartaoEditado, CartaoDTO.class);
     }
 
     public void deletar(Long numeroCartao) throws BancoDeDadosException, RegraDeNegocioException {
@@ -57,11 +61,6 @@ public class CartaoService extends Servico {
         } else {
             cartaoRepository.remover(numeroCartao);
         }
-    }
-
-    public CartaoDTO editarCartao(Long numeroCartao, Cartao cartao) throws BancoDeDadosException {
-        Cartao cartaoEditado = cartaoRepository.editar(numeroCartao, cartao);
-        return objectMapper.convertValue(cartaoEditado, CartaoDTO.class);
     }
 
 }

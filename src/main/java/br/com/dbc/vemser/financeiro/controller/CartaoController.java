@@ -35,7 +35,7 @@ public class CartaoController {
     }
 
     @PutMapping("/{numeroCartao}")
-    public ResponseEntity<CartaoDTO> atualizar(@PathVariable("numeroCartao") Integer numeroCartao, @RequestBody CartaoCreateDTO cartaoCreateDTO) {
+    public ResponseEntity<CartaoDTO> atualizar(@PathVariable("numeroCartao") Long numeroCartao, @RequestBody CartaoCreateDTO cartaoCreateDTO) throws RegraDeNegocioException, BancoDeDadosException {
         return new ResponseEntity<>(cartaoService.atualizar(numeroCartao, cartaoCreateDTO), HttpStatus.OK);
     }
 

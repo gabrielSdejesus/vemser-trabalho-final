@@ -1,6 +1,8 @@
 package br.com.dbc.vemser.financeiro.repository;
 
 
+import br.com.dbc.vemser.financeiro.dto.CartaoCreateDTO;
+import br.com.dbc.vemser.financeiro.dto.CartaoDTO;
 import br.com.dbc.vemser.financeiro.exception.BancoDeDadosException;
 import br.com.dbc.vemser.financeiro.model.*;
 import org.springframework.stereotype.Repository;
@@ -106,7 +108,7 @@ public class CartaoRepository implements Repositorio<Cartao> {
         }
     }
 
-    public Cartao editar(Long numeroCartao, Cartao cartao) throws BancoDeDadosException {
+    public Cartao editar(Long numeroCartao, CartaoCreateDTO cartaoCreateDTO) throws BancoDeDadosException {
         Connection con = null;
         try {
             con = ConexaoBancoDeDados.getConnection();
@@ -119,8 +121,8 @@ public class CartaoRepository implements Repositorio<Cartao> {
 
             PreparedStatement stmt = con.prepareStatement(sql);
 
-            stmt.setLong(1, numeroCartao);
-            stmt.setInt(2, cartao.getCodigoSeguranca());
+            stmt.setInt(1, cartaoCreateDTO.getCodigoSeguranca());
+            stmt.setLong(2, numeroCartao);
 
             stmt.executeUpdate();
 
@@ -235,7 +237,6 @@ public class CartaoRepository implements Repositorio<Cartao> {
             Cartao result = cartoes.stream()
                     .findFirst()
                     .orElse(null);
-
 
             return result;
 
