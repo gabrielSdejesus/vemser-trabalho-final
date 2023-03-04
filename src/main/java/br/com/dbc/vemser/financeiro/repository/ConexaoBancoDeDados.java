@@ -1,5 +1,7 @@
 package br.com.dbc.vemser.financeiro.repository;
 
+import br.com.dbc.vemser.financeiro.exception.BancoDeDadosException;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
