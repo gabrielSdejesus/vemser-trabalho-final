@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @RequestMapping("/item")
 @RestController
@@ -22,12 +23,12 @@ public class ItemController {
     private final ItemService itemService;
 
     @GetMapping("/lista")
-    public ResponseEntity<ItemDTO> listarTodosItens(){
+    public ResponseEntity<List<ItemDTO>> listarTodosItens(){
         return null;
     }
 
     @GetMapping("/{idCompra}/compra")
-    public ResponseEntity<ItemDTO> listarItensDaCompra(@NotNull Integer idCompra){
+    public ResponseEntity<List<ItemDTO>> listarItensDaCompra(@NotNull Integer idCompra){
         return null;
     }
 
