@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @RequestMapping("/endereco")
 @RestController
@@ -22,12 +23,12 @@ public class EnderecoController {
     private final EnderecoService enderecoService;
 
     @GetMapping("/lista")
-    public ResponseEntity<EnderecoDTO> listarTodosEnderecos(){
+    public ResponseEntity<List<EnderecoDTO>> listarTodosEnderecos(){
         return null;
     }
 
     @GetMapping("/{idCliente}/cliente")
-    public ResponseEntity<EnderecoDTO> listarTodosEnderecosDoCliente(@NotNull Integer idCliente){
+    public ResponseEntity<List<EnderecoDTO>> listarTodosEnderecosDoCliente(@NotNull Integer idCliente){
         return null;
     }
 
