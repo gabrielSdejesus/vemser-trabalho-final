@@ -89,7 +89,7 @@ public class ClienteRepository implements Repositorio<Cliente> {
         }
     }
 
-    public boolean editar(Integer id, Cliente cliente) throws BancoDeDadosException {
+    public Cliente editar(Integer id, Cliente cliente) throws BancoDeDadosException {
         Connection con = null;
         try {
             con = ConexaoBancoDeDados.getConnection();
@@ -121,8 +121,9 @@ public class ClienteRepository implements Repositorio<Cliente> {
             stmt.setInt(index, id);
 
             // Executar consulta
-            int res = stmt.executeUpdate();
-            return res > 0;
+            stmt.executeUpdate();
+
+            return consultarPorIdCliente(id);
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
         } finally {

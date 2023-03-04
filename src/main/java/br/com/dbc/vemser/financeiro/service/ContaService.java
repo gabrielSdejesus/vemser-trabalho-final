@@ -1,6 +1,9 @@
 package br.com.dbc.vemser.financeiro.service;
 
+import br.com.dbc.vemser.financeiro.dto.ContaCreateDTO;
+import br.com.dbc.vemser.financeiro.dto.ContaDTO;
 import br.com.dbc.vemser.financeiro.exception.BancoDeDadosException;
+import br.com.dbc.vemser.financeiro.exception.RegraDeNegocioException;
 import br.com.dbc.vemser.financeiro.model.*;
 import br.com.dbc.vemser.financeiro.repository.ContaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,6 +13,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 public class ContaService extends Servico {
@@ -26,209 +30,121 @@ public class ContaService extends Servico {
         this.transferenciaService = transferenciaService;
     }
 
-    public Conta adicionar() {
-        int agencia = ThreadLocalRandom.current().nextInt(1000, 9999);
-        String senha;
-
-        try {
-            Cliente cliente = clienteService.adicionarCliente();
-
-            while (true) {
-                System.out.print("Insira a senha: ");
-                senha = SCANNER.nextLine().trim().replaceAll(" ", "");
-                if (senha.length() == 6 && !Pattern.matches("[a-zA-Z!@#$%^&*(),.?\":{}|<>]+", senha)) {
-                    break;
-                }
-                System.out.println("A senha não possui 6 digitos ou não é composta apenas por números! Tente novamente.");
-            }
-
-            Conta conta = new Conta();
-            conta.setAgencia(agencia);
-            conta.setCliente(cliente);
-            conta.setSenha(senha);
-            conta.setSaldo(0d);
-            conta.setStatus(Status.ATIVO);
-            conta.setChequeEspecial(0d);
-
-            conta = contaRepository.adicionar(conta);
-            if(conta != null){
-                System.err.println("Número da sua conta: "+conta.getNumeroConta());
-            }
-            return conta;
-        } catch (BancoDeDadosException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public ContaDTO adicionar(ContaCreateDTO contaCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
+        Conta conta = objectMapper.convertValue(contaCreateDTO, Conta.class);
+        return objectMapper.convertValue(contaRepository.adicionar(conta), ContaDTO.class);
     }
 
-    public List<Conta> listar() {
-        try {
-            System.out.println();
-            List<Conta> contas = contaRepository.listar();
-            contas.forEach(System.out::println);
-            System.out.println();
-            return contas;
-        } catch (BancoDeDadosException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public List<ContaDTO> listar() throws BancoDeDadosException, RegraDeNegocioException {
+        return contaRepository.listar().stream()
+                .map(conta -> objectMapper.convertValue(conta, ContaDTO.class))
+                .collect(Collectors.toList());
     }
 
-    public void editar(Integer numeroConta, Conta conta) {
-        try {
-            contaRepository.editar(numeroConta, conta);
-        } catch (BancoDeDadosException e) {
-            e.printStackTrace();
-        }
-
+    public ContaDTO editar(Integer numeroConta, ContaCreateDTO contaCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
+        Conta conta = objectMapper.convertValue(contaCreateDTO, Conta.class);
+        return objectMapper.convertValue(contaRepository.editar(numeroConta, conta), ContaDTO.class);
     }
 
     //função exclusiva do administrador
-    public void removerConta() {
-        try{
-            List<Conta> contas = this.listar();
-            int numeroConta = askInt("Insira o número da conta que deseja remover:");
+    public boolean removerConta(Integer numeroConta) throws BancoDeDadosException, RegraDeNegocioException {
+        return contaRepository.remover(numeroConta);
+    }
 
-            if(numeroConta != -1){
-                Conta conta = new Conta();
-                for(Conta c: contas){
-                    if(c.getNumeroConta() == numeroConta){
-                        conta = c;
-                        break;
-                    }
-                }
-
-                //verificar se a conta já está inativa
-                if(conta.getStatus() == Status.INATIVO){
-                    System.err.println("\nEstá conta já está inativa!");
-                    return;
-                }
-
-                //deletar cartão
-                List<Cartao> cartoes = cartaoService.returnCartoes(conta);
-                if(cartoes != null){
-                    for(Cartao cartao: cartoes){
-                        cartaoService.deletarCartao(cartao);
-                    }
-                }
-
-                //deletar conta
-                if(contaRepository.remover(numeroConta)) {
-                    clienteService.deletarCliente(conta.getCliente().getIdCliente());
-                    Servico.tempoParaExibir(100);
-                    System.err.println("Conta removida com sucesso!");
-                }
+    public ContaDTO retornarLoginConta(Integer numeroConta, String senhaConta) throws BancoDeDadosException, RegraDeNegocioException{
+        Conta conta = retornarConta(numeroConta);
+        if (conta != null && conta.getSenha() != null && conta.getSenha().equals(senhaConta) && conta.getStatus() == Status.ATIVO) {
+            return objectMapper.convertValue(conta, ContaDTO.class);
+        } else {
+            //retorna null se não existe conta alguma ou algum dado está errado
+            if (conta == null) {
+                throw new RegraDeNegocioException("Número da conta ou Senha inválida!");
+            } else if (conta.getStatus() == Status.INATIVO) {//a conta já existiu porém ela está inativa
+                throw new RegraDeNegocioException("Conta inativa!");
             }
-
-
-        } catch (BancoDeDadosException e) {
-            e.printStackTrace();
         }
+        return objectMapper.convertValue(conta, ContaDTO.class);
     }
 
-    public Conta retornarConta(int numeroConta, String senhaConta){
-        Conta conta;
-        Integer numero = numeroConta;
-        try{
-            conta = this.contaRepository.consultarPorNumeroConta(numero);
-            if(conta != null && conta.getSenha() != null && conta.getSenha().equals(senhaConta) && conta.getStatus() == Status.ATIVO){
-                return conta;
-            }else{
+    public Conta retornarConta(Integer numeroConta) throws BancoDeDadosException, RegraDeNegocioException{
+        return this.contaRepository.consultarPorNumeroConta(numeroConta);
+    }
 
-                //retorna null se não existe conta alguma ou algum dado está errado
-                if(conta == null){
-                    System.err.println("Número de conta ou senha inválida!");
-                    return null;
+    public ContaDTO depositar(Integer numeroConta, Double valor) throws BancoDeDadosException, RegraDeNegocioException{
+        Conta conta = retornarConta(numeroConta);
+        if(conta != null){
+            if(conta.getStatus() != Status.ATIVO){
+                if(valor <= 0){
+                    throw new RegraDeNegocioException("Valor de depósito inválido!");
+                }else{
+                    conta.setSaldo(conta.getSaldo()+valor);
+                    return editar(numeroConta, objectMapper.convertValue(conta, ContaCreateDTO.class));
                 }
-
-                //a conta já existiu porém ela está inativa
-                if(conta.getStatus() == Status.INATIVO){
-                    System.err.println("Conta desativada!\n");
-                    return null;
-                }
-            }
-        }catch(SQLException e){
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public void exibirConta(Conta conta){
-        System.out.println("\n" + "\tNúmero da conta: "+conta.getNumeroConta());
-        System.out.println("\tNome do cliente da conta: "+conta.getCliente().getNome());
-        System.out.println("\tSaldo: "+conta.getSaldo());
-        System.out.println("\tAgência: "+conta.getAgencia());
-        System.out.println("\tCheque especial: "+conta.getChequeEspecial() + "\n");
-    }
-
-    public void depositar(Conta conta){
-        double valor = askDouble("Insira o valor do Depósito: ");
-        if(valor > 0){
-            conta.setSaldo(conta.getSaldo()+valor);
-            this.editar(conta.getNumeroConta(), conta);
-            System.err.println("\nDepósito concluído!");
-        }else{
-            System.err.println("Valor inválido");
-        }
-    }
-
-    public void sacar(Conta conta){
-        double valor = askDouble("Insira o valor do Saque: ");
-        if(valor > 0){
-            if(conta.getSaldo()-valor+conta.getChequeEspecial() < 0){
-                System.err.println("\nSaldo insuficiente!");
             }else{
-                conta.setSaldo(conta.getSaldo()-valor);
-                this.editar(conta.getNumeroConta(), conta);
-                System.err.println("\nSaque concluído!");
+                throw new RegraDeNegocioException("Conta inativada!");
             }
         }else{
-            System.err.println("\nValor inválido");
+            throw new RegraDeNegocioException("Número da conta inválida!");
         }
     }
 
-    public void transferir(Conta conta){
-        double valor = askDouble("Insira o valor da transferência: ");
-        if(valor > 0){
-            if (valor <= conta.getSaldo()) {
-                int numeroConta = askInt("Insira o número da conta que receberá a transferência: ");
-                if(numeroConta > 0){
-                    try{
-                        Conta contaRecebeu = this.contaRepository.consultarPorNumeroConta(numeroConta);
+    public ContaDTO sacar(Integer numeroConta, Double valor) throws BancoDeDadosException, RegraDeNegocioException {
+        Conta conta = retornarConta(numeroConta);
+        if(conta != null){
+            if(conta.getStatus() != Status.ATIVO){
+                if(valor <= 0){
+                    throw new RegraDeNegocioException("Valor de saque inválido!");
+                }else{
+                    if(conta.getSaldo()-valor < 0){
+                        throw new RegraDeNegocioException("Saldo insuficiente para saque!");
+                    }else{
+                        conta.setSaldo(conta.getSaldo()-valor);
+                        return editar(numeroConta, objectMapper.convertValue(conta, ContaCreateDTO.class));
+                    }
+                }
+            }else{
+                throw new RegraDeNegocioException("Conta inativada!");
+            }
+        }else{
+            throw new RegraDeNegocioException("Número da conta inválida!");
+        }
+    }
 
-                        if(contaRecebeu != null){
-                            try {
-                                contaRecebeu.setSaldo(contaRecebeu.getSaldo()+valor);
-                            } catch (NullPointerException e) {
-                                System.err.println("A conta de destino não existe!");
-                            }
-
-                            this.editar(numeroConta, contaRecebeu);
-
-                            conta.setSaldo(conta.getSaldo()-valor);
-
-                            this.editar(conta.getNumeroConta(), conta);
-
-                            System.err.printf("\nSaldo atual: R$ %.2f", conta.getSaldo());
-                            transferenciaService.adicionarTransferencia(conta, contaRecebeu, valor);
-                        }else{
-                            System.err.println("\nA conta de destino não existe!");
-                        }
-                    }catch(BancoDeDadosException e){
-                        e.printStackTrace();
+    public boolean transferir(Integer numeroContaEnvia, Integer numeroContaRecebe, Double valor) throws BancoDeDadosException, RegraDeNegocioException {
+        Conta recebe = retornarConta(numeroContaRecebe),
+                envia = retornarConta(numeroContaEnvia);
+        if(recebe != null && envia != null){
+            if(recebe.getStatus() == Status.ATIVO && envia.getStatus() == Status.ATIVO){
+                if(valor > 0){
+                    if(envia.getSaldo()-valor >= 0){
+                        envia.setSaldo(envia.getSaldo()-valor);
+                        recebe.setSaldo(recebe.getSaldo()+valor);
+                        editar(numeroContaEnvia, objectMapper.convertValue(envia, ContaCreateDTO.class));
+                        editar(numeroContaRecebe, objectMapper.convertValue(recebe, ContaCreateDTO.class));
+                        return true;
+                    }else{
+                        throw new RegraDeNegocioException("Saldo da conta que envia insuficiente!");
                     }
                 }else{
-                    System.err.println("\nValor inválido");
+                    throw new RegraDeNegocioException("Valor de transferência inválido!");
                 }
-            } else {
-                System.err.println("\nSaldo insuficiente!");
+            }else{
+                if(recebe.getStatus() == Status.INATIVO){
+                    throw new RegraDeNegocioException("Conta que recebe inativa!");
+                }else{
+                    throw new RegraDeNegocioException("Conta que envia inativa!");
+                }
             }
         }else{
-            System.err.println("\nValor inválido");
+            if(recebe == null){
+                throw new RegraDeNegocioException("Número da conta que recebe incorreto!");
+            }else{
+                throw new RegraDeNegocioException("Número da conta que envia incorreto!");
+            }
         }
     }
 
-    public void pagar(Conta conta){
+    public boolean pagar(Conta conta){
 
         double valor = askDouble("Insira o valor do pagamento: ");
         if(valor > 0){
