@@ -13,14 +13,14 @@ import java.util.List;
 public class CartaoRepository implements Repositorio<Cartao> {
     
     @Override
-    public String getProximoId(Connection connection) throws BancoDeDadosException {
+    public Long getProximoId(Connection connection) throws BancoDeDadosException {
         try {
             String sql = "SELECT SEQ_CARTAO.NEXTVAL mysequence from DUAL";
             Statement stmt = connection.createStatement();
             ResultSet res = stmt.executeQuery(sql);
 
             if (res.next()) {
-                return res.getString("mysequence");
+                return res.getLong("mysequence");
             }
 
             return null;
@@ -35,8 +35,7 @@ public class CartaoRepository implements Repositorio<Cartao> {
         try {
             con = ConexaoBancoDeDados.getConnection();
 
-            String proximoId = this.getProximoId(con);
-            cartao.setNumeroCartao(String.valueOf(proximoId));
+            cartao.setNumeroCartao(getProximoId(con));
             StringBuilder sql = new StringBuilder();
             sql.append("INSERT INTO");
             sql.append(" cartao (NUMERO_CARTAO, NUMERO_CONTA, DATA_EXPEDICAO, CODIGO_SEGURANCA, TIPO, VENCIMENTO");
@@ -52,8 +51,8 @@ public class CartaoRepository implements Repositorio<Cartao> {
             }
 
             PreparedStatement stmt = con.prepareStatement(sql.toString());
-            stmt.setString(1, cartao.getNumeroCartao());
-            stmt.setInt(2, cartao.getConta().getNumeroConta());
+            stmt.setLong(1, cartao.getNumeroCartao());
+            stmt.setInt(2, cartao.getNumeroConta());
             stmt.setDate(3, Date.valueOf(cartao.getDataExpedicao()));
             stmt.setInt(4, cartao.getCodigoSeguranca());
             stmt.setInt(5, cartao.getTipo().getTipo());
@@ -80,7 +79,7 @@ public class CartaoRepository implements Repositorio<Cartao> {
         }
     }
 
-    public boolean remover(String id) throws BancoDeDadosException {
+    public boolean remover(Long numeroCartao) throws BancoDeDadosException {
         Connection con = null;
         try {
             con = ConexaoBancoDeDados.getConnection();
@@ -89,7 +88,7 @@ public class CartaoRepository implements Repositorio<Cartao> {
 
             PreparedStatement stmt = con.prepareStatement(sql);
 
-            stmt.setString(1, id);
+            stmt.setLong(1, numeroCartao);
 
             // Executar consulta
             int res = stmt.executeUpdate();
@@ -107,60 +106,26 @@ public class CartaoRepository implements Repositorio<Cartao> {
         }
     }
 
-    public boolean editar(String id, Cartao cartao) throws BancoDeDadosException {
+    public Cartao editar(Long numeroCartao, Cartao cartao) throws BancoDeDadosException {
         Connection con = null;
         try {
             con = ConexaoBancoDeDados.getConnection();
 
+            String sql = """
+                    UPDATE cartao 
+                    SET codigo_seguranca = ?
+                    WHERE numero_cartao = ?
+                    """;
 
-            StringBuilder sql = new StringBuilder();
-            sql.append("UPDATE cartao SET \n");
+            PreparedStatement stmt = con.prepareStatement(sql);
 
-            if(cartao.getCodigoSeguranca() > 99){
-                sql.append(" CODIGO_SEGURANCA = ?,");
-            }
+            stmt.setLong(1, numeroCartao);
+            stmt.setInt(2, cartao.getCodigoSeguranca());
 
-            if(cartao.getTipo() != null){
-                sql.append(" TIPO = ?,");
-            }
+            stmt.executeUpdate();
 
-            if(cartao.getVencimento() != null){
-                sql.append(" VENCIMENTO = ?,");
-            }
+            return this.getPorNumeroCartao(numeroCartao);
 
-            if(cartao.getClass().equals(CartaoDeCredito.class)
-                    && ((CartaoDeCredito) cartao).getLimite() > 0){
-                sql.append(" LIMITE = ?,");
-            }
-
-            sql.deleteCharAt(sql.length() - 1); //remove o ultimo ','
-            sql.append(" WHERE numero_cartao = ? ");
-
-            PreparedStatement stmt = con.prepareStatement(sql.toString());
-
-            int index = 1;
-            if(cartao.getCodigoSeguranca() > 99){
-                stmt.setInt(index++, cartao.getCodigoSeguranca());
-            }
-
-            if(cartao.getTipo() != null){
-                stmt.setInt(index++, cartao.getTipo().getTipo());
-            }
-
-            if(cartao.getVencimento() != null){
-                stmt.setDate(index++, Date.valueOf(cartao.getVencimento()));
-            }
-
-            if(cartao.getClass().equals(CartaoDeCredito.class)
-                    && ((CartaoDeCredito) cartao).getLimite() > 0){
-                stmt.setDouble(index++, ((CartaoDeCredito) cartao).getLimite());
-            }
-
-            stmt.setString(index, id);
-
-            // Executar consulta
-            int res = stmt.executeUpdate();
-            return res > 0;
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
         } finally {
@@ -208,7 +173,7 @@ public class CartaoRepository implements Repositorio<Cartao> {
         }
     }
 
-    public List<Cartao> listarCartoesPorNumeroConta(Conta conta) throws BancoDeDadosException{
+    public List<Cartao> listarPorNumeroConta(Integer numeroConta) throws BancoDeDadosException{
         List<Cartao> cartoes = new ArrayList<>();
         Connection con = null;
         try {
@@ -222,11 +187,7 @@ public class CartaoRepository implements Repositorio<Cartao> {
 
             // Executa-se a consulta
             PreparedStatement stmt = con.prepareStatement(sql);
-
-            if(conta != null){
-                stmt.setInt(1, conta.getNumeroConta());
-            }
-
+            stmt.setInt(1, numeroConta);
             ResultSet res = stmt.executeQuery();
 
             while (res.next()) {
@@ -234,6 +195,50 @@ public class CartaoRepository implements Repositorio<Cartao> {
                 cartoes.add(cartao);
             }
             return cartoes;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new BancoDeDadosException(e.getCause());
+        } finally {
+            try {
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public Cartao getPorNumeroCartao(Long numeroCartao) throws BancoDeDadosException{
+        List<Cartao> cartoes = new ArrayList<>();
+        Connection con = null;
+        try {
+            con = ConexaoBancoDeDados.getConnection();
+
+            String sql = """
+                    SELECT *  FROM CARTAO c
+                    WHERE c.NUMERO_CARTAO = ?
+                    AND STATUS = 1
+                    """;
+
+            // Executa-se a consulta
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setLong(1, numeroCartao);
+            ResultSet res = stmt.executeQuery();
+
+            while (res.next()) {
+                Cartao cartao = getCartaoFromResultSet(res);
+                cartoes.add(cartao);
+            }
+
+            Cartao result = cartoes.stream()
+                    .findFirst()
+                    .orElse(null);
+
+
+            return result;
+
         } catch (SQLException e) {
             e.printStackTrace();
             throw new BancoDeDadosException(e.getCause());
@@ -252,10 +257,8 @@ public class CartaoRepository implements Repositorio<Cartao> {
 
         if (res.getInt("TIPO") == 1) {
             CartaoDeDebito cartaoDeDebito = new CartaoDeDebito();
-            cartaoDeDebito.setNumeroCartao(res.getString("NUMERO_CARTAO"));
-            Conta conta = new Conta();
-            conta.setNumeroConta(res.getInt("NUMERO_CONTA"));
-            cartaoDeDebito.setConta(conta);
+            cartaoDeDebito.setNumeroCartao(res.getLong("NUMERO_CARTAO"));
+            cartaoDeDebito.setNumeroConta(res.getInt("NUMERO_CONTA"));
             cartaoDeDebito.setDataExpedicao(res.getDate("DATA_EXPEDICAO").toLocalDate());
             cartaoDeDebito.setCodigoSeguranca(res.getInt("CODIGO_SEGURANCA"));
             cartaoDeDebito.setTipo(TipoCartao.getTipoCartao(res.getInt("TIPO")));
@@ -264,10 +267,8 @@ public class CartaoRepository implements Repositorio<Cartao> {
             return cartaoDeDebito;
         } else{
             CartaoDeCredito cartaoDeCredito = new CartaoDeCredito();
-            cartaoDeCredito.setNumeroCartao(res.getString("NUMERO_CARTAO"));
-            Conta conta = new Conta();
-            conta.setNumeroConta(res.getInt("NUMERO_CONTA"));
-            cartaoDeCredito.setConta(conta);
+            cartaoDeCredito.setNumeroCartao(res.getLong("NUMERO_CARTAO"));
+            cartaoDeCredito.setNumeroConta(res.getInt("NUMERO_CONTA"));
             cartaoDeCredito.setDataExpedicao(res.getDate("DATA_EXPEDICAO").toLocalDate());
             cartaoDeCredito.setCodigoSeguranca(res.getInt("CODIGO_SEGURANCA"));
             cartaoDeCredito.setTipo(TipoCartao.getTipoCartao(res.getInt("TIPO")));

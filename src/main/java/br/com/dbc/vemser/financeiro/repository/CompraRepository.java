@@ -48,7 +48,7 @@ public class CompraRepository implements Repositorio<Compra> {
             PreparedStatement stmt = con.prepareStatement(sql);
 
             stmt.setInt(1, compra.getIdCompra());
-            stmt.setString(2, compra.getCartao().getNumeroCartao());
+            stmt.setLong(2, compra.getCartao().getNumeroCartao());
             stmt.setString(3, compra.getDocVendedor());
             stmt.setDate(4, Date.valueOf(compra.getData()));
 
@@ -105,7 +105,7 @@ public class CompraRepository implements Repositorio<Compra> {
         }
     }
 
-    public List<Compra> listarPorCartao(String numeroCartao) throws BancoDeDadosException {
+    public List<Compra> listarPorCartao(Long numeroCartao) throws BancoDeDadosException {
         List<Compra> compras = new ArrayList<>();
         Connection con = null;
         try {
@@ -121,7 +121,7 @@ public class CompraRepository implements Repositorio<Compra> {
 
             // Executa-se a consulta
             PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setString(1, numeroCartao);
+            stmt.setLong(1, numeroCartao);
 
             ResultSet res = stmt.executeQuery();
 
@@ -150,13 +150,13 @@ public class CompraRepository implements Repositorio<Compra> {
         compra.setData(LocalDate.parse(res.getDate("data").toString()));
         compra.setDocVendedor(res.getString("doc_vendedor"));
         Cartao cartao = new CartaoDeDebito();
-        cartao.setNumeroCartao(res.getString("numero_cartao"));
+        cartao.setNumeroCartao(res.getLong("numero_cartao"));
         Conta conta = new Conta();
         conta.setNumeroConta(res.getInt("numero_conta"));
         Cliente cliente = new Cliente();
         cliente.setNome(res.getString("nome"));
         conta.setCliente(cliente);
-        cartao.setConta(conta);
+        cartao.setNumeroConta(res.getInt("numero_conta"));
         compra.setCartao(cartao);
         return compra;
     }

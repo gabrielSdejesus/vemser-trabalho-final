@@ -9,10 +9,6 @@ public class CartaoDeCredito extends Cartao {
         this.limite = 1000;
     }
 
-    public CartaoDeCredito(String numeroCartao, Conta conta, LocalDate dataExpedicao, Integer codigoSeguranca, TipoCartao tipo, LocalDate vencimento, double limite) {
-        super(numeroCartao, conta, dataExpedicao, codigoSeguranca, tipo, vencimento);
-        this.limite = limite;
-    }
 
     public double getLimite() {
         return limite;
