@@ -7,9 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -23,28 +21,33 @@ public class CompraController {
 
     private final CompraService compraService;
 
+    @GetMapping("/lista")
     public ResponseEntity<CompraDTO> listarTodasCompras(){
         return null;
     }
 
-    public ResponseEntity<CompraDTO> listarComprasDoCartao(){
+    @GetMapping("/{idCartao}/cartao")
+    public ResponseEntity<CompraDTO> listarComprasDoCartao(@NotNull Integer idCartao){
         return null;
     }
 
+    @PostMapping
     public ResponseEntity<CompraDTO> criar(@RequestBody @Valid CompraCreateDTO compra){
         log.info("Criando compra!");
         log.info("compra Criado!");
         return null;
     }
 
-    public ResponseEntity<CompraDTO> atualizar(@NotNull Long numeroDoCartao,
+    @PutMapping("/{idCompra}")
+    public ResponseEntity<CompraDTO> atualizar(@NotNull Integer idCompra,
                                                @RequestBody @Valid CompraCreateDTO compra){
         log.info("Atualizando compra!");
         log.info("compra Atualizado!");
         return null;
     }
 
-    public ResponseEntity<Void> deletar(@NotNull Integer numeroDaCompra){
+    @DeleteMapping("/{idCompra}")
+    public ResponseEntity<Void> deletar(@NotNull Integer idCompra){
         log.info("Deletando compra!");
         log.info("compra Deletado!");
         return null;

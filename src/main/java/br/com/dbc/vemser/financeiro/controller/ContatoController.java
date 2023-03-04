@@ -7,9 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -23,28 +21,33 @@ public class ContatoController {
 
     private final ContatoService contatoService;
 
+    @GetMapping("/lista")
     public ResponseEntity<ContatoDTO> listarTodosContatos(){
         return null;
     }
 
-    public ResponseEntity<ContatoDTO> listarTodosContatosDoCliente(){
+    @GetMapping("/{idCliente}/cliente")
+    public ResponseEntity<ContatoDTO> listarTodosContatosDoCliente(@NotNull Integer idCliente){
         return null;
     }
 
+    @PostMapping
     public ResponseEntity<ContatoDTO> criar(@RequestBody @Valid ContatoCreateDTO contato){
         log.info("Criando Contato!");
         log.info("Contato Criado!");
         return null;
     }
 
-    public ResponseEntity<Void> atualizar(@NotNull String cpfCliente,
+    @PutMapping("/{idContato}")
+    public ResponseEntity<Void> atualizar(@NotNull Integer idContato,
                                                  @RequestBody @Valid ContatoCreateDTO contato){
         log.info("Atualizando Contato!");
         log.info("Contato Atualizado!");
         return null;
     }
 
-    public ResponseEntity<ContatoDTO> deletar(@NotNull String cpfCliente, @NotNull Integer idContato){
+    @DeleteMapping("/{idContato}")
+    public ResponseEntity<ContatoDTO> deletar(@NotNull Integer idContato){
         log.info("Deletando Contato!");
         log.info("Contato Deletado!");
         return null;

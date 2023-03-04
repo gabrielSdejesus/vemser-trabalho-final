@@ -7,9 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -23,27 +21,34 @@ public class ClienteController {
 
     private final ClienteService clienteService;
 
+    @GetMapping("/lista")
     public ResponseEntity<ClienteDTO> listarTodosClientes(){
         return null;
     }
 
-    public ResponseEntity<ClienteDTO> listarCliente(){
+    @GetMapping("/{idCliente}")
+    public ResponseEntity<ClienteDTO> listarCliente(@NotNull Integer idCliente){
+
         return null;
     }
 
+    @PostMapping
     public ResponseEntity<ClienteDTO> criar(@RequestBody @Valid ClienteCreateDTO cliente){
         log.info("Criando Cliente!");
         log.info("Cliente Criado!");
         return null;
     }
 
-    public ResponseEntity<ClienteDTO> atualizar(@RequestBody @Valid ClienteCreateDTO cliente){
+    @PutMapping("/{idCliente}")
+    public ResponseEntity<ClienteDTO> atualizar(@NotNull Integer idCliente,
+                                                @RequestBody @Valid ClienteCreateDTO cliente){
         log.info("Atualizando Cliente!");
         log.info("Cliente Atualizado!");
         return null;
     }
 
-    public ResponseEntity<Void> deletar(@NotNull String cpfCliente){
+    @DeleteMapping("/{idCliente}")
+    public ResponseEntity<Void> deletar(@NotNull Integer idCliente){
         log.info("Deletando Cliente!");
         log.info("Cliente Deletado!");
         return null;

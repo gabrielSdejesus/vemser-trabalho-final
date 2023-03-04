@@ -7,9 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -23,27 +21,32 @@ public class ItemController {
 
     private final ItemService itemService;
 
+    @GetMapping("/lista")
     public ResponseEntity<ItemDTO> listarTodosItens(){
         return null;
     }
 
-    public ResponseEntity<ItemDTO> listarItensDaCompra(){
+    @GetMapping("/{idCompra}/compra")
+    public ResponseEntity<ItemDTO> listarItensDaCompra(@NotNull Integer idCompra){
         return null;
     }
 
+    @PostMapping
     public ResponseEntity<ItemDTO> criar(@RequestBody @Valid ItemCreateDTO item){
         log.info("Criando compra!");
         log.info("compra Criado!");
         return null;
     }
 
-    public ResponseEntity<ItemDTO> atualizar(@NotNull Long numeroDaCompra,
+    @PutMapping("/{idItem}")
+    public ResponseEntity<ItemDTO> atualizar(@NotNull Integer idItem,
                                                @RequestBody @Valid ItemCreateDTO item){
         log.info("Atualizando compra!");
         log.info("compra Atualizado!");
         return null;
     }
 
+    @DeleteMapping("/{idItem}")
     public ResponseEntity<Void> deletar(@NotNull Integer idItem){
         log.info("Deletando compra!");
         log.info("compra Deletado!");

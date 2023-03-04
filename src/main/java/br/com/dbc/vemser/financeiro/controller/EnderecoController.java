@@ -7,9 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -23,28 +21,33 @@ public class EnderecoController {
 
     private final EnderecoService enderecoService;
 
+    @GetMapping("/lista")
     public ResponseEntity<EnderecoDTO> listarTodosEnderecos(){
         return null;
     }
 
-    public ResponseEntity<EnderecoDTO> listarTodosEnderecosDoCliente(){
+    @GetMapping("/{idCliente}/cliente")
+    public ResponseEntity<EnderecoDTO> listarTodosEnderecosDoCliente(@NotNull Integer idCliente){
         return null;
     }
 
+    @PostMapping
     public ResponseEntity<EnderecoDTO> criar(@RequestBody @Valid EnderecoCreateDTO endereco){
         log.info("Criando Endereço!");
         log.info("Endereço Criado!");
         return null;
     }
 
-    public ResponseEntity<EnderecoDTO> atualizar(@NotNull String cpfCliente,
+    @PutMapping("/{idEndereco}")
+    public ResponseEntity<EnderecoDTO> atualizar(@NotNull Integer idEndereco,
                                  @RequestBody @Valid EnderecoCreateDTO endereco){
         log.info("Atualizando Endereço!");
         log.info("Endereço Atualizado!");
         return null;
     }
 
-    public ResponseEntity<Void> deletar(@NotNull String cpfCliente, @NotNull Integer idEndereco){
+    @DeleteMapping("/{idEndereco}")
+    public ResponseEntity<Void> deletar(@NotNull Integer idEndereco){
         log.info("Deletando Endereço!");
         log.info("Endereço Deletado!");
         return null;
