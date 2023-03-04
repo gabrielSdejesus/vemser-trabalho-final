@@ -5,6 +5,7 @@ import br.com.dbc.vemser.financeiro.model.Cliente;
 import br.com.dbc.vemser.financeiro.model.Status;
 import org.springframework.stereotype.Repository;
 
+import java.awt.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,9 +43,8 @@ public class ClienteRepository implements Repositorio<Cliente> {
                     (id_cliente, cpf_cliente, nome)
                     VALUES(?, ?, ?)
                     """;
-
             PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setInt(1, cliente.getIdCliente());
+            stmt.setInt(1, getProximoId(con));
             stmt.setString(2, cliente.getCpf());
             stmt.setString(3, cliente.getNome());
 
@@ -104,6 +104,10 @@ public class ClienteRepository implements Repositorio<Cliente> {
                 sql.append(" NOME = ?,");
             }
 
+            if (cliente.getStatus() != null){
+                sql.append(" STATUS = ?,");
+            }
+
             sql.deleteCharAt(sql.length() - 1);
             sql.append(" WHERE ID_CLIENTE = ? ");
 
@@ -116,6 +120,10 @@ public class ClienteRepository implements Repositorio<Cliente> {
 
             if(cliente.getCpf() != null){
                 stmt.setString(index++, cliente.getNome());
+            }
+
+            if(cliente.getStatus() != null){
+                stmt.setInt(index++, cliente.getStatus().getStatus());
             }
 
             stmt.setInt(index, id);
