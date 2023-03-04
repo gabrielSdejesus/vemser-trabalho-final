@@ -43,7 +43,7 @@ public class ClienteController {
         return null;
     }
 
-    public ResponseEntity<ClienteDTO> deletar(@NotNull String cpfCliente){
+    public ResponseEntity<Void> deletar(@NotNull String cpfCliente){
         log.info("Deletando Cliente!");
         log.info("Cliente Deletado!");
         return null;

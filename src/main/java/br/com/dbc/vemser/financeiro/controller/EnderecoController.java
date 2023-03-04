@@ -37,14 +37,14 @@ public class EnderecoController {
         return null;
     }
 
-    public ResponseEntity<EnderecoDTO> atualizar(@NotNull Integer numeroConta,
+    public ResponseEntity<EnderecoDTO> atualizar(@NotNull String cpfCliente,
                                  @RequestBody @Valid EnderecoCreateDTO endereco){
         log.info("Atualizando Endereço!");
         log.info("Endereço Atualizado!");
         return null;
     }
 
-    public ResponseEntity<EnderecoDTO> deletar(@NotNull Integer numeroConta, @NotNull Integer idEndereco){
+    public ResponseEntity<Void> deletar(@NotNull String cpfCliente, @NotNull Integer idEndereco){
         log.info("Deletando Endereço!");
         log.info("Endereço Deletado!");
         return null;

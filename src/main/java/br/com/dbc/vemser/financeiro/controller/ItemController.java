@@ -1,8 +1,8 @@
 package br.com.dbc.vemser.financeiro.controller;
 
-import br.com.dbc.vemser.financeiro.dto.CompraCreateDTO;
-import br.com.dbc.vemser.financeiro.dto.CompraDTO;
-import br.com.dbc.vemser.financeiro.service.CompraService;
+import br.com.dbc.vemser.financeiro.dto.ItemCreateDTO;
+import br.com.dbc.vemser.financeiro.dto.ItemDTO;
+import br.com.dbc.vemser.financeiro.service.ItemService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -14,37 +14,37 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-@RequestMapping("/compra")
+@RequestMapping("/item")
 @RestController
 @Slf4j
 @Validated
 @RequiredArgsConstructor
-public class CompraController {
+public class ItemController {
 
-    private final CompraService compraService;
+    private final ItemService itemService;
 
-    public ResponseEntity<CompraDTO> listarTodasCompras(){
+    public ResponseEntity<ItemDTO> listarTodosItens(){
         return null;
     }
 
-    public ResponseEntity<CompraDTO> listarComprasDoCartao(){
+    public ResponseEntity<ItemDTO> listarItensDaCompra(){
         return null;
     }
 
-    public ResponseEntity<CompraDTO> criar(@RequestBody @Valid CompraCreateDTO compra){
+    public ResponseEntity<ItemDTO> criar(@RequestBody @Valid ItemCreateDTO item){
         log.info("Criando compra!");
         log.info("compra Criado!");
         return null;
     }
 
-    public ResponseEntity<CompraDTO> atualizar(@NotNull Long numeroDoCartao,
-                                               @RequestBody @Valid CompraCreateDTO compra){
+    public ResponseEntity<ItemDTO> atualizar(@NotNull Long numeroDaCompra,
+                                               @RequestBody @Valid ItemCreateDTO item){
         log.info("Atualizando compra!");
         log.info("compra Atualizado!");
         return null;
     }
 
-    public ResponseEntity<Void> deletar(@NotNull Integer numeroDaCompra){
+    public ResponseEntity<Void> deletar(@NotNull Integer idItem){
         log.info("Deletando compra!");
         log.info("compra Deletado!");
         return null;

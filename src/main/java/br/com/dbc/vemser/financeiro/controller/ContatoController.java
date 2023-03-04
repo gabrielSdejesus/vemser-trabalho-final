@@ -2,7 +2,6 @@ package br.com.dbc.vemser.financeiro.controller;
 
 import br.com.dbc.vemser.financeiro.dto.ContatoCreateDTO;
 import br.com.dbc.vemser.financeiro.dto.ContatoDTO;
-import br.com.dbc.vemser.financeiro.model.Contato;
 import br.com.dbc.vemser.financeiro.service.ContatoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,14 +37,14 @@ public class ContatoController {
         return null;
     }
 
-    public ResponseEntity<ContatoDTO> atualizar(@NotNull Integer numeroConta,
+    public ResponseEntity<Void> atualizar(@NotNull String cpfCliente,
                                                  @RequestBody @Valid ContatoCreateDTO contato){
         log.info("Atualizando Contato!");
         log.info("Contato Atualizado!");
         return null;
     }
 
-    public ResponseEntity<ContatoDTO> deletar(@NotNull Integer numeroConta, @NotNull Integer contato){
+    public ResponseEntity<ContatoDTO> deletar(@NotNull String cpfCliente, @NotNull Integer idContato){
         log.info("Deletando Contato!");
         log.info("Contato Deletado!");
         return null;
