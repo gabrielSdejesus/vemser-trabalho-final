@@ -6,10 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
+import br.com.dbc.vemser.financeiro.controller.CartaoDTO;
+import br.com.dbc.vemser.financeiro.dto.CartaoCreateDTO;
 import br.com.dbc.vemser.financeiro.exception.BancoDeDadosException;
 import br.com.dbc.vemser.financeiro.model.*;
 import br.com.dbc.vemser.financeiro.repository.CartaoRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,7 +25,7 @@ public class CartaoService extends Servico {
         this.cartaoRepository = cartaoRepository;
     }
 
-    public void exibirCartao(Conta conta, TipoCartao tipo) {
+    public List<CartaoDTO> listarPorIdConta(Integer numeroConta) {
         List<Cartao> cartoes = this.returnCartoes(conta);
         int index = 1;
 
@@ -52,13 +55,15 @@ public class CartaoService extends Servico {
                 System.err.println("Você não possui nenhum cartão de " + ((tipo == TipoCartao.DEBITO) ? "débito!" : "crédito!") + "\n");
             }
         }
+
+        return null;
     }
 
-    public void cadastrarCartao(Conta conta, TipoCartao tipoCartao) {
+    public CartaoDTO criar(Integer numeroConta, CartaoCreateDTO cartaoCreateDTO) {
         List<Cartao> cartoes = this.returnCartoes(conta);
         if (cartoes != null && cartoes.size() == 2) {
             System.err.println("Você não pode adicionar mais cartões, só é possível ter no máximo 2x cartões!\n");
-            return;
+            return null;
         } else if(tipoCartao == null){
 
             //Lendo e passando o valor referente ao tipo do cartão
@@ -68,7 +73,7 @@ public class CartaoService extends Servico {
                 System.out.println();
             } else {
                 System.err.println("Operação cancelada!\n");
-                return;
+                return null;
             }
         }
             switch (tipoCartao) {
@@ -120,9 +125,14 @@ public class CartaoService extends Servico {
                 }
                 default -> System.err.println("Erro bizarro!");
             }
+        return null;
     }
 
-    public void deletarCartao(Conta conta) {
+    public CartaoDTO atualizar(Integer numeroCartao, CartaoCreateDTO cartaoCreateDTO) {
+        return null;
+    }
+
+    public void deletar(Integer numeroCartao) {
         List<Cartao> cartoes = this.returnCartoes(conta);
         if (cartoes.size() == 1) {
             System.err.println("Você não pode remover mais cartões, é necessário ter no mínimo 1x cartão!\n");
