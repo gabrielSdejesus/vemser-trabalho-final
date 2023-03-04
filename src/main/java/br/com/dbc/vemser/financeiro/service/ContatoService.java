@@ -6,6 +6,7 @@ import br.com.dbc.vemser.financeiro.model.Cliente;
 import br.com.dbc.vemser.financeiro.model.Conta;
 import br.com.dbc.vemser.financeiro.model.Contato;
 import br.com.dbc.vemser.financeiro.repository.ContatoRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,7 +17,8 @@ public class ContatoService extends Servico {
 
     private final ContatoRepository contatoRepository;
 
-    public ContatoService(ContatoRepository contatoRepository) {
+    public ContatoService(ContatoRepository contatoRepository, ObjectMapper objectMapper) {
+        super(objectMapper);
         this.contatoRepository = contatoRepository;
     }
 

@@ -3,6 +3,7 @@ package br.com.dbc.vemser.financeiro.service;
 import br.com.dbc.vemser.financeiro.exception.BancoDeDadosException;
 import br.com.dbc.vemser.financeiro.model.*;
 import br.com.dbc.vemser.financeiro.repository.ContaRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
@@ -17,7 +18,8 @@ public class ContaService extends Servico {
     private final CartaoService cartaoService;
     private final TransferenciaService transferenciaService;
 
-    public ContaService(ContaRepository contaRepository, ClienteService clienteService, CartaoService cartaoService, TransferenciaService transferenciaService) {
+    public ContaService(ContaRepository contaRepository, ClienteService clienteService, CartaoService cartaoService, TransferenciaService transferenciaService, ObjectMapper objectMapper) {
+        super(objectMapper);
         this.contaRepository = contaRepository;
         this.clienteService = clienteService;
         this.cartaoService = cartaoService;

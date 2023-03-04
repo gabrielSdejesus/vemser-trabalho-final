@@ -4,6 +4,7 @@ package br.com.dbc.vemser.financeiro.service;
 import br.com.dbc.vemser.financeiro.exception.BancoDeDadosException;
 import br.com.dbc.vemser.financeiro.model.Cliente;
 import br.com.dbc.vemser.financeiro.repository.ClienteRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,7 +14,8 @@ import java.util.regex.Pattern;
 public class ClienteService extends Servico {
     private final ClienteRepository clienteRepository;
 
-    public ClienteService(ClienteRepository clienteRepository) {
+    public ClienteService(ClienteRepository clienteRepository, ObjectMapper objectMapper) {
+        super(objectMapper);
         this.clienteRepository = clienteRepository;
     }
 

@@ -9,6 +9,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import br.com.dbc.vemser.financeiro.exception.BancoDeDadosException;
 import br.com.dbc.vemser.financeiro.model.*;
 import br.com.dbc.vemser.financeiro.repository.CartaoRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,7 +17,8 @@ public class CartaoService extends Servico {
 
     private final CartaoRepository cartaoRepository;
 
-    public CartaoService(CartaoRepository cartaoRepository) {
+    public CartaoService(CartaoRepository cartaoRepository, ObjectMapper objectMapper) {
+        super(objectMapper);
         this.cartaoRepository = cartaoRepository;
     }
 

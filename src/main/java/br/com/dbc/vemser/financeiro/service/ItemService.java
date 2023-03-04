@@ -3,6 +3,7 @@ package br.com.dbc.vemser.financeiro.service;
 import br.com.dbc.vemser.financeiro.exception.BancoDeDadosException;
 import br.com.dbc.vemser.financeiro.model.Item;
 import br.com.dbc.vemser.financeiro.repository.ItemRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -13,7 +14,10 @@ public class ItemService extends Servico {
 
     private final ItemRepository itemRepository;
 
-    public ItemService(ItemRepository itemRepository) { this.itemRepository = itemRepository;}
+    public ItemService(ItemRepository itemRepository, ObjectMapper objectMapper) {
+        super(objectMapper);
+        this.itemRepository = itemRepository;
+    }
 
     public void adicionar(ArrayList<Item> itens) {
         for (Item item : itens) {

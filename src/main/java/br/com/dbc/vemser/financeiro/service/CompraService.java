@@ -4,6 +4,7 @@ import br.com.dbc.vemser.financeiro.exception.BancoDeDadosException;
 import br.com.dbc.vemser.financeiro.model.*;
 import br.com.dbc.vemser.financeiro.repository.CompraRepository;
 import br.com.dbc.vemser.financeiro.repository.ItemRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -17,7 +18,8 @@ public class CompraService extends Servico {
     private final ContaService contaService;
     private final ItemService itemService;
 
-    public CompraService(CompraRepository compraRepository, CartaoService cartaoService, ContaService contaService, ItemService itemService) {
+    public CompraService(CompraRepository compraRepository, CartaoService cartaoService, ContaService contaService, ItemService itemService, ObjectMapper objectMapper) {
+        super(objectMapper);
         this.compraRepository = compraRepository;
         this.cartaoService = cartaoService;
         this.contaService = contaService;

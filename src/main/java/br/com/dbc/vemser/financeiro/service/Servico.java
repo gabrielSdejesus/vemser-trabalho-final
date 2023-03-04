@@ -1,10 +1,17 @@
 package br.com.dbc.vemser.financeiro.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public abstract class Servico {
     protected static final Scanner SCANNER = new Scanner(System.in);
+    protected final ObjectMapper objectMapper;
+
+    public Servico(ObjectMapper objectMapper){
+        this.objectMapper = objectMapper;
+    }
 
     public static void tempoParaExibir(int numero){
         try {

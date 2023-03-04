@@ -5,6 +5,7 @@ import br.com.dbc.vemser.financeiro.model.Cliente;
 import br.com.dbc.vemser.financeiro.model.Conta;
 import br.com.dbc.vemser.financeiro.model.Endereco;
 import br.com.dbc.vemser.financeiro.repository.EnderecoRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,7 +16,8 @@ public class EnderecoService extends Servico {
 
     private final EnderecoRepository enderecoRepository;
 
-    public EnderecoService(EnderecoRepository enderecoRepository) {
+    public EnderecoService(EnderecoRepository enderecoRepository, ObjectMapper objectMapper) {
+        super(objectMapper);
         this.enderecoRepository = enderecoRepository;
     }
 
