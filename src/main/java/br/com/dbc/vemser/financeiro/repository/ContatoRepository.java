@@ -222,6 +222,37 @@ public class ContatoRepository implements Repositorio<Contato> {
         }
     }
 
+    public Contato retornarContato(Integer idContato) throws BancoDeDadosException {
+        Connection con = null;
+        try {
+            con = ConexaoBancoDeDados.getConnection();
+
+            String sql = """
+                        SELECT c.* FROM CONTATO c
+                        WHERE c.id_contato = ?
+                    """;
+
+            // Executa-se a consulta
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setInt(1, idContato);
+
+            ResultSet res = stmt.executeQuery();
+
+            return getContatoFromResultSet(res);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new BancoDeDadosException(e.getCause());
+        } finally {
+            try {
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     private Contato getContatoFromResultSet(ResultSet res) throws SQLException {
         Contato contato = new Contato();
         contato.setIdContato(res.getInt("id_contato"));

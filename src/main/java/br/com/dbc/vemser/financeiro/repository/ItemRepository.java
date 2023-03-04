@@ -150,6 +150,32 @@ public class ItemRepository implements Repositorio<Item> {
         }
     }
 
+    public Item retornarItem(Integer idItem) throws BancoDeDadosException {
+        Connection con = null;
+        try {
+            con = ConexaoBancoDeDados.getConnection();
+
+            String sql = "SELECT i.* FROM ITEM i WHERE i.id_item = ?";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setInt(1, idItem);
+            ResultSet res = stmt.executeQuery();
+
+            return getItemFromResultSet(res);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new BancoDeDadosException(e.getCause());
+        } finally {
+            try {
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     private Item getItemFromResultSet(ResultSet res) throws SQLException {
         Item item = new Item();
         item.setIdItem(res.getInt("id_item"));

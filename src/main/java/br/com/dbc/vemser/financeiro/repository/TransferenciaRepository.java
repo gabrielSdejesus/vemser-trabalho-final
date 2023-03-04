@@ -154,6 +154,36 @@ public class TransferenciaRepository implements Repositorio<Transferencia> {
         }
     }
 
+    public Transferencia retornarTransferencia(Integer id) throws BancoDeDadosException {
+        Connection con = null;
+        try {
+            con = ConexaoBancoDeDados.getConnection();
+
+            String sql = """
+                    SELECT t.* FROM TRANSFERENCIA
+                    WHERE t.id_transferencia = ?
+                    """;
+
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setInt(1, id);
+
+            ResultSet res = stmt.executeQuery();
+
+            return getTransferenciaFromResultSet(res);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new BancoDeDadosException(e.getCause());
+        } finally {
+            try {
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     private Transferencia getTransferenciaFromResultSet(ResultSet res) throws SQLException {
 
         Conta contaEnviou = new Conta();
