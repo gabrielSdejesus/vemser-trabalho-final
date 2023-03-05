@@ -43,11 +43,11 @@ public class ItemController {
     }
 
     @PutMapping("/{idItem}")
-    public ResponseEntity<ItemDTO> atualizar(@NotNull Integer idItem,
-                                               @RequestBody @Valid ItemCreateDTO item){
+    public ResponseEntity<ItemDTO> atualizar(@NotNull @PathVariable("idItem") Integer idItem,
+                                               @RequestBody @Valid ItemCreateDTO itemCreateDTO) throws BancoDeDadosException {
         log.info("Atualizando compra!");
         log.info("compra Atualizado!");
-        return null;
+        return new ResponseEntity<>(itemService.atualizar(idItem, itemCreateDTO), HttpStatus.OK);
     }
 
     @DeleteMapping("/{idItem}")

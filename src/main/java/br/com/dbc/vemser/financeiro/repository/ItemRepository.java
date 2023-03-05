@@ -119,6 +119,27 @@ public class ItemRepository implements Repositorio<Item> {
         }
     }
 
+    public Item atualizar(Item item) throws BancoDeDadosException {
+        Connection con = null;
+        try {
+            con = ConexaoBancoDeDados.getConnection();
+
+            String sql = "UPDATE item SET nome = ?, valor = ?, quantidade = ? WHERE id_item = ?";
+
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setString(1, item.getNome());
+            stmt.setDouble(2, item.getValor());
+            stmt.setInt(3, item.getQuantidade());
+            stmt.setInt(4, item.getIdItem());
+            stmt.executeQuery();
+
+            return item;
+
+        } catch (SQLException e) {
+            throw new BancoDeDadosException(e.getCause());
+        }
+    }
+
     public List<Item> listarItensPorIdCompra(Integer idCompra) throws BancoDeDadosException {
         List<Item> itens = new ArrayList<>();
         Connection con = null;
@@ -160,7 +181,12 @@ public class ItemRepository implements Repositorio<Item> {
             stmt.setInt(1, idItem);
             ResultSet res = stmt.executeQuery();
 
-            return getItemFromResultSet(res);
+            while (res.next()) {
+                Item item = getItemFromResultSet(res);
+                return getItemFromResultSet(res);
+            }
+
+            return null;
 
         } catch (SQLException e) {
             e.printStackTrace();

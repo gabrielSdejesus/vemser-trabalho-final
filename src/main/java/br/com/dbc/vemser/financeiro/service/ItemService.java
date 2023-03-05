@@ -36,6 +36,14 @@ public class ItemService extends Servico {
         return itensDTO;
     }
 
+    public ItemDTO atualizar(Integer idItem, ItemCreateDTO itemCreateDTO) throws BancoDeDadosException {
+        itemRepository.retornarItem(idItem);
+        Item item = objectMapper.convertValue(itemCreateDTO, Item.class);
+        item.setIdItem(idItem);
+        Item itemUpdated = itemRepository.atualizar(item);
+        return objectMapper.convertValue(itemUpdated, ItemDTO.class);
+    }
+
     public ItemDTO retornarItem(Integer idItem) throws BancoDeDadosException, RegraDeNegocioException {
         return objectMapper.convertValue(this.itemRepository.retornarItem(idItem), ItemDTO.class);
     }
