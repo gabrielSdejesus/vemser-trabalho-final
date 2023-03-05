@@ -47,7 +47,7 @@ public class EnderecoRepository implements Repositorio<Endereco> {
             PreparedStatement stmt = con.prepareStatement(sql);
 
             stmt.setInt(1, endereco.getIdEndereco());
-            stmt.setInt(2, endereco.getCliente().getIdCliente());
+            stmt.setInt(2, endereco.getIdCliente());
             stmt.setString(3, endereco.getCidade());
             stmt.setString(4, endereco.getLogradouro());
             stmt.setString(5, endereco.getEstado());
@@ -100,7 +100,7 @@ public class EnderecoRepository implements Repositorio<Endereco> {
 
     }
 
-    public boolean editar(Integer id, Endereco endereco) throws BancoDeDadosException {
+    public Endereco editar(Integer id, Endereco endereco) throws BancoDeDadosException {
         Connection con = null;
         try {
             con = ConexaoBancoDeDados.getConnection();
@@ -129,13 +129,11 @@ public class EnderecoRepository implements Repositorio<Endereco> {
             }
 
             sql.deleteCharAt(sql.length() - 1); //remove o ultimo ','
-            sql.append(" WHERE id_cliente = ? ");
-            sql.append("AND id_endereco = ? ");
+            sql.append("WHERE ID_ENDERECO = ? ");
 
             PreparedStatement stmt = con.prepareStatement(sql.toString());
 
             int index = 1;
-
             if(endereco.getCidade() != null){
                 stmt.setString(index++, endereco.getCidade());
             }
@@ -156,13 +154,12 @@ public class EnderecoRepository implements Repositorio<Endereco> {
                 stmt.setString(index++, endereco.getCep());
             }
 
-            stmt.setInt(index++, id);
-            stmt.setInt(index, endereco.getIdEndereco());
+            stmt.setInt(index, id);
 
             // Executar consulta
-            int res = stmt.executeUpdate();
-            return res > 0;
+            stmt.executeUpdate();
 
+            return retornarEndereco(id);
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
         } finally {
@@ -250,6 +247,7 @@ public class EnderecoRepository implements Repositorio<Endereco> {
         Connection con = null;
         try {
             con = ConexaoBancoDeDados.getConnection();
+            Endereco endereco = new Endereco();
 
             String sql = """
                         SELECT e.*  FROM ENDERECO e
@@ -261,7 +259,11 @@ public class EnderecoRepository implements Repositorio<Endereco> {
 
             ResultSet res = stmt.executeQuery();
 
-            return getEnderecoFromResultSet(res);
+            while (res.next()) {
+                endereco = getEnderecoFromResultSet(res);
+            }
+
+            return endereco;
         } catch (SQLException e) {
             e.printStackTrace();
             throw new BancoDeDadosException(e.getCause());
@@ -279,9 +281,7 @@ public class EnderecoRepository implements Repositorio<Endereco> {
     private Endereco getEnderecoFromResultSet(ResultSet res) throws SQLException {
         Endereco endereco = new Endereco();
         endereco.setIdEndereco(res.getInt("id_endereco"));
-        Cliente cliente = new Cliente();
-        cliente.setNome(res.getString("nome"));
-        endereco.setCliente(cliente);
+        endereco.setIdCliente(res.getInt("id_cliente"));
         endereco.setCep(res.getString("cep"));
         endereco.setCidade(res.getString("cidade"));
         endereco.setEstado(res.getString("estado"));

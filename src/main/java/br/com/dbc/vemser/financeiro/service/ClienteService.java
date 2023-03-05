@@ -31,11 +31,12 @@ public class ClienteService extends Servico {
 
     public ClienteDTO visualizarCliente(Integer idCliente) throws BancoDeDadosException, RegraDeNegocioException {
         ClienteDTO clienteDTO = objectMapper.convertValue(clienteRepository.consultarPorIdCliente(idCliente), ClienteDTO.class);
-        validarCliente(clienteDTO);
+        validarClienteInativo(clienteDTO);
         return clienteDTO;
     }
 
     public ClienteDTO adicionarCliente(ClienteCreateDTO clienteCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
+        validarClientePorCPF(clienteCreateDTO);
         Cliente cliente = objectMapper.convertValue(clienteCreateDTO, Cliente.class);
         return objectMapper.convertValue(clienteRepository.adicionar(cliente), ClienteDTO.class);
     }
@@ -50,9 +51,22 @@ public class ClienteService extends Servico {
         return this.clienteRepository.remover(idCliente);
     }
 
-    private void validarCliente(ClienteDTO clienteDTO) throws RegraDeNegocioException {
+    void validarClienteInativo(ClienteDTO clienteDTO) throws RegraDeNegocioException {
+
         if (clienteDTO.getStatus() == Status.INATIVO) {
-            throw new RegraDeNegocioException("INATIVO");
+            System.out.println("JAJA");
+            throw new RegraDeNegocioException("Cliente Inativo!");
+        }
+
+        if(clienteDTO.getCpf() == null){
+            throw new RegraDeNegocioException("Este cliente não existe!");
+        }
+    }
+
+    void validarClientePorCPF(ClienteCreateDTO clienteCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
+
+        if(listarClientes().stream().anyMatch(cliente -> cliente.getCpf().equals(clienteCreateDTO.getCpf()))){
+            throw new RegraDeNegocioException("Este cliente já está registrado!");
         }
     }
 }

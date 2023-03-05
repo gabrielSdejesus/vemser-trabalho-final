@@ -2,6 +2,8 @@ package br.com.dbc.vemser.financeiro.controller;
 
 import br.com.dbc.vemser.financeiro.dto.EnderecoCreateDTO;
 import br.com.dbc.vemser.financeiro.dto.EnderecoDTO;
+import br.com.dbc.vemser.financeiro.exception.BancoDeDadosException;
+import br.com.dbc.vemser.financeiro.exception.RegraDeNegocioException;
 import br.com.dbc.vemser.financeiro.service.EnderecoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,34 +25,43 @@ public class EnderecoController {
     private final EnderecoService enderecoService;
 
     @GetMapping("/lista")
-    public ResponseEntity<List<EnderecoDTO>> listarTodosEnderecos(){
-        return null;
+    public ResponseEntity<List<EnderecoDTO>> listarTodosEnderecos() throws BancoDeDadosException, RegraDeNegocioException {
+        return ResponseEntity.ok(enderecoService.listarEnderecos());
     }
 
     @GetMapping("/{idCliente}/cliente")
-    public ResponseEntity<List<EnderecoDTO>> listarTodosEnderecosDoCliente(@NotNull Integer idCliente){
-        return null;
+    public ResponseEntity<List<EnderecoDTO>> listarTodosEnderecosDoCliente(@PathVariable("idCliente") Integer idCliente) throws BancoDeDadosException, RegraDeNegocioException {
+        return ResponseEntity.ok(enderecoService.retornarEnderecosDoCliente(idCliente));
+    }
+
+    @GetMapping("/{idEndereco}")
+    public ResponseEntity<EnderecoDTO> retornarEndereco(@PathVariable("idEndereco") Integer idEndereco) throws BancoDeDadosException, RegraDeNegocioException {
+        return ResponseEntity.ok(enderecoService.retornarEndereco(idEndereco));
     }
 
     @PostMapping
-    public ResponseEntity<EnderecoDTO> criar(@RequestBody @Valid EnderecoCreateDTO endereco){
+    public ResponseEntity<EnderecoDTO> criar(@RequestBody @Valid EnderecoCreateDTO endereco) throws BancoDeDadosException, RegraDeNegocioException {
         log.info("Criando Endereço!");
+        EnderecoDTO endereDTO = enderecoService.adicionarEndereco(endereco);
         log.info("Endereço Criado!");
-        return null;
+        return ResponseEntity.ok(endereDTO);
     }
 
     @PutMapping("/{idEndereco}")
-    public ResponseEntity<EnderecoDTO> atualizar(@NotNull Integer idEndereco,
-                                 @RequestBody @Valid EnderecoCreateDTO endereco){
+    public ResponseEntity<EnderecoDTO> atualizar(@PathVariable("idEndereco") Integer idEndereco,
+                                 @RequestBody @Valid EnderecoCreateDTO endereco) throws BancoDeDadosException, RegraDeNegocioException {
         log.info("Atualizando Endereço!");
+        EnderecoDTO enderecoDTO = enderecoService.atualizarEndereco(idEndereco, endereco);
         log.info("Endereço Atualizado!");
-        return null;
+        return ResponseEntity.ok(enderecoDTO);
     }
 
     @DeleteMapping("/{idEndereco}")
-    public ResponseEntity<Void> deletar(@NotNull Integer idEndereco){
+    public ResponseEntity<Void> deletar(
+            @PathVariable("idEndereco") Integer idEndereco) throws BancoDeDadosException, RegraDeNegocioException {
         log.info("Deletando Endereço!");
+        enderecoService.deletarEndereco(idEndereco);
         log.info("Endereço Deletado!");
-        return null;
+        return ResponseEntity.ok().build();
     }
 }

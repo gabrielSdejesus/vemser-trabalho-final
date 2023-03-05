@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -13,8 +14,9 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @Data
 public class EnderecoCreateDTO {
-    @NotNull(message = "Cliente não deve ser nulo!")
-    private Cliente cliente;
+
+    @NotNull(message = "Necessário informar um cliente válido!")
+    private Integer idCliente;
     @NotBlank(message = "Logradouro não pode ser vazio ou nulo!")
     @Size(max = 250, message = "Logradouro longo demais!")
     private String logradouro;
@@ -26,6 +28,6 @@ public class EnderecoCreateDTO {
     @NotBlank(message = "País não pode ser vazio ou nulo!")
     private String pais;
     @NotBlank(message = "CEP não pode ser vazio ou nulo!")
-    @Size(max = 8, message = "CEP inválido!")
+    @Size(min=8, max=8, message = "CEP inválido!")
     private String cep;
 }

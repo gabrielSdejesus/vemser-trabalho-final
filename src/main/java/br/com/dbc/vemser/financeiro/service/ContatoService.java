@@ -22,6 +22,16 @@ public class ContatoService extends Servico {
         this.contatoRepository = contatoRepository;
     }
 
+    public List<ContatoDTO> retornarContatosDoCliente(Integer idCliente) throws BancoDeDadosException, RegraDeNegocioException {
+        return this.contatoRepository.listarContatosPorPessoa(idCliente).stream()
+                .map(contato -> objectMapper.convertValue(contato, ContatoDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    public ContatoDTO retornarContato(Integer idContato) throws BancoDeDadosException, RegraDeNegocioException {
+        return objectMapper.convertValue(this.contatoRepository.retornarContato(idContato), ContatoDTO.class);
+    }
+
     public ContatoDTO editar(Integer idContato, ContatoCreateDTO contatoCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
         Contato contato = objectMapper.convertValue(contatoCreateDTO, Contato.class);
         return objectMapper.convertValue(this.contatoRepository.editar(idContato, contato), ContatoDTO.class);
@@ -34,15 +44,5 @@ public class ContatoService extends Servico {
     public ContatoDTO adicionarContato(ContatoCreateDTO contatoCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
         Contato contato = objectMapper.convertValue(contatoCreateDTO, Contato.class);
         return objectMapper.convertValue(this.contatoRepository.adicionar(contato), ContatoDTO.class);
-    }
-
-    public ContatoDTO retornarContato(Integer idContato) throws BancoDeDadosException, RegraDeNegocioException {
-        return objectMapper.convertValue(this.contatoRepository.retornarContato(idContato), ContatoDTO.class);
-    }
-
-    public List<ContatoDTO> retornarContatosDoCliente(Integer idCliente) throws BancoDeDadosException, RegraDeNegocioException {
-        return this.contatoRepository.listarContatosPorPessoa(idCliente).stream()
-                .map(contato -> objectMapper.convertValue(contato, ContatoDTO.class))
-                .collect(Collectors.toList());
     }
 }

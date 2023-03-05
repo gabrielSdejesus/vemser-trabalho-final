@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class Endereco {
     private Integer idEndereco;
-    private Cliente cliente;
+    private Integer idCliente;
     private String logradouro;
     private String cidade;
     private String estado;
