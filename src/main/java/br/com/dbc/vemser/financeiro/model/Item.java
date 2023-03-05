@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class Item {
     private Integer idItem;//PK
-    private Compra compra;
+    private Integer idCompra;
     private String nome;
     private Double valor;
     private Integer quantidade;

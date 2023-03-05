@@ -2,9 +2,12 @@ package br.com.dbc.vemser.financeiro.controller;
 
 import br.com.dbc.vemser.financeiro.dto.ItemCreateDTO;
 import br.com.dbc.vemser.financeiro.dto.ItemDTO;
+import br.com.dbc.vemser.financeiro.exception.BancoDeDadosException;
+import br.com.dbc.vemser.financeiro.exception.RegraDeNegocioException;
 import br.com.dbc.vemser.financeiro.service.ItemService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -28,8 +31,8 @@ public class ItemController {
     }
 
     @GetMapping("/{idCompra}/compra")
-    public ResponseEntity<List<ItemDTO>> listarItensDaCompra(@NotNull Integer idCompra){
-        return null;
+    public ResponseEntity<List<ItemDTO>> listarItensDaCompra(@NotNull @PathVariable("idCompra") Integer idCompra) throws BancoDeDadosException, RegraDeNegocioException {
+        return new ResponseEntity<>(itemService.listarItensPorIdCompra(idCompra), HttpStatus.OK);
     }
 
     @PostMapping

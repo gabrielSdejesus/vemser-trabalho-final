@@ -182,9 +182,7 @@ public class ItemRepository implements Repositorio<Item> {
         item.setNome(res.getString("nome"));
         item.setValor(res.getDouble("valor"));
         item.setQuantidade(res.getInt("quantidade"));
-        Compra compra = new Compra();
-        compra.setIdCompra(res.getInt("id_compra"));
-        item.setCompra(compra);
+        item.setIdCompra(res.getInt("id_compra"));
         return item;
     }
 }
