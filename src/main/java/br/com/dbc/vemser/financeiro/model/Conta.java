@@ -8,11 +8,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class Conta {
-    private Integer numeroConta;//PK
+    private Integer numeroConta;
     private Cliente cliente;
     private String senha;
     private Integer agencia;
     private Double saldo;
-    private Double chequeEspecial;
-    private Status status = Status.ATIVO;
+    private Double chequeEspecial = 200.0;
+    private Status status;
 }

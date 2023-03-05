@@ -41,7 +41,9 @@ public class ContaRepository implements Repositorio<Conta> {
 
             String sql = """
                     INSERT INTO conta
-                    VALUES(?, ?, ?, ?, ?, ?, ?)
+                    (numero_conta, id_cliente, senha, 
+                        agencia, saldo, cheque_especial)
+                    VALUES(?, ?, ?, ?, ?, ?)
                     """;
 
             PreparedStatement stmt = con.prepareStatement(sql);
@@ -52,12 +54,11 @@ public class ContaRepository implements Repositorio<Conta> {
             stmt.setInt(4, conta.getAgencia());
             stmt.setDouble(5, conta.getSaldo());
             stmt.setDouble(6, conta.getChequeEspecial());
-            stmt.setInt(7, conta.getStatus().getStatus());
 
             // Executar consulta
             stmt.executeUpdate();
-            return conta;
 
+            return consultarPorNumeroConta(conta.getNumeroConta(), conta.getCliente().getIdCliente());
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
         } finally {
@@ -138,7 +139,7 @@ public class ContaRepository implements Repositorio<Conta> {
         }
     }
 
-    public boolean editar(Integer id, Conta conta) throws BancoDeDadosException {
+    public Conta editar(Integer id, Conta conta) throws BancoDeDadosException {
         Connection con = null;
         try {
             con = ConexaoBancoDeDados.getConnection();
@@ -187,8 +188,9 @@ public class ContaRepository implements Repositorio<Conta> {
             stmt.setInt(index, id);
 
             // Executar consulta
-            int res = stmt.executeUpdate();
-            return res > 0;
+            stmt.executeUpdate();
+
+            return consultarPorNumeroConta(conta.getNumeroConta(), conta.getCliente().getIdCliente());
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
         } finally {
@@ -232,7 +234,7 @@ public class ContaRepository implements Repositorio<Conta> {
         }
     }
 
-    public Conta consultarPorNumeroConta(Integer id) throws BancoDeDadosException {
+    public Conta consultarPorNumeroConta(Integer numeroConta, Integer idCliente) throws BancoDeDadosException {
         Connection con = null;
         try {
             con = ConexaoBancoDeDados.getConnection();
@@ -241,12 +243,13 @@ public class ContaRepository implements Repositorio<Conta> {
             String sql = """
                     SELECT * FROM CONTA c
                     LEFT JOIN CLIENTE c2 ON c.ID_CLIENTE = c2.ID_CLIENTE
-                    WHERE numero_conta = ?
+                    WHERE c.numero_conta = ? AND c.id_cliente = ?
                      """;
 
             // Executa-se a consulta
             PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setInt(1, id);
+            stmt.setInt(1, numeroConta);
+            stmt.setInt(2,idCliente);
             ResultSet res = stmt.executeQuery();
 
             while (res.next()) {
@@ -282,6 +285,7 @@ public class ContaRepository implements Repositorio<Conta> {
         cliente.setIdCliente(res.getInt("ID_CLIENTE"));
         cliente.setCpf(res.getString("CPF_CLIENTE"));
         cliente.setNome(res.getString("NOME"));
+        cliente.setStatus(Status.getTipoStatus(res.getInt("STATUS")));
         conta.setCliente(cliente);
         return conta;
     }

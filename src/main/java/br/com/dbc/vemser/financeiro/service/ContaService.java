@@ -1,9 +1,9 @@
 package br.com.dbc.vemser.financeiro.service;
 
-import br.com.dbc.vemser.financeiro.dto.ContaCreateDTO;
-import br.com.dbc.vemser.financeiro.dto.ContaDTO;
+import br.com.dbc.vemser.financeiro.dto.*;
 import br.com.dbc.vemser.financeiro.exception.BancoDeDadosException;
 import br.com.dbc.vemser.financeiro.exception.RegraDeNegocioException;
+import br.com.dbc.vemser.financeiro.model.Cliente;
 import br.com.dbc.vemser.financeiro.model.Conta;
 import br.com.dbc.vemser.financeiro.model.Status;
 import br.com.dbc.vemser.financeiro.repository.ContaRepository;
@@ -11,6 +11,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Random;
+import java.util.random.RandomGenerator;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,17 +22,14 @@ public class ContaService extends Servico {
     private final CartaoService cartaoService;
     private final TransferenciaService transferenciaService;
 
-    public ContaService(ContaRepository contaRepository, ClienteService clienteService, CartaoService cartaoService, TransferenciaService transferenciaService, ObjectMapper objectMapper) {
+    public ContaService(ContaRepository contaRepository, ClienteService clienteService,
+                        CartaoService cartaoService, TransferenciaService transferenciaService,
+                        ObjectMapper objectMapper) {
         super(objectMapper);
         this.contaRepository = contaRepository;
         this.clienteService = clienteService;
         this.cartaoService = cartaoService;
         this.transferenciaService = transferenciaService;
-    }
-
-    public ContaDTO adicionar(ContaCreateDTO contaCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
-        Conta conta = objectMapper.convertValue(contaCreateDTO, Conta.class);
-        return objectMapper.convertValue(contaRepository.adicionar(conta), ContaDTO.class);
     }
 
     public List<ContaDTO> listar() throws BancoDeDadosException, RegraDeNegocioException {
@@ -39,37 +38,98 @@ public class ContaService extends Servico {
                 .collect(Collectors.toList());
     }
 
-    public ContaDTO editar(Integer numeroConta, ContaCreateDTO contaCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
-        Conta conta = objectMapper.convertValue(contaCreateDTO, Conta.class);
-        return objectMapper.convertValue(contaRepository.editar(numeroConta, conta), ContaDTO.class);
-    }
+    public ContaDTO retornarContaCliente(Integer idCliente, ContaAcessDTO contaAcessDTO) throws BancoDeDadosException, RegraDeNegocioException{
+        //Validando cliente
+        clienteService.visualizarCliente(idCliente);
 
-    //função exclusiva do administrador
-    public boolean removerConta(Integer numeroConta) throws BancoDeDadosException, RegraDeNegocioException {
-        return contaRepository.remover(numeroConta);
-    }
+        //Recuperando conta
+        Conta conta = contaRepository
+                .consultarPorNumeroConta(contaAcessDTO.getNumeroConta(), idCliente);
 
-    public ContaDTO retornarLoginConta(Integer numeroConta, String senhaConta) throws BancoDeDadosException, RegraDeNegocioException{
-        Conta conta = retornarConta(numeroConta);
-        if (conta != null && conta.getSenha() != null && conta.getSenha().equals(senhaConta) && conta.getStatus() == Status.ATIVO) {
-            return objectMapper.convertValue(conta, ContaDTO.class);
-        } else {
-            //retorna null se não existe conta alguma ou algum dado está errado
-            if (conta == null) {
-                throw new RegraDeNegocioException("Número da conta ou Senha inválida!");
-            } else if (conta.getStatus() == Status.INATIVO) {//a conta já existiu porém ela está inativa
-                throw new RegraDeNegocioException("Conta inativa!");
-            }
-        }
+        //Verificando senha
+        validandoAcessoConta(contaAcessDTO,conta);
         return objectMapper.convertValue(conta, ContaDTO.class);
     }
 
-    private Conta retornarConta(Integer numeroConta) throws BancoDeDadosException, RegraDeNegocioException{
-        return this.contaRepository.consultarPorNumeroConta(numeroConta);
+    public ContaDTO criar(ContaCreateDTO contaCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
+        //Validando se o CPF já possui uma conta no banco.
+        validarCriacaoConta(contaCreateDTO);
+        //Criando entidade
+        Conta conta = criandoEntidade(contaCreateDTO);
+        return objectMapper.convertValue(contaRepository.adicionar(conta), ContaDTO.class);
     }
 
+    public ContaDTO alterarSenha(Integer idCliente,
+                              ContaUpdateDTO contaUpdateDTO) throws BancoDeDadosException, RegraDeNegocioException {
+
+        //Vericando acesso a conta que irá ser atualizada
+        ContaAcessDTO contaAcessDTO = new ContaAcessDTO();
+        contaAcessDTO.setNumeroConta(contaUpdateDTO.getNumeroConta());
+        contaAcessDTO.setSenha(contaUpdateDTO.getSenha());
+        ContaDTO contaDTO = retornarContaCliente(idCliente, contaAcessDTO);
+
+        //Alterando senha
+        Conta conta = objectMapper.convertValue(contaDTO, Conta.class);
+        conta.setSenha(contaUpdateDTO.getSenhaNova());
+
+        //Executando edição
+        return objectMapper.convertValue(contaRepository
+                .editar(conta.getNumeroConta(), conta), ContaDTO.class);
+    }
+
+    public void removerConta(Integer idCliente, Integer numeroConta) throws BancoDeDadosException, RegraDeNegocioException {
+        //Validando e recuperando conta
+        ContaDTO contaDTO = listar().stream()
+                .filter(contaDTO1 -> contaDTO1.getNumeroConta().equals(numeroConta)
+                && contaDTO1.getCliente().getIdCliente().equals(idCliente)).findFirst()
+                .orElseThrow(() -> new RegraDeNegocioException("Conta inválida!"));
+
+        //Deletando cliente
+        clienteService.deletarCliente(idCliente);
+
+        //Deletando conta
+        contaRepository.remover(numeroConta);
+    }
+
+    private Conta criandoEntidade(ContaCreateDTO contaCreateDTO){
+        Random random = new Random();
+        Cliente cliente = new Cliente();
+        cliente.setIdCliente(contaCreateDTO.getIdCliente());
+        Conta conta = new Conta();
+        conta.setCliente(cliente);
+        conta.setSenha(contaCreateDTO.getSenha());
+        conta.setSaldo(contaCreateDTO.getSaldo());
+        conta.setAgencia(random.nextInt(9000) + 1000);
+        return conta;
+    }
+
+    private void validarCriacaoConta(ContaCreateDTO contaCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
+        ClienteDTO clienteDTO = clienteService.visualizarCliente(contaCreateDTO.getIdCliente());
+        if(listar().stream()
+                .anyMatch(conta -> conta.getCliente().getCpf().equals(clienteDTO.getCpf()))){
+            throw new RegraDeNegocioException("Este cliente já tem uma conta cadastrada!");
+        }
+
+        if(!contaCreateDTO.getCpf().equals(clienteDTO.getCpf())){
+            throw new RegraDeNegocioException("CPF inválido!");
+        }
+    }
+
+    private void validandoAcessoConta(ContaAcessDTO contaAcessDTO, Conta conta) throws RegraDeNegocioException {
+
+        if(!(conta != null)){
+            throw new RegraDeNegocioException("Conta inválida!");
+        }
+
+        if(!conta.getSenha().equals(contaAcessDTO.getSenha())){
+            throw new RegraDeNegocioException("Senha errada!");
+        }
+    }
+
+    /*
+
     public ContaDTO depositar(Integer numeroConta, Double valor) throws BancoDeDadosException, RegraDeNegocioException{
-        Conta conta = retornarConta(numeroConta);
+        Conta conta = retornarContaCliente(numeroConta);
         if(conta != null){
             if(conta.getStatus() != Status.ATIVO){
                 if(valor <= 0){
@@ -87,7 +147,7 @@ public class ContaService extends Servico {
     }
 
     public ContaDTO sacar(Integer numeroConta, Double valor) throws BancoDeDadosException, RegraDeNegocioException {
-        Conta conta = retornarConta(numeroConta);
+        Conta conta = retornarContaCliente(numeroConta);
         if(conta != null){
             if(conta.getStatus() != Status.ATIVO){
                 if(valor <= 0){
@@ -109,8 +169,8 @@ public class ContaService extends Servico {
     }
 
     public boolean transferir(Integer numeroContaEnvia, Integer numeroContaRecebe, Double valor) throws BancoDeDadosException, RegraDeNegocioException {
-        Conta recebe = retornarConta(numeroContaRecebe),
-                envia = retornarConta(numeroContaEnvia);
+        Conta recebe = retornarContaCliente(numeroContaRecebe),
+                envia = retornarContaCliente(numeroContaEnvia);
         if(recebe != null && envia != null){
             if(recebe.getStatus() == Status.ATIVO && envia.getStatus() == Status.ATIVO){
                 if(valor > 0){
@@ -143,7 +203,7 @@ public class ContaService extends Servico {
     }
 
     public ContaDTO pagar(Integer numeroConta, Double valor) throws BancoDeDadosException, RegraDeNegocioException {
-        Conta conta = retornarConta(numeroConta);
+        Conta conta = retornarContaCliente(numeroConta);
         if(conta != null){
             if(conta.getStatus() != Status.ATIVO){
                 if(valor <= 0){
@@ -164,18 +224,8 @@ public class ContaService extends Servico {
         }
     }
 
-    public ContaDTO alterarSenha(String senhaAntiga, String senhaNova, Integer numeroConta) throws BancoDeDadosException, RegraDeNegocioException {
-        Conta conta = retornarConta(numeroConta);
-        if(conta.getSenha().equals(senhaAntiga)){
-            conta.setSenha(senhaNova);
-            return editar(numeroConta, objectMapper.convertValue(conta, ContaCreateDTO.class));
-        }else{
-            throw new RegraDeNegocioException("Senha antiga incorreta! Caso não lembre sua senha para alterá-la, entre em contato com o administrador do banco!");
-        }
-    }
-
     public ContaDTO reativarConta(Integer numeroConta, String senhaAdmin) throws BancoDeDadosException, RegraDeNegocioException {
-        Conta conta = retornarConta(numeroConta);
+        Conta conta = retornarContaCliente(numeroConta);
         if(senhaAdmin.equals("ABACAXI")){
             if(conta.getStatus()==Status.ATIVO){
                 throw new RegraDeNegocioException("Conta já está ativa!");
@@ -187,4 +237,6 @@ public class ContaService extends Servico {
             throw new RegraDeNegocioException("Senha administrativa incorreta!");
         }
     }
+*/
 }
+

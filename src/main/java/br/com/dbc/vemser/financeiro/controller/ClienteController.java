@@ -24,7 +24,7 @@ public class ClienteController {
     private final ClienteService clienteService;
 
     @GetMapping("/lista")
-    public ResponseEntity<List<ClienteDTO>> listarTodosClientes() throws BancoDeDadosException, RegraDeNegocioException {
+    public ResponseEntity<List<ClienteDTO>> listarClientes() throws BancoDeDadosException, RegraDeNegocioException {
         return ResponseEntity.ok(clienteService.listarClientes());
     }
 
