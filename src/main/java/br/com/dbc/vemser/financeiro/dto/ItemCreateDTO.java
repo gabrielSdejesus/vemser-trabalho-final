@@ -14,7 +14,7 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @Data
 public class ItemCreateDTO {
-    @NotNull(message = "Compra não deve ser nula!")
+    //@NotNull(message = "Compra não deve ser nula!")
     private Integer idCompra;
     @NotBlank(message = "Nome do item não deve ser nulo!")
     @Size(max = 100, message = "Nome do item longo demais!")

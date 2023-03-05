@@ -36,10 +36,10 @@ public class ItemController {
     }
 
     @PostMapping
-    public ResponseEntity<ItemDTO> criar(@RequestBody @Valid ItemCreateDTO item){
+    public ResponseEntity<List<ItemDTO>> criar(@RequestBody @Valid List<ItemCreateDTO> itensCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
         log.info("Criando compra!");
         log.info("compra Criado!");
-        return null;
+        return new ResponseEntity<>(itemService.adicionar(itensCreateDTO), HttpStatus.OK);
     }
 
     @PutMapping("/{idItem}")

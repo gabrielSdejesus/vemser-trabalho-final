@@ -9,6 +9,7 @@ import br.com.dbc.vemser.financeiro.repository.ItemRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,9 +23,17 @@ public class ItemService extends Servico {
         this.itemRepository = itemRepository;
     }
 
-    public ItemDTO adicionar(ItemCreateDTO itemCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
-        Item item = objectMapper.convertValue(itemCreateDTO, Item.class);
-        return objectMapper.convertValue(this.itemRepository.adicionar(item), ItemDTO.class);
+    public List<ItemDTO> adicionar(List<ItemCreateDTO> itensCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
+
+        List<Item> itens = itensCreateDTO.stream()
+                .map(itemCreateDTO -> objectMapper.convertValue(itemCreateDTO, Item.class))
+                .toList();
+        List<ItemDTO> itensDTO = new ArrayList<>();
+        for(Item item : itens) {
+            Item itemCreated = itemRepository.adicionar(item);
+            itensDTO.add(objectMapper.convertValue(itemCreated, ItemDTO.class));
+        }
+        return itensDTO;
     }
 
     public ItemDTO retornarItem(Integer idItem) throws BancoDeDadosException, RegraDeNegocioException {

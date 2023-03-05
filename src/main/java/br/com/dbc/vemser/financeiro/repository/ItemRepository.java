@@ -62,7 +62,7 @@ public class ItemRepository implements Repositorio<Item> {
 
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setInt(1, item.getIdItem());
-            stmt.setInt(2, this.getUltimoIdCompra(con));
+            stmt.setInt(2, item.getIdCompra());
             stmt.setString(3, item.getNome());
             stmt.setDouble(4, item.getValor());
             stmt.setInt(5, item.getQuantidade());
