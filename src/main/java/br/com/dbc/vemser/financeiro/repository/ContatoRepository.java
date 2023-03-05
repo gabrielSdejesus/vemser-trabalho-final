@@ -48,7 +48,7 @@ public class ContatoRepository implements Repositorio<Contato> {
             PreparedStatement stmt = con.prepareStatement(sql);
 
             stmt.setInt(1, contato.getIdContato());
-            stmt.setInt(2, contato.getCliente().getIdCliente());
+            stmt.setInt(2, contato.getIdCliente());
             stmt.setString(3, contato.getTelefone());
             stmt.setString(4, contato.getEmail());
 
@@ -192,8 +192,7 @@ public class ContatoRepository implements Repositorio<Contato> {
             con = ConexaoBancoDeDados.getConnection();
 
             String sql = """
-                        SELECT c2.nome, c.* FROM contato c
-                        INNER JOIN cliente c2 ON c.id_cliente = c2.id_cliente
+                        SELECT * FROM contato c
                         WHERE c.id_cliente = ?
                     """;
 
@@ -256,9 +255,7 @@ public class ContatoRepository implements Repositorio<Contato> {
     private Contato getContatoFromResultSet(ResultSet res) throws SQLException {
         Contato contato = new Contato();
         contato.setIdContato(res.getInt("id_contato"));
-        Cliente cliente = new Cliente();
-        cliente.setNome(res.getString("nome"));
-        contato.setCliente(cliente);
+        contato.setIdCliente(res.getInt("id_cliente"));
         contato.setTelefone(res.getString("telefone"));
         contato.setEmail(res.getString("email"));
         return contato;

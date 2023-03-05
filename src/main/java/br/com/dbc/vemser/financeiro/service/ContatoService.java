@@ -22,7 +22,7 @@ public class ContatoService extends Servico {
         this.contatoRepository = contatoRepository;
     }
 
-    public List<ContatoDTO> retornarContatosDoCliente(Integer idCliente) throws BancoDeDadosException, RegraDeNegocioException {
+    public List<ContatoDTO> listarPorIdCliente(Integer idCliente) throws BancoDeDadosException, RegraDeNegocioException {
         return this.contatoRepository.listarContatosPorPessoa(idCliente).stream()
                 .map(contato -> objectMapper.convertValue(contato, ContatoDTO.class))
                 .collect(Collectors.toList());

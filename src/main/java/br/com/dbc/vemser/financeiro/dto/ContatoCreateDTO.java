@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 @Data
 public class ContatoCreateDTO {
     @NotNull(message = "Cliente não deve ser nulo!")
-    private Cliente cliente;
+    private Integer idCliente;
     @NotBlank(message = "Telefone não deve ser nulo!")
     private String telefone;
     @Email(message = "Email inválido!")

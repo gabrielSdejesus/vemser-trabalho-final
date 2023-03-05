@@ -183,7 +183,7 @@ public class ItemRepository implements Repositorio<Item> {
         Connection con = null;
         try {
             con = ConexaoBancoDeDados.getConnection();
-            
+
             String sql = "DELETE FROM item WHERE id_item = ?";
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setInt(1, idItem);

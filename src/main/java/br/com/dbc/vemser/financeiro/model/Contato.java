@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class Contato {
     private Integer idContato;//PK
-    private Cliente cliente;
+    private Integer idCliente;
     private String telefone;
     private String email;
 }

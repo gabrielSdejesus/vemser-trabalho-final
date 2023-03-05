@@ -2,9 +2,12 @@ package br.com.dbc.vemser.financeiro.controller;
 
 import br.com.dbc.vemser.financeiro.dto.ContatoCreateDTO;
 import br.com.dbc.vemser.financeiro.dto.ContatoDTO;
+import br.com.dbc.vemser.financeiro.exception.BancoDeDadosException;
+import br.com.dbc.vemser.financeiro.exception.RegraDeNegocioException;
 import br.com.dbc.vemser.financeiro.service.ContatoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -28,8 +31,8 @@ public class ContatoController {
     }
 
     @GetMapping("/{idCliente}/cliente")
-    public ResponseEntity<List<ContatoDTO>> listarTodosContatosDoCliente(@NotNull Integer idCliente){
-        return null;
+    public ResponseEntity<List<ContatoDTO>> listarTodosContatosDoCliente(@NotNull @PathVariable("idCliente") Integer idCliente) throws BancoDeDadosException, RegraDeNegocioException {
+        return new ResponseEntity<>(contatoService.listarPorIdCliente(idCliente), HttpStatus.OK);
     }
 
     @PostMapping
