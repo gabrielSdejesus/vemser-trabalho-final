@@ -59,4 +59,8 @@ public class ItemService extends Servico {
                 .map(item -> objectMapper.convertValue(item, ItemDTO.class))
                 .collect(Collectors.toList());
     }
+
+    public void deletar(Integer idItem) throws BancoDeDadosException {
+        itemRepository.deletar(idItem);
+    }
 }

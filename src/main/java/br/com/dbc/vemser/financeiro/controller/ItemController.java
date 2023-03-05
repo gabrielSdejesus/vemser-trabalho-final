@@ -51,9 +51,10 @@ public class ItemController {
     }
 
     @DeleteMapping("/{idItem}")
-    public ResponseEntity<Void> deletar(@NotNull Integer idItem){
-        log.info("Deletando compra!");
-        log.info("compra Deletado!");
-        return null;
+    public ResponseEntity<Void> deletar(@NotNull @PathVariable("idItem") Integer idItem) throws BancoDeDadosException {
+        log.info("Deletando compra...");
+        itemService.deletar(idItem);
+        log.info("compra Deletada!");
+        return ResponseEntity.ok().build();
     }
 }

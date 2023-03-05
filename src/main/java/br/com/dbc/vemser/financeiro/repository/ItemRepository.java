@@ -137,6 +137,14 @@ public class ItemRepository implements Repositorio<Item> {
 
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
+        } finally {
+            try {
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -159,6 +167,28 @@ public class ItemRepository implements Repositorio<Item> {
 
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new BancoDeDadosException(e.getCause());
+        } finally {
+            try {
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void deletar(Integer idItem) throws BancoDeDadosException {
+        Connection con = null;
+        try {
+            con = ConexaoBancoDeDados.getConnection();
+            
+            String sql = "DELETE FROM item WHERE id_item = ?";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setInt(1, idItem);
+            stmt.execute();
+        } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
         } finally {
             try {
