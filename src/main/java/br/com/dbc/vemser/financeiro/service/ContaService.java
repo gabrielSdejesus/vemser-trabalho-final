@@ -42,13 +42,10 @@ public class ContaService extends Servico {
         //Validando cliente
         clienteService.visualizarCliente(idCliente);
 
-        //Recuperando conta
-        Conta conta = contaRepository
-                .consultarPorNumeroConta(contaAcessDTO.getNumeroConta(), idCliente);
+        //Verificando senha e recuperando conta
+        ContaDTO contaDTO = validandoAcessoConta(contaAcessDTO,idCliente);
 
-        //Verificando senha
-        validandoAcessoConta(contaAcessDTO,conta);
-        return objectMapper.convertValue(conta, ContaDTO.class);
+        return contaDTO;
     }
 
     public ContaDTO criar(ContaCreateDTO contaCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
@@ -66,7 +63,7 @@ public class ContaService extends Servico {
         ContaAcessDTO contaAcessDTO = new ContaAcessDTO();
         contaAcessDTO.setNumeroConta(contaUpdateDTO.getNumeroConta());
         contaAcessDTO.setSenha(contaUpdateDTO.getSenha());
-        ContaDTO contaDTO = retornarContaCliente(idCliente, contaAcessDTO);
+        ContaDTO contaDTO = validandoAcessoConta(contaAcessDTO, idCliente);
 
         //Alterando senha
         Conta conta = objectMapper.convertValue(contaDTO, Conta.class);
@@ -79,10 +76,10 @@ public class ContaService extends Servico {
 
     public void removerConta(Integer idCliente, Integer numeroConta) throws BancoDeDadosException, RegraDeNegocioException {
         //Validando e recuperando conta
-        ContaDTO contaDTO = listar().stream()
-                .filter(contaDTO1 -> contaDTO1.getNumeroConta().equals(numeroConta)
-                && contaDTO1.getCliente().getIdCliente().equals(idCliente)).findFirst()
-                .orElseThrow(() -> new RegraDeNegocioException("Conta inválida!"));
+        ContaDTO contaDTO = objectMapper.convertValue(contaRepository.consultarPorNumeroConta(numeroConta, idCliente), ContaDTO.class);
+        if(!(contaDTO != null)){
+            throw new RegraDeNegocioException("Conta inválida!");
+        }
 
         //Deletando cliente
         clienteService.deletarCliente(idCliente);
@@ -115,8 +112,9 @@ public class ContaService extends Servico {
         }
     }
 
-    private void validandoAcessoConta(ContaAcessDTO contaAcessDTO, Conta conta) throws RegraDeNegocioException {
+    private ContaDTO validandoAcessoConta(ContaAcessDTO contaAcessDTO, Integer idCliente) throws RegraDeNegocioException, BancoDeDadosException {
 
+        Conta conta = contaRepository.consultarPorNumeroConta(contaAcessDTO.getNumeroConta(), idCliente);
         if(!(conta != null)){
             throw new RegraDeNegocioException("Conta inválida!");
         }
@@ -124,6 +122,8 @@ public class ContaService extends Servico {
         if(!conta.getSenha().equals(contaAcessDTO.getSenha())){
             throw new RegraDeNegocioException("Senha errada!");
         }
+
+        return objectMapper.convertValue(conta, ContaDTO.class);
     }
 
     /*
