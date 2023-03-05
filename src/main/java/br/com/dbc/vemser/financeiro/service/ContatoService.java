@@ -7,7 +7,6 @@ import br.com.dbc.vemser.financeiro.exception.RegraDeNegocioException;
 import br.com.dbc.vemser.financeiro.model.Contato;
 import br.com.dbc.vemser.financeiro.repository.ContatoRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.val;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

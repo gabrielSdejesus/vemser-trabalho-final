@@ -1,7 +1,6 @@
 package br.com.dbc.vemser.financeiro.service;
 
 
-import br.com.dbc.vemser.financeiro.dto.ClienteDTO;
 import br.com.dbc.vemser.financeiro.dto.EnderecoCreateDTO;
 import br.com.dbc.vemser.financeiro.dto.EnderecoDTO;
 import br.com.dbc.vemser.financeiro.exception.BancoDeDadosException;

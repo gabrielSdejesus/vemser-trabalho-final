@@ -5,7 +5,6 @@ import br.com.dbc.vemser.financeiro.model.Cliente;
 import br.com.dbc.vemser.financeiro.model.Status;
 import org.springframework.stereotype.Repository;
 
-import java.awt.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;

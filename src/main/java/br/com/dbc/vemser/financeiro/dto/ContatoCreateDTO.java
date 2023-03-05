@@ -1,6 +1,5 @@
 package br.com.dbc.vemser.financeiro.dto;
 
-import br.com.dbc.vemser.financeiro.model.Cliente;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

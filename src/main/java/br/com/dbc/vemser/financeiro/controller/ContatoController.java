@@ -1,9 +1,7 @@
 package br.com.dbc.vemser.financeiro.controller;
 
-import br.com.dbc.vemser.financeiro.dto.ClienteDTO;
 import br.com.dbc.vemser.financeiro.dto.ContatoCreateDTO;
 import br.com.dbc.vemser.financeiro.dto.ContatoDTO;
-import br.com.dbc.vemser.financeiro.dto.EnderecoDTO;
 import br.com.dbc.vemser.financeiro.exception.BancoDeDadosException;
 import br.com.dbc.vemser.financeiro.exception.RegraDeNegocioException;
 import br.com.dbc.vemser.financeiro.service.ContatoService;
@@ -15,7 +13,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @RequestMapping("/contato")
