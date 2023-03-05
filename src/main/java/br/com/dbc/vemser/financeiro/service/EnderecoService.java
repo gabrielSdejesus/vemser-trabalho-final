@@ -26,14 +26,15 @@ public class EnderecoService extends Servico {
         this.clienteService = clienteService;
     }
 
-    public List<EnderecoDTO> listarEnderecos() throws BancoDeDadosException, RegraDeNegocioException {
+    public List<EnderecoDTO> listarEnderecos() throws BancoDeDadosException {
         return enderecoRepository.listar().stream()
                 .map(endereco -> objectMapper.convertValue(endereco, EnderecoDTO.class))
                 .collect(Collectors.toList());
     }
 
-    public List<EnderecoDTO> retornarEnderecosDoCliente(Integer idCliente) throws BancoDeDadosException, RegraDeNegocioException {
-        validarPessoaEndereco(idCliente);
+    public List<EnderecoDTO> listarEnderecosDoCliente(Integer idCliente) throws BancoDeDadosException, RegraDeNegocioException {
+        //Validando cliente
+        clienteService.visualizarCliente(idCliente);
         return this.enderecoRepository.listarEnderecosPorPessoa(idCliente).stream()
                 .map(endereco -> objectMapper.convertValue(endereco, EnderecoDTO.class))
                 .collect(Collectors.toList());
@@ -44,28 +45,26 @@ public class EnderecoService extends Servico {
         return objectMapper.convertValue(this.enderecoRepository.retornarEndereco(idEndereco), EnderecoDTO.class);
     }
 
-    public EnderecoDTO adicionarEndereco(EnderecoCreateDTO enderecoCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
-        validarPessoaEndereco(enderecoCreateDTO.getIdCliente());
+    public EnderecoDTO adicionar(EnderecoCreateDTO enderecoCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
+        //Validando cliente
+        clienteService.visualizarCliente(enderecoCreateDTO.getIdCliente());
         //Validando se o cliente já possui aquele cep registrado no banco de dados.
-        if(listarEnderecos().stream()
-                .filter(enderecoDTO -> enderecoDTO.getIdCliente().equals(enderecoCreateDTO.getIdCliente()))
-                .anyMatch(enderecoDTO -> enderecoDTO.getCep().equals(enderecoCreateDTO.getCep()))){
-            throw new RegraDeNegocioException("Não é possível criar o mesmo CEP no mesmo cliente!");
-        }
+        validarCEPEndereco(enderecoCreateDTO);
         Endereco endereco = objectMapper.convertValue(enderecoCreateDTO, Endereco.class);
         return objectMapper.convertValue(this.enderecoRepository.adicionar(endereco), EnderecoDTO.class);
     }
 
-    public EnderecoDTO atualizarEndereco(Integer idEndereco, EnderecoCreateDTO enderecoCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
+    public EnderecoDTO atualizar(Integer idEndereco, EnderecoCreateDTO enderecoCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
         validarEndereco(idEndereco);
+        validarCEPEndereco(enderecoCreateDTO);
         Endereco endereco = objectMapper.convertValue(enderecoCreateDTO, Endereco.class);
         return objectMapper.convertValue(enderecoRepository.editar(idEndereco, endereco), EnderecoDTO.class);
     }
 
-    public boolean deletarEndereco(Integer idEndereco) throws BancoDeDadosException, RegraDeNegocioException {
+    public boolean deletar(Integer idEndereco) throws BancoDeDadosException, RegraDeNegocioException {
 
-        //Validando onde o cliente deve ter ao menos 1 endereço
-        List<EnderecoDTO> enderecoDTOS = retornarEnderecosDoCliente(retornarEndereco(idEndereco).getIdCliente());
+        //Validando se o cliente deve ter ao menos 1 endereço
+        List<EnderecoDTO> enderecoDTOS = listarEnderecosDoCliente(retornarEndereco(idEndereco).getIdCliente());
         if(enderecoDTOS.size() == 1){
             throw new RegraDeNegocioException("É necessário ter ao menos um endereço!");
         }
@@ -79,7 +78,11 @@ public class EnderecoService extends Servico {
         }
     }
 
-    void validarPessoaEndereco(Integer idCliente) throws BancoDeDadosException, RegraDeNegocioException {
-        clienteService.visualizarCliente(idCliente);
+    private void validarCEPEndereco(EnderecoCreateDTO enderecoCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
+        if(listarEnderecos().stream()
+                .filter(enderecoDTO -> enderecoDTO.getIdCliente().equals(enderecoCreateDTO.getIdCliente()))
+                .anyMatch(enderecoDTO -> enderecoDTO.getCep().equals(enderecoCreateDTO.getCep()))){
+            throw new RegraDeNegocioException("Este CEP já existe!");
+        }
     }
 }

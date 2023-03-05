@@ -98,7 +98,7 @@ public class ContatoRepository implements Repositorio<Contato> {
 
     }
 
-    public boolean editar(Integer id, Contato contato) throws BancoDeDadosException {
+    public Contato editar(Integer id, Contato contato) throws BancoDeDadosException {
         Connection con = null;
         try {
             con = ConexaoBancoDeDados.getConnection();
@@ -115,13 +115,11 @@ public class ContatoRepository implements Repositorio<Contato> {
             }
 
             sql.deleteCharAt(sql.length() - 1); //remove o ultimo ','
-            sql.append(" WHERE id_cliente = ? ");
-            sql.append("AND id_contato = ?");
+            sql.append(" WHERE ID_CONTATO = ? ");
 
             PreparedStatement stmt = con.prepareStatement(sql.toString());
 
             int index = 1;
-
             if (contato.getTelefone() != null) {
                 stmt.setString(index++, contato.getTelefone());
             }
@@ -130,13 +128,12 @@ public class ContatoRepository implements Repositorio<Contato> {
                 stmt.setString(index++, contato.getEmail());
             }
 
-            stmt.setInt(index++, id);
-            stmt.setInt(index, contato.getIdContato());
+            stmt.setInt(index, id);
 
             // Executar consulta
-            int res = stmt.executeUpdate();
-            return res > 0;
+            stmt.executeUpdate();
 
+            return retornarContato(id);
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
         } finally {
@@ -225,6 +222,7 @@ public class ContatoRepository implements Repositorio<Contato> {
         Connection con = null;
         try {
             con = ConexaoBancoDeDados.getConnection();
+            Contato contato = new Contato();
 
             String sql = """
                         SELECT c.* FROM CONTATO c
@@ -237,7 +235,10 @@ public class ContatoRepository implements Repositorio<Contato> {
 
             ResultSet res = stmt.executeQuery();
 
-            return getContatoFromResultSet(res);
+            while (res.next()){
+                contato = getContatoFromResultSet(res);
+            }
+            return contato;
         } catch (SQLException e) {
             e.printStackTrace();
             throw new BancoDeDadosException(e.getCause());

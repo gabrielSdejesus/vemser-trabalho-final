@@ -31,7 +31,7 @@ public class EnderecoController {
 
     @GetMapping("/{idCliente}/cliente")
     public ResponseEntity<List<EnderecoDTO>> listarTodosEnderecosDoCliente(@PathVariable("idCliente") Integer idCliente) throws BancoDeDadosException, RegraDeNegocioException {
-        return ResponseEntity.ok(enderecoService.retornarEnderecosDoCliente(idCliente));
+        return ResponseEntity.ok(enderecoService.listarEnderecosDoCliente(idCliente));
     }
 
     @GetMapping("/{idEndereco}")
@@ -42,7 +42,7 @@ public class EnderecoController {
     @PostMapping
     public ResponseEntity<EnderecoDTO> criar(@RequestBody @Valid EnderecoCreateDTO endereco) throws BancoDeDadosException, RegraDeNegocioException {
         log.info("Criando Endereço!");
-        EnderecoDTO endereDTO = enderecoService.adicionarEndereco(endereco);
+        EnderecoDTO endereDTO = enderecoService.adicionar(endereco);
         log.info("Endereço Criado!");
         return ResponseEntity.ok(endereDTO);
     }
@@ -51,7 +51,7 @@ public class EnderecoController {
     public ResponseEntity<EnderecoDTO> atualizar(@PathVariable("idEndereco") Integer idEndereco,
                                  @RequestBody @Valid EnderecoCreateDTO endereco) throws BancoDeDadosException, RegraDeNegocioException {
         log.info("Atualizando Endereço!");
-        EnderecoDTO enderecoDTO = enderecoService.atualizarEndereco(idEndereco, endereco);
+        EnderecoDTO enderecoDTO = enderecoService.atualizar(idEndereco, endereco);
         log.info("Endereço Atualizado!");
         return ResponseEntity.ok(enderecoDTO);
     }
@@ -60,7 +60,7 @@ public class EnderecoController {
     public ResponseEntity<Void> deletar(
             @PathVariable("idEndereco") Integer idEndereco) throws BancoDeDadosException, RegraDeNegocioException {
         log.info("Deletando Endereço!");
-        enderecoService.deletarEndereco(idEndereco);
+        enderecoService.deletar(idEndereco);
         log.info("Endereço Deletado!");
         return ResponseEntity.ok().build();
     }
