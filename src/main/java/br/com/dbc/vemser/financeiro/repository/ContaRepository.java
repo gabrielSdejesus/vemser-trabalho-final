@@ -155,7 +155,7 @@ public class ContaRepository implements Repositorio<Conta> {
                 sql.append(" AGENCIA = ?,");
             }
 
-            if(conta.getSaldo() != null && conta.getSaldo() > 0){
+            if(conta.getSaldo() != null && conta.getSaldo() >= 0){
                 sql.append(" SALDO = ?,");
             }
 
@@ -177,7 +177,7 @@ public class ContaRepository implements Repositorio<Conta> {
                 stmt.setInt(index++, conta.getAgencia());
             }
 
-            if(conta.getSaldo() > 0){
+            if(conta.getSaldo() >= 0){
                 stmt.setDouble(index++, conta.getSaldo());
             }
 
@@ -186,7 +186,6 @@ public class ContaRepository implements Repositorio<Conta> {
             }
 
             stmt.setInt(index, id);
-
             // Executar consulta
             stmt.executeUpdate();
 

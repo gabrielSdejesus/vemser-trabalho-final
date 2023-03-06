@@ -1,9 +1,6 @@
 package br.com.dbc.vemser.financeiro.controller;
 
-import br.com.dbc.vemser.financeiro.dto.ContaAcessDTO;
-import br.com.dbc.vemser.financeiro.dto.ContaCreateDTO;
-import br.com.dbc.vemser.financeiro.dto.ContaDTO;
-import br.com.dbc.vemser.financeiro.dto.ContaUpdateDTO;
+import br.com.dbc.vemser.financeiro.dto.*;
 import br.com.dbc.vemser.financeiro.exception.BancoDeDadosException;
 import br.com.dbc.vemser.financeiro.exception.RegraDeNegocioException;
 import br.com.dbc.vemser.financeiro.service.ContaService;
@@ -13,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RequestMapping("/conta")
@@ -31,12 +29,12 @@ public class ContaController {
 
     @GetMapping("/{idCliente}/cliente")
     public ResponseEntity<ContaDTO> retornarContaCliente(@PathVariable("idCliente") Integer idCliente,
-            @RequestBody ContaAcessDTO contaAcessDTO) throws BancoDeDadosException, RegraDeNegocioException {
+            @RequestBody @Valid ContaAcessDTO contaAcessDTO) throws BancoDeDadosException, RegraDeNegocioException {
         return ResponseEntity.ok(contaService.retornarContaCliente(idCliente,contaAcessDTO));
     }
 
     @PostMapping
-    public ResponseEntity<ContaDTO> criar(@RequestBody ContaCreateDTO contaCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
+    public ResponseEntity<ContaDTO> criar(@RequestBody @Valid ContaCreateDTO contaCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
         log.info("Criando Conta!");
         ContaDTO contaDTO = contaService.criar(contaCreateDTO);
         log.info("Conta Criada!");
@@ -45,10 +43,28 @@ public class ContaController {
 
     @PutMapping("/{idCliente}/alterarsenha")
     public ResponseEntity<ContaDTO> alterarSenha(@PathVariable("idCliente") Integer idCliente,
-                                              @RequestBody ContaUpdateDTO contaUpdateDTO) throws BancoDeDadosException, RegraDeNegocioException {
+                                              @RequestBody @Valid ContaUpdateDTO contaUpdateDTO) throws BancoDeDadosException, RegraDeNegocioException {
         log.info("Alterando Senha!");
         ContaDTO contaDTO = contaService.alterarSenha(idCliente,contaUpdateDTO);
         log.info("Senha Alterada!");
+        return ResponseEntity.ok(contaDTO);
+    }
+
+    @PutMapping("/{idCliente}/sacar")
+    public ResponseEntity<ContaDTO> sacar(@PathVariable("idCliente") Integer idCliente,
+                                          @RequestBody @Valid ContaTransfDTO contaTransfDTO) throws BancoDeDadosException, RegraDeNegocioException {
+        log.info("Sacando valor: R$" + contaTransfDTO.getValor());
+        ContaDTO contaDTO = contaService.sacar(idCliente,contaTransfDTO);
+        log.info("Valor Sacado: R$" + contaTransfDTO.getValor());
+        return ResponseEntity.ok(contaDTO);
+    }
+
+    @PutMapping("/{idCliente}/depositar")
+    public ResponseEntity<ContaDTO> depositar(@PathVariable("idCliente") Integer idCliente,
+                                          @RequestBody @Valid ContaTransfDTO contaTransfDTO) throws BancoDeDadosException, RegraDeNegocioException {
+        log.info("Depositando valor: R$" + contaTransfDTO.getValor());
+        ContaDTO contaDTO = contaService.depositar(idCliente,contaTransfDTO);
+        log.info("Valor Depositado: R$" + contaTransfDTO.getValor());
         return ResponseEntity.ok(contaDTO);
     }
 
