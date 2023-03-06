@@ -111,14 +111,17 @@ public class ContaService extends Servico {
         }
 
         if(contaDTO.getStatus().equals(Status.INATIVO)){
-            throw new RegraDeNegocioException("Não foi possível remover conta! Conta já inativa.");
+            throw new RegraDeNegocioException("Não foi possível remover a conta! A conta já está inativa.");
         }
 
-        //Deletando cliente
-        clienteService.deletarCliente(idCliente);
+        //Deletando cartoes
+        cartaoService.deletarTodosCartoes(contaDTO.getNumeroConta());
 
         //Deletando conta
         contaRepository.remover(numeroConta);
+
+        //Deletando cliente
+        clienteService.deletarCliente(idCliente);
     }
 
     private Conta criandoEntidade(ContaCreateDTO contaCreateDTO){
