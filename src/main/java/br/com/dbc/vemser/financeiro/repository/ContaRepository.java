@@ -13,6 +13,37 @@ import java.util.List;
 
 @Repository
 public class ContaRepository implements Repositorio<Conta> {
+
+    @Override
+    public List<Conta> listar() throws BancoDeDadosException {
+        List<Conta> contas = new ArrayList<>();
+        Connection con = null;
+        try {
+            con = ConexaoBancoDeDados.getConnection();
+            Statement stmt = con.createStatement();
+
+            String sql = "SELECT * FROM CONTA c LEFT JOIN CLIENTE c2 ON c.ID_CLIENTE = c2.ID_CLIENTE";
+
+            ResultSet res = stmt.executeQuery(sql);
+
+            while (res.next()) {
+                Conta conta = getContaFromResultSet(res);
+                contas.add(conta);
+            }
+            return contas;
+        } catch (SQLException e) {
+            throw new BancoDeDadosException(e.getCause());
+        } finally {
+            try {
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     @Override
     public Integer getProximoId(Connection connection) throws BancoDeDadosException {
         try {
@@ -28,6 +59,77 @@ public class ContaRepository implements Repositorio<Conta> {
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
         }
+    }
+
+    public Conta consultarConta(Integer numeroConta, Integer idCliente) throws BancoDeDadosException {
+        Connection con = null;
+        try {
+            con = ConexaoBancoDeDados.getConnection();
+            Conta conta = new Conta();
+
+            String sql = """
+                    SELECT * FROM CONTA c
+                    LEFT JOIN CLIENTE c2 ON c.ID_CLIENTE = c2.ID_CLIENTE
+                    WHERE c.numero_conta = ? AND c.id_cliente = ?
+                     """;
+
+            // Executa-se a consulta
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setInt(1, numeroConta);
+            stmt.setInt(2,idCliente);
+            ResultSet res = stmt.executeQuery();
+
+            while (res.next()) {
+                conta = getContaFromResultSet(res);
+            }
+            return conta;
+        } catch (SQLException e) {
+            throw new BancoDeDadosException(e.getCause());
+        } finally {
+            try {
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public Conta consultarNumeroConta(Integer numeroConta) throws BancoDeDadosException{
+        Connection con = null;
+        try {
+            con = ConexaoBancoDeDados.getConnection();
+            Conta conta = new Conta();
+
+            String sql = """
+                    SELECT * FROM CONTA c
+                    LEFT JOIN CLIENTE c2 ON c.ID_CLIENTE = c2.ID_CLIENTE
+                    WHERE c.numero_conta = ?
+                     """;
+
+            // Executa-se a consulta
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setInt(1, numeroConta);
+            ResultSet res = stmt.executeQuery();
+
+            while (res.next()) {
+                conta = getContaFromResultSet(res);
+            }
+
+            return conta;
+        } catch (SQLException e) {
+            throw new BancoDeDadosException(e.getCause());
+        } finally {
+            try {
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     @Override
@@ -58,7 +160,7 @@ public class ContaRepository implements Repositorio<Conta> {
             // Executar consulta
             stmt.executeUpdate();
 
-            return consultarPorNumeroConta(conta.getNumeroConta(), conta.getCliente().getIdCliente());
+            return consultarConta(conta.getNumeroConta(), conta.getCliente().getIdCliente());
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
         } finally {
@@ -112,7 +214,7 @@ public class ContaRepository implements Repositorio<Conta> {
         }
     }
 
-    public boolean remover(Integer id) throws BancoDeDadosException {
+    public boolean remover(Integer numeroConta) throws BancoDeDadosException {
         Connection con = null;
         try {
             con = ConexaoBancoDeDados.getConnection();
@@ -121,7 +223,7 @@ public class ContaRepository implements Repositorio<Conta> {
 
             PreparedStatement stmt = con.prepareStatement(sql);
 
-            stmt.setInt(1, id);
+            stmt.setInt(1, numeroConta);
 
             // Executar consulta
             int res = stmt.executeUpdate();
@@ -189,75 +291,7 @@ public class ContaRepository implements Repositorio<Conta> {
             // Executar consulta
             stmt.executeUpdate();
 
-            return consultarPorNumeroConta(conta.getNumeroConta(), conta.getCliente().getIdCliente());
-        } catch (SQLException e) {
-            throw new BancoDeDadosException(e.getCause());
-        } finally {
-            try {
-                if (con != null) {
-                    con.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    @Override
-    public List<Conta> listar() throws BancoDeDadosException {
-        List<Conta> contas = new ArrayList<>();
-        Connection con = null;
-        try {
-            con = ConexaoBancoDeDados.getConnection();
-            Statement stmt = con.createStatement();
-
-            String sql = "SELECT * FROM CONTA c LEFT JOIN CLIENTE c2 ON c.ID_CLIENTE = c2.ID_CLIENTE";
-
-            ResultSet res = stmt.executeQuery(sql);
-
-            while (res.next()) {
-                Conta conta = getContaFromResultSet(res);
-                contas.add(conta);
-            }
-            return contas;
-        } catch (SQLException e) {
-            throw new BancoDeDadosException(e.getCause());
-        } finally {
-            try {
-                if (con != null) {
-                    con.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public Conta consultarPorNumeroConta(Integer numeroConta, Integer idCliente) throws BancoDeDadosException {
-        Connection con = null;
-        try {
-            con = ConexaoBancoDeDados.getConnection();
-            Conta conta = new Conta();
-
-            String sql = """
-                    SELECT * FROM CONTA c
-                    LEFT JOIN CLIENTE c2 ON c.ID_CLIENTE = c2.ID_CLIENTE
-                    WHERE c.numero_conta = ? AND c.id_cliente = ?
-                     """;
-
-            // Executa-se a consulta
-            PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setInt(1, numeroConta);
-            stmt.setInt(2,idCliente);
-            ResultSet res = stmt.executeQuery();
-
-            while (res.next()) {
-                conta = getContaFromResultSet(res);
-            }
-            if(conta.getAgencia() == null){
-                return null;
-            }
-            return conta;
+            return consultarConta(conta.getNumeroConta(), conta.getCliente().getIdCliente());
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
         } finally {
