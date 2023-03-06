@@ -50,10 +50,13 @@ public class CartaoService extends Servico {
     }
 
     public CartaoDTO atualizar(Long numeroCartao, CartaoCreateDTO cartaoCreateDTO) throws RegraDeNegocioException, BancoDeDadosException {
-        if (cartaoRepository.getPorNumeroCartao(numeroCartao).equals(null)) {
-            throw new RegraDeNegocioException("Cartão não existe!");
+        Cartao cartao = cartaoRepository.getPorNumeroCartao(numeroCartao);
+        Cartao cartaoEditado = null;
+        if(cartao.getTipo().equals("DEBITO")) {
+            cartaoEditado = cartaoRepository.editar(numeroCartao, objectMapper.convertValue(cartaoCreateDTO, CartaoDeDebito.class));
+        } else {
+            cartaoEditado = cartaoRepository.editar(numeroCartao, objectMapper.convertValue(cartaoCreateDTO, CartaoDeCredito.class));
         }
-        Cartao cartaoEditado = cartaoRepository.editar(numeroCartao, cartaoCreateDTO);
         return objectMapper.convertValue(cartaoEditado, CartaoDTO.class);
     }
 

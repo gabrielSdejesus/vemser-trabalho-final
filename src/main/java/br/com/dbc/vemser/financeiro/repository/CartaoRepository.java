@@ -4,6 +4,7 @@ package br.com.dbc.vemser.financeiro.repository;
 import br.com.dbc.vemser.financeiro.dto.CartaoCreateDTO;
 import br.com.dbc.vemser.financeiro.dto.CartaoDTO;
 import br.com.dbc.vemser.financeiro.exception.BancoDeDadosException;
+import br.com.dbc.vemser.financeiro.exception.RegraDeNegocioException;
 import br.com.dbc.vemser.financeiro.model.*;
 import org.springframework.stereotype.Repository;
 
@@ -108,7 +109,7 @@ public class CartaoRepository implements Repositorio<Cartao> {
         }
     }
 
-    public Cartao editar(Long numeroCartao, CartaoCreateDTO cartaoCreateDTO) throws BancoDeDadosException {
+    public Cartao editar(Long numeroCartao, Cartao cartao) throws BancoDeDadosException, RegraDeNegocioException {
         Connection con = null;
         try {
             con = ConexaoBancoDeDados.getConnection();
@@ -121,12 +122,13 @@ public class CartaoRepository implements Repositorio<Cartao> {
 
             PreparedStatement stmt = con.prepareStatement(sql);
 
-            stmt.setInt(1, cartaoCreateDTO.getCodigoSeguranca());
+            stmt.setInt(1, cartao.getCodigoSeguranca());
             stmt.setLong(2, numeroCartao);
 
             stmt.executeUpdate();
 
-            return this.getPorNumeroCartao(numeroCartao);
+            return getPorNumeroCartao(numeroCartao);
+
 
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
@@ -212,7 +214,7 @@ public class CartaoRepository implements Repositorio<Cartao> {
         }
     }
 
-    public Cartao getPorNumeroCartao(Long numeroCartao) throws BancoDeDadosException{
+    public Cartao getPorNumeroCartao(Long numeroCartao) throws BancoDeDadosException, RegraDeNegocioException{
         List<Cartao> cartoes = new ArrayList<>();
         Connection con = null;
         try {
@@ -236,7 +238,7 @@ public class CartaoRepository implements Repositorio<Cartao> {
 
             Cartao result = cartoes.stream()
                     .findFirst()
-                    .orElse(null);
+                    .orElseThrow(()-> new RegraDeNegocioException("Cartão não encontrado!"));
 
             return result;
 
