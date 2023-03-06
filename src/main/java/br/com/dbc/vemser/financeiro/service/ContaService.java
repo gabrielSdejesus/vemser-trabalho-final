@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -101,6 +102,10 @@ public class ContaService extends Servico {
         //Validando e recuperando conta
         ContaDTO contaDTO = objectMapper.convertValue(contaRepository.consultarNumeroConta(numeroConta), ContaDTO.class);
 
+        if(Objects.isNull(contaDTO)){
+            throw new RegraDeNegocioException("Esta conta não existe!");
+        }
+
         if(!(contaDTO.getCliente().getIdCliente().equals(idCliente))){
             throw new RegraDeNegocioException("Esta conta não pertence a esse cliente!");
         }
@@ -143,7 +148,8 @@ public class ContaService extends Servico {
     private ContaDTO validandoAcessoConta(ContaAcessDTO contaAcessDTO) throws RegraDeNegocioException, BancoDeDadosException {
 
         Conta conta = contaRepository.consultarNumeroConta(contaAcessDTO.getNumeroConta());
-        if(!(conta != null)){
+
+        if(Objects.isNull(conta)){
             throw new RegraDeNegocioException("Conta inválida!");
         }
 

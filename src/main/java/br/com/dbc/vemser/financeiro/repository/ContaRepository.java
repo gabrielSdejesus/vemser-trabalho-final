@@ -100,7 +100,7 @@ public class ContaRepository implements Repositorio<Conta> {
         Connection con = null;
         try {
             con = ConexaoBancoDeDados.getConnection();
-            Conta conta = new Conta();
+            Conta conta = null;
 
             String sql = """
                     SELECT * FROM CONTA c
