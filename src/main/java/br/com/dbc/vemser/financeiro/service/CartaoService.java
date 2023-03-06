@@ -37,7 +37,12 @@ public class CartaoService extends Servico {
         if (cartoes.size() == 2) {
             throw new RegraDeNegocioException("Usuário já possui dois cartões");
         } else {
-            Cartao cartao = objectMapper.convertValue(cartaoCreateDTO, Cartao.class);
+            Cartao cartao = null;
+            if (cartaoCreateDTO.getTipo().equals("DEBITO")) {
+                cartao = objectMapper.convertValue(cartaoCreateDTO, CartaoDeDebito.class);
+            } else {
+                cartao = objectMapper.convertValue(cartaoCreateDTO, CartaoDeCredito.class);
+            }
             cartao.setNumeroConta(numeroConta);
             Cartao cartaoCriado = cartaoRepository.adicionar(cartao);
             return objectMapper.convertValue(cartaoCriado, CartaoDTO.class);

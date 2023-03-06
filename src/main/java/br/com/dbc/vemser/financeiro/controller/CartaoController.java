@@ -44,5 +44,4 @@ public class CartaoController {
         cartaoService.deletar(numeroCartao);
         return ResponseEntity.ok().build();
     }
-
 }
