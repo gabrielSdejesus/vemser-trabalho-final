@@ -53,7 +53,6 @@ public class ClienteService extends Servico {
     void validarClienteInativo(ClienteDTO clienteDTO) throws RegraDeNegocioException {
 
         if (clienteDTO.getStatus() == Status.INATIVO) {
-            System.out.println("JAJA");
             throw new RegraDeNegocioException("Cliente Inativo!");
         }
 

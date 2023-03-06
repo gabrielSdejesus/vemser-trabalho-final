@@ -61,41 +61,6 @@ public class ContaRepository implements Repositorio<Conta> {
         }
     }
 
-    public Conta consultarConta(Integer numeroConta, Integer idCliente) throws BancoDeDadosException {
-        Connection con = null;
-        try {
-            con = ConexaoBancoDeDados.getConnection();
-            Conta conta = new Conta();
-
-            String sql = """
-                    SELECT * FROM CONTA c
-                    LEFT JOIN CLIENTE c2 ON c.ID_CLIENTE = c2.ID_CLIENTE
-                    WHERE c.numero_conta = ? AND c.id_cliente = ?
-                     """;
-
-            // Executa-se a consulta
-            PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setInt(1, numeroConta);
-            stmt.setInt(2,idCliente);
-            ResultSet res = stmt.executeQuery();
-
-            while (res.next()) {
-                conta = getContaFromResultSet(res);
-            }
-            return conta;
-        } catch (SQLException e) {
-            throw new BancoDeDadosException(e.getCause());
-        } finally {
-            try {
-                if (con != null) {
-                    con.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     public Conta consultarNumeroConta(Integer numeroConta) throws BancoDeDadosException{
         Connection con = null;
         try {
@@ -160,7 +125,7 @@ public class ContaRepository implements Repositorio<Conta> {
             // Executar consulta
             stmt.executeUpdate();
 
-            return consultarConta(conta.getNumeroConta(), conta.getCliente().getIdCliente());
+            return consultarNumeroConta(conta.getNumeroConta());
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
         } finally {
@@ -291,7 +256,7 @@ public class ContaRepository implements Repositorio<Conta> {
             // Executar consulta
             stmt.executeUpdate();
 
-            return consultarConta(conta.getNumeroConta(), conta.getCliente().getIdCliente());
+            return consultarNumeroConta(conta.getNumeroConta());
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
         } finally {
