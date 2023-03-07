@@ -71,4 +71,12 @@ public class CartaoService extends Servico {
         }
     }
 
+    void deletarTodosCartoes(Integer numeroConta) throws BancoDeDadosException {
+        List<CartaoDTO> cartoes = listarPorNumeroConta(numeroConta);
+
+        for(CartaoDTO cartao: cartoes){
+            cartaoRepository.remover(Long.parseLong(cartao.getNumeroCartao()));
+        }
+    }
+
 }
