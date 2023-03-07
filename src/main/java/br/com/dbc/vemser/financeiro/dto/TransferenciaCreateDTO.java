@@ -13,9 +13,11 @@ import javax.validation.constraints.Positive;
 @Data
 public class TransferenciaCreateDTO {
     @NotNull(message = "Conta que enviou não pode ser nula!")
-    private Conta contaEnviou;
+    @Positive(message = "Número da conta que enviou não pode ser negativo ou zero!")
+    private Long contaEnviou;
     @NotNull(message = "Conta que recebeu não pode ser nula!")
-    private Conta contaRecebeu;
+    @Positive(message = "Número da conta que recebeu não pode ser negativo ou zero!")
+    private Long contaRecebeu;
     @NotNull(message = "Valor da transferencia não pode ser nulo!")
     @Positive(message = "Valor da transferencia não pode ser negativo ou zero!")
     private Double valor;

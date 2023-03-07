@@ -1,5 +1,6 @@
 package br.com.dbc.vemser.financeiro.service;
 
+import br.com.dbc.vemser.financeiro.dto.ContaAcessDTO;
 import br.com.dbc.vemser.financeiro.dto.TransferenciaCreateDTO;
 import br.com.dbc.vemser.financeiro.dto.TransferenciaDTO;
 import br.com.dbc.vemser.financeiro.exception.BancoDeDadosException;
@@ -16,13 +17,16 @@ import java.util.stream.Collectors;
 public class TransferenciaService extends Servico {
 
     private final TransferenciaRepository transferenciaRepository;
+    private final ContaService contaService;
 
-    public TransferenciaService(TransferenciaRepository transferenciaRepository, ObjectMapper objectMapper) {
+    public TransferenciaService(TransferenciaRepository transferenciaRepository, ObjectMapper objectMapper, ContaService contaService) {
         super(objectMapper);
         this.transferenciaRepository = transferenciaRepository;
+        this.contaService = contaService;
     }
 
-    public TransferenciaDTO adicionarTransferencia(TransferenciaCreateDTO transferenciaCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
+    public TransferenciaDTO adicionarTransferencia(TransferenciaCreateDTO transferenciaCreateDTO, ContaAcessDTO contaAcessDTO) throws BancoDeDadosException, RegraDeNegocioException {
+        contaService.validandoAcessoConta(contaAcessDTO);
         Transferencia transferencia = objectMapper.convertValue(transferenciaCreateDTO, Transferencia.class);
         return objectMapper.convertValue(this.transferenciaRepository.adicionar(transferencia), TransferenciaDTO.class);
     }
@@ -37,7 +41,8 @@ public class TransferenciaService extends Servico {
                 .collect(Collectors.toList());
     }
 
-    public List<TransferenciaDTO> listarTransferenciasPorConta(Integer numeroConta) throws BancoDeDadosException, RegraDeNegocioException {
+    public List<TransferenciaDTO> listarTransferenciasDaConta(Integer numeroConta, ContaAcessDTO contaAcessDTO) throws BancoDeDadosException, RegraDeNegocioException {
+        contaService.validandoAcessoConta(contaAcessDTO);
         return transferenciaRepository.listarTransferenciasPorConta(numeroConta).stream()
                 .map(transferencia -> objectMapper.convertValue(transferencia, TransferenciaDTO.class))
                 .collect(Collectors.toList());

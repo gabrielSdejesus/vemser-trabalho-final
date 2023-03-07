@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class Transferencia{
     private Integer idTransferencia;//PK
-    private Conta contaEnviou;
-    private Conta contaRecebeu;
+    private Long contaEnviou;
+    private Long contaRecebeu;
     private Double valor;
 }
