@@ -117,11 +117,20 @@ public class CartaoService extends Servico {
         log.info("Buscando cartão...");
         Cartao cartao = cartaoRepository.getPorNumeroCartao(numeroCartao);
         List<Cartao> cartoes = cartaoRepository.listarPorNumeroConta(cartao.getNumeroConta());
+
         if (cartoes.size() == 1) {
             throw new RegraDeNegocioException("Cliente possui apenas um cartão");
-        } else {
-            cartaoRepository.remover(numeroCartao);
         }
+
+        //VALIDANDO CARTAO DE CRÉDITO
+        if(cartao.getTipo().equals(TipoCartao.CREDITO)){
+            CartaoDeCredito cartaoDeCredito = (CartaoDeCredito) cartao;
+            if(cartaoDeCredito.getLimite() < 1000){
+                throw new RegraDeNegocioException("Não é possível remover o cartão com limite em aberto!");
+            }
+        }
+
+        cartaoRepository.remover(cartao.getNumeroCartao());
     }
 
     private List<Cartao> validarCartao(CartaoPagarDTO cartaoPagarDTO) throws BancoDeDadosException, RegraDeNegocioException {
