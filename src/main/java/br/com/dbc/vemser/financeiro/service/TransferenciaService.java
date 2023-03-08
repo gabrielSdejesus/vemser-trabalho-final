@@ -31,11 +31,11 @@ public class TransferenciaService extends Servico {
         return objectMapper.convertValue(this.transferenciaRepository.adicionar(transferencia), TransferenciaDTO.class);
     }
 
-    public TransferenciaDTO retornarTransferencia(Integer idTransferencia) throws BancoDeDadosException, RegraDeNegocioException {
+    public TransferenciaDTO retornarTransferencia(Integer idTransferencia) throws BancoDeDadosException {
         return objectMapper.convertValue(this.transferenciaRepository.retornarTransferencia(idTransferencia), TransferenciaDTO.class);
     }
 
-    public List<TransferenciaDTO> listarTransferencias() throws BancoDeDadosException, RegraDeNegocioException {
+    public List<TransferenciaDTO> listarTransferencias() throws BancoDeDadosException {
         return transferenciaRepository.listar().stream()
                 .map(transferencia -> objectMapper.convertValue(transferencia, TransferenciaDTO.class))
                 .collect(Collectors.toList());

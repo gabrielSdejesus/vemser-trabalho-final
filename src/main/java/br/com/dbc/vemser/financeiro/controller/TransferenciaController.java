@@ -18,17 +18,12 @@ import java.util.List;
 @Slf4j
 @Validated
 @RequiredArgsConstructor
-public class TransferenciaController {
+public class TransferenciaController implements ControleGeral<TransferenciaCreateDTO, TransferenciaDTO>{
 
     private final TransferenciaService transferenciaService;
 
-    @GetMapping
-    public ResponseEntity<List<TransferenciaDTO>> listarTransferencias() throws BancoDeDadosException, RegraDeNegocioException {
-        return ResponseEntity.ok(transferenciaService.listarTransferencias());
-    }
-
     @GetMapping("/{idTransferencia}")
-    public ResponseEntity<TransferenciaDTO> exibirTransferenciaPeloId(@PathVariable("idTransferencia") Integer idTransferencia) throws BancoDeDadosException, RegraDeNegocioException {
+    public ResponseEntity<TransferenciaDTO> exibirTransferenciaPeloId(@PathVariable("idTransferencia") Integer idTransferencia) throws BancoDeDadosException {
         return ResponseEntity.ok(transferenciaService.retornarTransferencia(idTransferencia));
     }
 
@@ -37,10 +32,15 @@ public class TransferenciaController {
         return ResponseEntity.ok(transferenciaService.listarTransferenciasDaConta(idConta, contaAcessDTO));
     }
 
-    @PostMapping
-    public ResponseEntity<TransferenciaDTO> adicionarTransferencia(@Valid @RequestBody TransferenciaCreateDTO transferenciaCreateDTO, @Valid @RequestBody ContaAcessDTO contaAcessDTO) throws BancoDeDadosException, RegraDeNegocioException {
+    @Override
+    public ResponseEntity<List<TransferenciaDTO>> listar(ContaAcessDTO acess) throws BancoDeDadosException {
+        return ResponseEntity.ok(transferenciaService.listarTransferencias());
+    }
+
+    @Override
+    public ResponseEntity<TransferenciaDTO> adicionar(TransferenciaCreateDTO dado, ContaAcessDTO acess) throws BancoDeDadosException, RegraDeNegocioException {
         log.info("Adicionando transferência!");
-        TransferenciaDTO transferenciaDTO = transferenciaService.adicionarTransferencia(transferenciaCreateDTO, contaAcessDTO);
+        TransferenciaDTO transferenciaDTO = transferenciaService.adicionarTransferencia(dado, acess);
         log.info("Transferência adicionada!");
         return ResponseEntity.ok(transferenciaDTO);
     }
