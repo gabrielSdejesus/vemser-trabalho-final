@@ -12,7 +12,7 @@ public class ConexaoBancoDeDados {
 
     // autenticação
     private static final String USER = "system";
-    private static final String PASS = "oracle";
+    private static final String PASS = "RvshWyfWLZrN";
     private static final String SCHEMA = "FINANCEIRO";
 
     public static Connection getConnection() throws SQLException {
