@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CartaoDTO extends CartaoCreateDTO {
-    private String numeroCartao;
+    private Long numeroCartao;
     private Double limite;
 
     public void setarLimite(Double valor){
