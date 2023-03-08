@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @Data
 public class CompraCreateDTO {
     @NotNull(message = "Cartão não pode ser nulo!")
-    private Cartao cartao;
+    private Long numeroCartao;
     @NotBlank(message = "Documento do vendedor não pode ser nulo!")
     private String docVendedor;
     @NotNull(message = "Data não pode ser nula!")

@@ -154,7 +154,7 @@ public class CartaoService extends Servico {
         List<CartaoDTO> cartoes = listarPorNumeroConta(numeroConta);
 
         for(CartaoDTO cartao: cartoes){
-            cartaoRepository.remover(Long.parseLong(cartao.getNumeroCartao()));
+            cartaoRepository.remover(cartao.getNumeroCartao());
         }
     }
 

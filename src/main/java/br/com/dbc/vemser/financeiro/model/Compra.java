@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Data
 public class Compra {
     private Integer idCompra;
-    private Cartao cartao;
+    private Long numeroCartao;
     private String docVendedor;
     private LocalDate data;
 }

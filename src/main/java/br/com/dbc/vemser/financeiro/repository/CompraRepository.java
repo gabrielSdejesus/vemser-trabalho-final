@@ -48,7 +48,7 @@ public class CompraRepository implements Repositorio<Compra> {
             PreparedStatement stmt = con.prepareStatement(sql);
 
             stmt.setInt(1, compra.getIdCompra());
-            stmt.setLong(2, compra.getCartao().getNumeroCartao());
+            stmt.setLong(2, compra.getNumeroCartao());
             stmt.setString(3, compra.getDocVendedor());
             stmt.setDate(4, Date.valueOf(compra.getData()));
 
@@ -149,15 +149,7 @@ public class CompraRepository implements Repositorio<Compra> {
         compra.setIdCompra(res.getInt("id_compra"));
         compra.setData(LocalDate.parse(res.getDate("data").toString()));
         compra.setDocVendedor(res.getString("doc_vendedor"));
-        Cartao cartao = new CartaoDeDebito();
-        cartao.setNumeroCartao(res.getLong("numero_cartao"));
-        Conta conta = new Conta();
-        conta.setNumeroConta(res.getInt("numero_conta"));
-        Cliente cliente = new Cliente();
-        cliente.setNome(res.getString("nome"));
-        conta.setCliente(cliente);
-        cartao.setNumeroConta(res.getInt("numero_conta"));
-        compra.setCartao(cartao);
+        compra.setNumeroCartao(res.getLong("numero_cartao"));
         return compra;
     }
 }
