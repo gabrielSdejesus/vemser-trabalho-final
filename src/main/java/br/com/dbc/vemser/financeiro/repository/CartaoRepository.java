@@ -315,13 +315,12 @@ public class CartaoRepository implements Repositorio<Cartao> {
         cartao.setVencimento(res.getDate("VENCIMENTO").toLocalDate());
         cartao.setStatus(Status.getTipoStatus(res.getInt("STATUS")));
 
-        if (cartao.getTipo().equals(TipoCartao.DEBITO)) {
-            return cartao;
-        } else{
+        if(cartao instanceof CartaoDeCredito){
             CartaoDeCredito cartaoDeCredito = (CartaoDeCredito) cartao;
             cartaoDeCredito.setLimite(res.getDouble("LIMITE"));
             return cartaoDeCredito;
         }
+        return cartao;
     }
 
 }
