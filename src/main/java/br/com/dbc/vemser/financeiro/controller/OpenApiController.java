@@ -13,7 +13,7 @@ import java.io.IOException;
 public class OpenApiController {
 
     @Operation(hidden = true)
-    @GetMapping(value = "/")
+    @GetMapping(value = "/swagger-ui")
     public void index(HttpServletResponse response) throws IOException {
         response.sendRedirect("/swagger-ui/index.html");
     }
