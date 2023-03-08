@@ -1,20 +1,18 @@
 package br.com.dbc.vemser.financeiro.repository;
 
-import br.com.dbc.vemser.financeiro.exception.BancoDeDadosException;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ConexaoBancoDeDados {
 
-    private static final String SERVER = "vemser-dbc.dbccompany.com.br";
-    private static final String PORT = "25000"; // Porta TCP padrão do Oracle
+    private static final String SERVER = "localhost";
+    private static final String PORT = "1521"; // Porta TCP padrão do Oracle
     private static final String DATABASE = "xe";
 
     // autenticação
-    private static final String USER = "FINANCEIRO";
-    private static final String PASS = "RvshWyfWLZrN";
+    private static final String USER = "system";
+    private static final String PASS = "oracle";
     private static final String SCHEMA = "FINANCEIRO";
 
     public static Connection getConnection() throws SQLException {

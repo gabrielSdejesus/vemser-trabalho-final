@@ -24,7 +24,7 @@ public class EnderecoController {
     private final EnderecoService enderecoService;
 
     @GetMapping("/lista")
-    public ResponseEntity<List<EnderecoDTO>> listarTodosEnderecos() throws BancoDeDadosException, RegraDeNegocioException {
+    public ResponseEntity<List<EnderecoDTO>> listarTodosEnderecos() throws BancoDeDadosException {
         return ResponseEntity.ok(enderecoService.listarEnderecos());
     }
 

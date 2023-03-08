@@ -1,6 +1,5 @@
 package br.com.dbc.vemser.financeiro.dto;
 
-import br.com.dbc.vemser.financeiro.model.Conta;
 import br.com.dbc.vemser.financeiro.model.Status;
 import br.com.dbc.vemser.financeiro.model.TipoCartao;
 import lombok.Data;

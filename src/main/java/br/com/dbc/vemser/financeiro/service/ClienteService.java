@@ -22,7 +22,7 @@ public class ClienteService extends Servico {
         this.clienteRepository = clienteRepository;
     }
 
-    public List<ClienteDTO> listarClientes() throws BancoDeDadosException, RegraDeNegocioException {
+    public List<ClienteDTO> listarClientes() throws BancoDeDadosException {
         return clienteRepository.listar().stream()
                 .map(cliente -> objectMapper.convertValue(cliente, ClienteDTO.class))
                 .collect(Collectors.toList());
@@ -40,14 +40,14 @@ public class ClienteService extends Servico {
         return objectMapper.convertValue(clienteRepository.adicionar(cliente), ClienteDTO.class);
     }
 
-    public ClienteDTO alterarCliente(Integer idCliente, ClienteCreateDTO clienteCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
+    public ClienteDTO alterarCliente(Integer idCliente, ClienteCreateDTO clienteCreateDTO) throws BancoDeDadosException {
         Cliente cliente = objectMapper.convertValue(clienteCreateDTO, Cliente.class);
         return objectMapper.convertValue(clienteRepository.editar(idCliente, cliente), ClienteDTO.class);
     }
 
-    public boolean deletarCliente(Integer idCliente) throws BancoDeDadosException, RegraDeNegocioException{
+    public void deletarCliente(Integer idCliente) throws BancoDeDadosException, RegraDeNegocioException{
         visualizarCliente(idCliente);
-        return this.clienteRepository.remover(idCliente);
+        this.clienteRepository.remover(idCliente);
     }
 
     void validarClienteInativo(ClienteDTO clienteDTO) throws RegraDeNegocioException {

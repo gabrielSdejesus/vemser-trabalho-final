@@ -78,8 +78,7 @@ public class ContatoService extends Servico {
     }
 
     private void validarNumeroContato(ContatoCreateDTO contatoCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
-        if(listarContatos().stream()
-                .filter(contatoDTO -> contatoDTO.getIdCliente().equals(contatoCreateDTO.getIdCliente()))
+        if(listarContatosDoCliente(contatoCreateDTO.getIdCliente()).stream()
                 .anyMatch(contatoDTO -> contatoDTO.getTelefone().equals(contatoCreateDTO.getTelefone()))){
             throw new RegraDeNegocioException("Este número de telefone já existe!");
         }

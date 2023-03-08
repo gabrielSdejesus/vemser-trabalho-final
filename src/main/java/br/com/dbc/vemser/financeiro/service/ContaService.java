@@ -6,10 +6,13 @@ import br.com.dbc.vemser.financeiro.exception.RegraDeNegocioException;
 import br.com.dbc.vemser.financeiro.model.Cliente;
 import br.com.dbc.vemser.financeiro.model.Conta;
 import br.com.dbc.vemser.financeiro.model.Status;
+import br.com.dbc.vemser.financeiro.model.TipoCartao;
 import br.com.dbc.vemser.financeiro.repository.ContaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
@@ -20,16 +23,18 @@ public class ContaService extends Servico {
     private final ContaRepository contaRepository;
     private final ClienteService clienteService;
     private final CartaoService cartaoService;
-    private final TransferenciaService transferenciaService;
+    private final ContatoService contatoService;
+    private final EnderecoService enderecoService;
 
     public ContaService(ContaRepository contaRepository, ClienteService clienteService,
-                        CartaoService cartaoService, TransferenciaService transferenciaService,
-                        ObjectMapper objectMapper) {
+                        CartaoService cartaoService, ContatoService contatoService,
+                        EnderecoService enderecoService, ObjectMapper objectMapper) {
         super(objectMapper);
         this.contaRepository = contaRepository;
         this.clienteService = clienteService;
         this.cartaoService = cartaoService;
-        this.transferenciaService = transferenciaService;
+        this.contatoService = contatoService;
+        this.enderecoService = enderecoService;
     }
 
     public List<ContaDTO> listar() throws BancoDeDadosException, RegraDeNegocioException {
@@ -40,17 +45,27 @@ public class ContaService extends Servico {
 
     public ContaDTO retornarContaCliente(ContaAcessDTO contaAcessDTO) throws BancoDeDadosException, RegraDeNegocioException{
         //Verificando senha e recuperando conta
-        ContaDTO contaDTO = validandoAcessoConta(contaAcessDTO);
-
-        return contaDTO;
+        return validandoAcessoConta(contaAcessDTO);
     }
 
     public ContaDTO criar(ContaCreateDTO contaCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
-        //Validando se o CPF já possui uma conta no banco.
-        validarCriacaoConta(contaCreateDTO);
-        //Criando entidade
-        Conta conta = criandoEntidade(contaCreateDTO);
-        return objectMapper.convertValue(contaRepository.adicionar(conta), ContaDTO.class);
+        //Criando e validando se já existe um cliente pelo CPF
+        ClienteDTO clienteDTO = clienteService.adicionarCliente(contaCreateDTO.getClienteCreateDTO());
+        //Criando contato
+        contaCreateDTO.getContatoCreateDTO().setIdCliente(clienteDTO.getIdCliente());
+        contatoService.adicionar(contaCreateDTO.getContatoCreateDTO());
+        //Criando endereço
+        contaCreateDTO.getEnderecoCreateDTO().setIdCliente(clienteDTO.getIdCliente());
+        enderecoService.adicionar(contaCreateDTO.getEnderecoCreateDTO());
+        //Criando array objects
+        Object[] objects = criandoDados(contaCreateDTO, clienteDTO);
+        //Criando conta
+        Conta conta = (Conta) objects[0];
+        ContaDTO contaDTO = objectMapper.convertValue(contaRepository.adicionar(conta), ContaDTO.class);
+        //Criando cartão
+        CartaoCreateDTO cartaoCreateDTO = (CartaoCreateDTO) objects[1];
+        cartaoService.criar(contaDTO.getNumeroConta(), cartaoCreateDTO);
+        return contaDTO;
     }
 
     public ContaDTO alterarSenha(ContaUpdateDTO contaUpdateDTO) throws BancoDeDadosException, RegraDeNegocioException {
@@ -94,8 +109,8 @@ public class ContaService extends Servico {
         return objectMapper.convertValue(contaRepository.editar(conta.getNumeroConta(), conta), ContaDTO.class);
     }
 
-    public boolean reativarConta(String cpf) throws BancoDeDadosException {
-        return contaRepository.reativarConta(cpf);
+    public void reativarConta(String cpf) throws BancoDeDadosException {
+        contaRepository.reativarConta(cpf);
     }
 
     public void removerConta(Integer idCliente, Integer numeroConta) throws BancoDeDadosException, RegraDeNegocioException {
@@ -124,31 +139,32 @@ public class ContaService extends Servico {
         clienteService.deletarCliente(idCliente);
     }
 
-    private Conta criandoEntidade(ContaCreateDTO contaCreateDTO){
+    private Object[] criandoDados(ContaCreateDTO contaCreateDTO, ClienteDTO clienteDTO){
+        //Array Object para passar dois objetos distintos.
+        Object[] objects = new Object[2];
         Random random = new Random();
-        Cliente cliente = new Cliente();
-        cliente.setIdCliente(contaCreateDTO.getIdCliente());
-        Conta conta = new Conta();
-        conta.setCliente(cliente);
-        conta.setSenha(contaCreateDTO.getSenha());
-        conta.setSaldo(contaCreateDTO.getSaldo());
+
+        //Convertendo a contaCreate em Conta
+        Conta conta = objectMapper.convertValue(contaCreateDTO, Conta.class);
+        //Setando na conta o novo cliente criado no banco de dados
+        conta.setCliente(objectMapper.convertValue(contaCreateDTO.getClienteCreateDTO(), Cliente.class));
+        //Setando o id respectivo gerado na criação do cliente
+        conta.getCliente().setIdCliente(clienteDTO.getIdCliente());
+        //Gerando um número aleatório de 4 dígitos para agência da conta
         conta.setAgencia(random.nextInt(9000) + 1000);
-        return conta;
+        objects[0] = conta;
+
+        //Criando cartão de débito
+        CartaoCreateDTO cartaoCreateDTO = new CartaoCreateDTO();
+        cartaoCreateDTO.setTipo(TipoCartao.DEBITO);
+        cartaoCreateDTO.setDataExpedicao(LocalDate.now());
+        cartaoCreateDTO.setVencimento(cartaoCreateDTO.getDataExpedicao().plusYears(4));
+        cartaoCreateDTO.setCodigoSeguranca(random.nextInt(999) + 100);
+        objects[1] = cartaoCreateDTO;
+        return objects;
     }
 
-    private void validarCriacaoConta(ContaCreateDTO contaCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
-        ClienteDTO clienteDTO = clienteService.visualizarCliente(contaCreateDTO.getIdCliente());
-        if(listar().stream()
-                .anyMatch(conta -> conta.getCliente().getCpf().equals(clienteDTO.getCpf()))){
-            throw new RegraDeNegocioException("Este cliente já tem uma conta cadastrada!");
-        }
-
-        if(!contaCreateDTO.getCpf().equals(clienteDTO.getCpf())){
-            throw new RegraDeNegocioException("CPF inválido!");
-        }
-    }
-
-    private ContaDTO validandoAcessoConta(ContaAcessDTO contaAcessDTO) throws RegraDeNegocioException, BancoDeDadosException {
+    ContaDTO validandoAcessoConta(ContaAcessDTO contaAcessDTO) throws RegraDeNegocioException, BancoDeDadosException {
 
         Conta conta = contaRepository.consultarNumeroConta(contaAcessDTO.getNumeroConta());
 
@@ -167,4 +183,3 @@ public class ContaService extends Servico {
         return objectMapper.convertValue(conta, ContaDTO.class);
     }
 }
-

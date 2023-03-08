@@ -43,7 +43,7 @@ public class ClienteRepository implements Repositorio<Cliente> {
                     VALUES(?, ?, ?)
                     """;
             PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setInt(1, getProximoId(con));
+            stmt.setInt(1, cliente.getIdCliente());
             stmt.setString(2, cliente.getCpf());
             stmt.setString(3, cliente.getNome());
 

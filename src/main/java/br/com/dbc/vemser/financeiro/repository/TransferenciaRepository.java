@@ -49,9 +49,9 @@ public class TransferenciaRepository implements Repositorio<Transferencia> {
             PreparedStatement stmt = con.prepareStatement(sql);
 
             stmt.setInt(1, transferencia.getIdTransferencia());
-            stmt.setInt(2, transferencia.getContaEnviou().getNumeroConta());
+            /*stmt.setInt(2, transferencia.getContaEnviou().getNumeroConta());
             stmt.setInt(3, transferencia.getContaRecebeu().getNumeroConta());
-            stmt.setDouble(4, transferencia.getValor());
+            stmt.setDouble(4, transferencia.getValor());*/
 
             // Executar consulta
             stmt.executeUpdate();
@@ -200,8 +200,8 @@ public class TransferenciaRepository implements Repositorio<Transferencia> {
 
         Transferencia transferencia = new Transferencia();
         transferencia.setIdTransferencia(res.getInt("ID_TRANSFERENCIA"));
-        transferencia.setContaEnviou(contaEnviou);
-        transferencia.setContaRecebeu(contaRecebeu);
+        /*transferencia.setContaEnviou(contaEnviou);
+        transferencia.setContaRecebeu(contaRecebeu);*/
         transferencia.setValor(res.getDouble("VALOR"));
         return transferencia;
     }

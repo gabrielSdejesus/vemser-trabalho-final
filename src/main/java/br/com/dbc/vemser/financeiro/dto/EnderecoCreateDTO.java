@@ -13,7 +13,6 @@ import javax.validation.constraints.Size;
 @Data
 public class EnderecoCreateDTO {
 
-    @NotNull(message = "Necessário informar um cliente válido!")
     private Integer idCliente;
     @NotBlank(message = "Logradouro não pode ser vazio ou nulo!")
     @Size(max = 250, message = "Logradouro longo demais!")
@@ -22,6 +21,7 @@ public class EnderecoCreateDTO {
     @Size(max = 250)
     private String cidade;
     @NotBlank(message = "Estado não pode ser vazio ou nulo!")
+    @Size(min = 2, max = 2, message = "Estado inválido! (RJ) (SP) (BA) (MG)")
     private String estado;
     @NotBlank(message = "País não pode ser vazio ou nulo!")
     private String pais;

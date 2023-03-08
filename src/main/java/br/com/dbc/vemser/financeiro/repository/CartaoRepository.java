@@ -1,14 +1,13 @@
 package br.com.dbc.vemser.financeiro.repository;
 
 
-import br.com.dbc.vemser.financeiro.dto.CartaoCreateDTO;
-import br.com.dbc.vemser.financeiro.dto.CartaoDTO;
 import br.com.dbc.vemser.financeiro.exception.BancoDeDadosException;
 import br.com.dbc.vemser.financeiro.exception.RegraDeNegocioException;
 import br.com.dbc.vemser.financeiro.model.*;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -113,23 +112,40 @@ public class CartaoRepository implements Repositorio<Cartao> {
         Connection con = null;
         try {
             con = ConexaoBancoDeDados.getConnection();
+            StringBuilder sql = new StringBuilder();
+            sql.append("UPDATE cartao SET \n");
 
-            String sql = """
-                    UPDATE cartao 
-                    SET codigo_seguranca = ?
-                    WHERE numero_cartao = ?
-                    """;
+            if(cartao.getCodigoSeguranca() != null){
+                sql.append(" CODIGO_SEGURANCA = ?,");
+            }
 
-            PreparedStatement stmt = con.prepareStatement(sql);
+            if(cartao instanceof CartaoDeCredito){
+                if(((CartaoDeCredito) cartao).getLimite() != 1000){
+                    sql.append(" LIMITE = ?,");
+                }
+            }
 
-            stmt.setInt(1, cartao.getCodigoSeguranca());
-            stmt.setLong(2, numeroCartao);
+            sql.deleteCharAt(sql.length() -1);
+            sql.append(" WHERE NUMERO_CARTAO = ?");
+            PreparedStatement stmt = con.prepareStatement(sql.toString());
 
+            int index = 1;
+            if(cartao.getCodigoSeguranca() != null){
+                stmt.setInt(index++, cartao.getCodigoSeguranca());
+            }
+
+            if(cartao instanceof CartaoDeCredito){
+                if(((CartaoDeCredito) cartao).getLimite() != 1000){
+                    stmt.setDouble(index++, ((CartaoDeCredito) cartao).getLimite());;
+                }
+            }
+
+            stmt.setLong(index, numeroCartao);
+
+            //Executar consulta
             stmt.executeUpdate();
 
             return getPorNumeroCartao(numeroCartao);
-
-
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
         } finally {
@@ -236,11 +252,9 @@ public class CartaoRepository implements Repositorio<Cartao> {
                 cartoes.add(cartao);
             }
 
-            Cartao result = cartoes.stream()
+            return cartoes.stream()
                     .findFirst()
                     .orElseThrow(()-> new RegraDeNegocioException("Cartão não encontrado!"));
-
-            return result;
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -257,27 +271,55 @@ public class CartaoRepository implements Repositorio<Cartao> {
     }
 
     public Cartao getCartaoFromResultSet(ResultSet res) throws SQLException {
+        Cartao cartao = new Cartao() {
+            @Override
+            public void setNumeroCartao(Long numeroCartao) {
+                super.setNumeroCartao(numeroCartao);
+            }
 
-        if (res.getInt("TIPO") == 1) {
-            CartaoDeDebito cartaoDeDebito = new CartaoDeDebito();
-            cartaoDeDebito.setNumeroCartao(res.getLong("NUMERO_CARTAO"));
-            cartaoDeDebito.setNumeroConta(res.getInt("NUMERO_CONTA"));
-            cartaoDeDebito.setDataExpedicao(res.getDate("DATA_EXPEDICAO").toLocalDate());
-            cartaoDeDebito.setCodigoSeguranca(res.getInt("CODIGO_SEGURANCA"));
-            cartaoDeDebito.setTipo(TipoCartao.getTipoCartao(res.getInt("TIPO")));
-            cartaoDeDebito.setVencimento(res.getDate("VENCIMENTO").toLocalDate());
-            cartaoDeDebito.setStatus(Status.getTipoStatus(res.getInt("STATUS")));
-            return cartaoDeDebito;
+            @Override
+            public void setNumeroConta(Integer numeroConta) {
+                super.setNumeroConta(numeroConta);
+            }
+
+            @Override
+            public void setDataExpedicao(LocalDate dataExpedicao) {
+                super.setDataExpedicao(dataExpedicao);
+            }
+
+            @Override
+            public void setCodigoSeguranca(Integer codigoSeguranca) {
+                super.setCodigoSeguranca(codigoSeguranca);
+            }
+
+            @Override
+            public void setTipo(TipoCartao tipo) {
+                super.setTipo(tipo);
+            }
+
+            @Override
+            public void setVencimento(LocalDate vencimento) {
+                super.setVencimento(vencimento);
+            }
+
+            @Override
+            public void setStatus(Status status) {
+                super.setStatus(status);
+            }
+        };
+        cartao.setNumeroCartao(res.getLong("NUMERO_CARTAO"));
+        cartao.setNumeroConta(res.getInt("NUMERO_CONTA"));
+        cartao.setDataExpedicao(res.getDate("DATA_EXPEDICAO").toLocalDate());
+        cartao.setCodigoSeguranca(res.getInt("CODIGO_SEGURANCA"));
+        cartao.setTipo(TipoCartao.getTipoCartao(res.getInt("TIPO")));
+        cartao.setVencimento(res.getDate("VENCIMENTO").toLocalDate());
+        cartao.setStatus(Status.getTipoStatus(res.getInt("STATUS")));
+
+        if (cartao.getTipo().equals(TipoCartao.DEBITO)) {
+            return cartao;
         } else{
-            CartaoDeCredito cartaoDeCredito = new CartaoDeCredito();
-            cartaoDeCredito.setNumeroCartao(res.getLong("NUMERO_CARTAO"));
-            cartaoDeCredito.setNumeroConta(res.getInt("NUMERO_CONTA"));
-            cartaoDeCredito.setDataExpedicao(res.getDate("DATA_EXPEDICAO").toLocalDate());
-            cartaoDeCredito.setCodigoSeguranca(res.getInt("CODIGO_SEGURANCA"));
-            cartaoDeCredito.setTipo(TipoCartao.getTipoCartao(res.getInt("TIPO")));
-            cartaoDeCredito.setVencimento(res.getDate("VENCIMENTO").toLocalDate());
+            CartaoDeCredito cartaoDeCredito = (CartaoDeCredito) cartao;
             cartaoDeCredito.setLimite(res.getDouble("LIMITE"));
-            cartaoDeCredito.setStatus(Status.getTipoStatus(res.getInt("STATUS")));
             return cartaoDeCredito;
         }
     }

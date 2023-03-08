@@ -19,7 +19,7 @@ public class OpenApiConfig {
                 .info(new Info().title("Pessoa API")
                         .description("Pessoa API documentação")
                         .version("v1.0.0")
-                        .license(new License().name("Apache 2.0").url("http://springdoc.org")))
+                        .license(new License().name("Apache 2.0").url("springdoc.org")))
                 .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
                 .components(
                         new Components()
