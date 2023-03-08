@@ -7,15 +7,16 @@ import br.com.dbc.vemser.financeiro.dto.CartaoPagarDTO;
 import br.com.dbc.vemser.financeiro.dto.ContaTransfDTO;
 import br.com.dbc.vemser.financeiro.exception.BancoDeDadosException;
 import br.com.dbc.vemser.financeiro.exception.RegraDeNegocioException;
-import br.com.dbc.vemser.financeiro.model.*;
+import br.com.dbc.vemser.financeiro.model.Cartao;
+import br.com.dbc.vemser.financeiro.model.CartaoDeCredito;
+import br.com.dbc.vemser.financeiro.model.CartaoDeDebito;
+import br.com.dbc.vemser.financeiro.model.TipoCartao;
 import br.com.dbc.vemser.financeiro.repository.CartaoRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,7 +25,7 @@ import java.util.stream.Collectors;
 public class CartaoService extends Servico {
 
     private final CartaoRepository cartaoRepository;
-    private ContaService contaService;
+    private final ContaService contaService;
 
     public CartaoService(@Lazy ContaService contaService, CartaoRepository cartaoRepository, ObjectMapper objectMapper) {
         super(objectMapper);
@@ -66,32 +67,32 @@ public class CartaoService extends Servico {
         /*********** CARTÃO DE CRÉDITO **********/
 
         //Validando e pagando com cartão de crédito
-        if(cartaoPagarDTO.getTipoCartao().equals(TipoCartao.CREDITO)){
-            //Retornando o cartão de crédito da lista
-            CartaoDeCredito cartaoDeCredito = (CartaoDeCredito) cartoes.stream()
-                    .filter(cartao -> cartao.getNumeroCartao().equals(cartaoPagarDTO.getNumeroCartao()))
-                    .filter(cartao -> cartao.getCodigoSeguranca().equals(cartaoPagarDTO.getCodigoSeguranca()))
-                    .findFirst()
-                    .orElseThrow(() -> new RegraDeNegocioException("Dados do cartão de crédito inválido!"));
+        if (cartaoPagarDTO.getTipoCartao().equals(TipoCartao.CREDITO)) {
+            //Validando e pegando cartão de crédito
+            if (cartoes.get(0) instanceof CartaoDeCredito){
+                CartaoDeCredito cartaoDeCredito = (CartaoDeCredito) cartoes.stream().findFirst().get();
 
             //Verificando o limite
-            if(cartaoDeCredito.getLimite() < cartaoPagarDTO.getValor()){
+            if (cartaoDeCredito.getLimite() < cartaoPagarDTO.getValor()) {
                 throw new RegraDeNegocioException("Cartão de crédito não possui limite suficiente!");
             }
+
             //Pagando com o cartão de crédito
             cartaoDeCredito.setLimite(cartaoDeCredito.getLimite() - cartaoPagarDTO.getValor());
             Cartao cartao = cartaoRepository.editar(cartaoDeCredito.getNumeroCartao(), cartaoDeCredito);
-            return objectMapper.convertValue(cartao, CartaoDTO.class);
+            CartaoDTO cartaoDTO = objectMapper.convertValue(cartao, CartaoDTO.class);
+            cartaoDTO.setarLimite(cartaoDeCredito.getLimite());
+            return cartaoDTO;
+            }
         }
 
         /*********** CARTÃO DE DÉBITO **********/
 
         //Validando e pagando com cartão de débito
-        CartaoDeDebito cartaoDeDebito = (CartaoDeDebito) cartoes.stream()
-                .filter(cartao -> cartao.getNumeroCartao().equals(cartaoPagarDTO.getNumeroCartao()))
-                .filter(cartao -> cartao.getCodigoSeguranca().equals(cartaoPagarDTO.getCodigoSeguranca()))
-                .findFirst()
-                .orElseThrow(() -> new RegraDeNegocioException("Dados do cartão de crédito inválido!"));
+        CartaoDeDebito cartaoDeDebito = null;
+        if (cartoes.get(0) instanceof CartaoDeDebito){
+            cartaoDeDebito = (CartaoDeDebito) cartoes.stream().findFirst().get();
+        }
         //Pagando com o cartão de débito
         ContaTransfDTO contaTransfDTO = new ContaTransfDTO();
         contaTransfDTO.setValor(cartaoPagarDTO.getValor());
@@ -127,12 +128,14 @@ public class CartaoService extends Servico {
         List<Cartao> cartoesValidados = cartaoRepository
                 .listarPorNumeroConta(
                         cartaoPagarDTO.getContaAcessDTO().getNumeroConta())
-                .stream().filter
-                        (cartao -> cartao.getNumeroCartao().equals(cartaoPagarDTO.getNumeroCartao()))
+                .stream()
+                .filter(cartao -> cartao.getNumeroCartao().equals(cartaoPagarDTO.getNumeroCartao()))
+                .filter(cartao -> cartao.getCodigoSeguranca().equals(cartaoPagarDTO.getCodigoSeguranca()))
+                .filter(cartao -> cartao.getTipo().equals(cartaoPagarDTO.getTipoCartao()))
                 .collect(Collectors.toList());
 
-        if(cartoesValidados.equals(null)){
-            throw new RegraDeNegocioException("Cartão inválido!");
+        if(cartoesValidados.isEmpty()){
+            throw new RegraDeNegocioException("Dados do cartão inválido!");
         }
 
         return cartoesValidados;

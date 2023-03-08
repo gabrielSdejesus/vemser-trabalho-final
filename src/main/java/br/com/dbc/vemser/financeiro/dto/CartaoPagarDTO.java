@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
-import javax.validation.constraints.Size;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -26,6 +25,5 @@ public class CartaoPagarDTO {
     @NotNull(message = "Tipo inválido!")
     private TipoCartao tipoCartao;
     @NotNull(message = "Código inválido")
-    @Size(min = 3, max = 3, message = "Código de segurança tem que possui 3 dígitos!")
     private Integer codigoSeguranca;
 }

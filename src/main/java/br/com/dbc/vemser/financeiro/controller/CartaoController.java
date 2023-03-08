@@ -2,6 +2,7 @@ package br.com.dbc.vemser.financeiro.controller;
 
 import br.com.dbc.vemser.financeiro.dto.CartaoCreateDTO;
 import br.com.dbc.vemser.financeiro.dto.CartaoDTO;
+import br.com.dbc.vemser.financeiro.dto.CartaoPagarDTO;
 import br.com.dbc.vemser.financeiro.exception.BancoDeDadosException;
 import br.com.dbc.vemser.financeiro.exception.RegraDeNegocioException;
 import br.com.dbc.vemser.financeiro.service.CartaoService;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -32,6 +34,14 @@ public class CartaoController {
     @PostMapping("/{numeroConta}")
     public ResponseEntity<CartaoDTO> criar(@PathVariable("numeroConta") Integer numeroConta, @RequestBody CartaoCreateDTO cartaoCreateDTO) throws Exception {
         return new ResponseEntity<>(cartaoService.criar(numeroConta, cartaoCreateDTO), HttpStatus.OK);
+    }
+
+    @PutMapping("/pagar")
+    public ResponseEntity<CartaoDTO> pagar(@RequestBody @Valid CartaoPagarDTO cartaoPagarDTO) throws BancoDeDadosException, RegraDeNegocioException {
+        log.info("Operação pagar com cartão iniciada!");
+        CartaoDTO cartaoDTO = cartaoService.pagar(cartaoPagarDTO);
+        log.info("Operação conluída!");
+        return ResponseEntity.ok(cartaoDTO);
     }
 
     @PutMapping("/{numeroCartao}")
