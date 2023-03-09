@@ -1,5 +1,6 @@
 package br.com.dbc.vemser.financeiro.dto;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,7 @@ import javax.validation.constraints.Size;
 @Data
 public class EnderecoCreateDTO {
 
+    @Hidden
     private Integer idCliente;
     @NotBlank(message = "Logradouro não pode ser vazio ou nulo!")
     @Size(max = 250, message = "Logradouro longo demais!")

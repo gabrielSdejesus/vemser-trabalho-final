@@ -45,8 +45,8 @@
 <body>
 <div class="container">
     <main>
-        <h1>Caro cliente</h1>
-        <p>É com tristeza que recebemos a notícia da sua saída do nosso banco. Gostaríamos de agradecer pela sua confiança em nós durante todo o período em que esteve conosco e por nos permitir ajudá-lo em suas necessidades financeiras.<br><br>Nosso objetivo sempre foi oferecer serviços de qualidade e excelência no atendimento aos nossos clientes, e esperamos que tenhamos atingido suas expectativas durante todo esse tempo.<br><br>Saiba que estaremos sempre à disposição para ajudá-lo no que precisar, e que seus comentários e sugestões são muito importantes para que possamos melhorar cada vez mais. Desejamos sucesso em seus novos empreendimentos e esperamos vê-lo novamente em breve.</p>
+        <h1>Caro(a) ${nome}</h1>
+        <p>É com tristeza que recebemos a notícia da sua saída do nosso banco. Gostaríamos de agradecer pela sua confiança em nós durante todo o período em que esteve conosco e por nos permitir ajudá-lo(a) em suas necessidades financeiras.<br><br>Nosso objetivo sempre foi oferecer serviços de qualidade e excelência no atendimento aos nossos clientes, e esperamos que tenhamos atingido suas expectativas durante todo esse tempo.<br><br>Saiba que estaremos sempre à disposição para ajudá-lo(a) no que precisar, e que seus comentários e sugestões são muito importantes para que possamos melhorar cada vez mais. Desejamos sucesso em seus novos empreendimentos e esperamos vê-lo(a) novamente em breve.</p>
         <span>Qualquer dúvida é só contatar o suporte pelo e-mail <b>${email}</b>.</span>
     </main>
     <footer>

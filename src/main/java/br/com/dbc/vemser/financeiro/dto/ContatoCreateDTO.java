@@ -1,5 +1,6 @@
 package br.com.dbc.vemser.financeiro.dto;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,8 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @Data
 public class ContatoCreateDTO {
+
+    @Hidden
     private Integer idCliente;
     @NotBlank(message = "Telefone não deve ser nulo!")
     private String telefone;
