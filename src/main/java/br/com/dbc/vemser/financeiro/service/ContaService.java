@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
@@ -25,16 +26,18 @@ public class ContaService extends Servico {
     private final CartaoService cartaoService;
     private final ContatoService contatoService;
     private final EnderecoService enderecoService;
+    private final EmailService emailService;
 
     public ContaService(ContaRepository contaRepository, ClienteService clienteService,
                         CartaoService cartaoService, ContatoService contatoService,
-                        EnderecoService enderecoService, ObjectMapper objectMapper) {
+                        EnderecoService enderecoService, ObjectMapper objectMapper, EmailService emailService) {
         super(objectMapper);
         this.contaRepository = contaRepository;
         this.clienteService = clienteService;
         this.cartaoService = cartaoService;
         this.contatoService = contatoService;
         this.enderecoService = enderecoService;
+        this.emailService = emailService;
     }
 
     public List<ContaDTO> listar() throws BancoDeDadosException, RegraDeNegocioException {
@@ -49,22 +52,31 @@ public class ContaService extends Servico {
     }
 
     public ContaDTO criar(ContaCreateDTO contaCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
+        //Lista de objetos para passando no email.
+        List<Object> listObjects = new ArrayList<>();
         //Criando e validando se já existe um cliente pelo CPF
         ClienteDTO clienteDTO = clienteService.adicionarCliente(contaCreateDTO.getClienteCreateDTO());
+        //Adicionando cliente criado a lista
+        listObjects.add(clienteDTO);
         //Criando contato
         contaCreateDTO.getContatoCreateDTO().setIdCliente(clienteDTO.getIdCliente());
         contatoService.adicionar(contaCreateDTO.getContatoCreateDTO());
         //Criando endereço
         contaCreateDTO.getEnderecoCreateDTO().setIdCliente(clienteDTO.getIdCliente());
         enderecoService.adicionar(contaCreateDTO.getEnderecoCreateDTO());
-        //Criando array objects
-        Object[] objects = criandoDados(contaCreateDTO, clienteDTO);
+        //Criando lista objects, e recebdo list de dados com conta e cartão
+        List<Object> retornoDados = criandoDados(contaCreateDTO, clienteDTO);
+        //Adicionando conta e cartão a listObjects
+        listObjects.add(retornoDados.get(0));
+        listObjects.add(retornoDados.get(1));
         //Criando conta
-        Conta conta = (Conta) objects[0];
+        Conta conta = (Conta) retornoDados.stream().filter(contas -> contas instanceof Conta).findFirst().orElseThrow();
         ContaDTO contaDTO = objectMapper.convertValue(contaRepository.adicionar(conta), ContaDTO.class);
         //Criando cartão
-        CartaoCreateDTO cartaoCreateDTO = (CartaoCreateDTO) objects[1];
+        CartaoCreateDTO cartaoCreateDTO = (CartaoCreateDTO) retornoDados.stream().filter(cartao -> cartao instanceof CartaoCreateDTO).findFirst().orElseThrow();
         cartaoService.criar(contaDTO.getNumeroConta(), cartaoCreateDTO);
+        //Enviando email
+        emailService.sendEmailCliente(listObjects);
         return contaDTO;
     }
 
@@ -116,6 +128,10 @@ public class ContaService extends Servico {
     public void removerConta(Integer idCliente, Integer numeroConta) throws BancoDeDadosException, RegraDeNegocioException {
         //Validando e recuperando conta
         ContaDTO contaDTO = objectMapper.convertValue(contaRepository.consultarNumeroConta(numeroConta), ContaDTO.class);
+        Cliente cliente = clienteService.retornandoCliente(contaDTO.getCliente().getIdCliente());
+        List<ContatoDTO> contatoDTO = contatoService.listarContatosDoCliente(idCliente);
+        List<Cliente> clienteList = new ArrayList<>();
+        clienteList.add(cliente);
 
         if(Objects.isNull(contaDTO)){
             throw new RegraDeNegocioException("Esta conta não existe!");
@@ -137,11 +153,12 @@ public class ContaService extends Servico {
 
         //Deletando cliente
         clienteService.deletarCliente(idCliente);
+        emailService.sendEmailClienteDelete(idCliente,contatoDTO);
     }
 
-    private Object[] criandoDados(ContaCreateDTO contaCreateDTO, ClienteDTO clienteDTO){
-        //Array Object para passar dois objetos distintos.
-        Object[] objects = new Object[2];
+    private List<Object> criandoDados(ContaCreateDTO contaCreateDTO, ClienteDTO clienteDTO){
+        //Lista de objetos para passar dois objetos distintos.
+        List<Object> objects = new ArrayList<>();
         Random random = new Random();
 
         //Convertendo a contaCreate em Conta
@@ -152,7 +169,7 @@ public class ContaService extends Servico {
         conta.getCliente().setIdCliente(clienteDTO.getIdCliente());
         //Gerando um número aleatório de 4 dígitos para agência da conta
         conta.setAgencia(random.nextInt(9000) + 1000);
-        objects[0] = conta;
+        objects.add(conta);
 
         //Criando cartão de débito
         CartaoCreateDTO cartaoCreateDTO = new CartaoCreateDTO();
@@ -160,7 +177,7 @@ public class ContaService extends Servico {
         cartaoCreateDTO.setDataExpedicao(LocalDate.now());
         cartaoCreateDTO.setVencimento(cartaoCreateDTO.getDataExpedicao().plusYears(4));
         cartaoCreateDTO.setCodigoSeguranca(random.nextInt(999) + 100);
-        objects[1] = cartaoCreateDTO;
+        objects.add(cartaoCreateDTO);
         return objects;
     }
 
