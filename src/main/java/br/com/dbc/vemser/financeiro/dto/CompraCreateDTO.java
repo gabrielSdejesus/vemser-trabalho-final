@@ -23,4 +23,6 @@ public class CompraCreateDTO {
     private LocalDate data;
     @NotNull
     private List<ItemCreateDTO> itens;
+    @NotNull(message = "O código de segurança não pode ser nulo!")
+    private Integer codigoSeguranca;
 }

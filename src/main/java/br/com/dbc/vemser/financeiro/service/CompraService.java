@@ -53,6 +53,15 @@ public class CompraService extends Servico {
     public CompraDTO adicionar(CompraCreateDTO compraCreateDTO, Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException{
         contaService.validandoAcessoConta(numeroConta, senha);
 
+        Double valorTotal = compraCreateDTO.getItens().stream()
+                .mapToDouble(ItemCreateDTO::getValor).sum();
+
+        CartaoDTO cartao = new CartaoDTO();
+        cartao.setNumeroCartao(compraCreateDTO.getNumeroCartao());
+        cartao.setCodigoSeguranca(compraCreateDTO.getCodigoSeguranca());
+
+        cartaoService.pagar(cartao, valorTotal, numeroConta, senha);
+
         Compra compra = compraRepository.adicionar(objectMapper.convertValue(compraCreateDTO, Compra.class));
         CompraDTO compraDTO = objectMapper.convertValue(compra, CompraDTO.class);
 
