@@ -1,6 +1,5 @@
 package br.com.dbc.vemser.financeiro.controller;
 
-import br.com.dbc.vemser.financeiro.dto.ContaAcessDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -22,7 +21,7 @@ public interface ControleEspecifico<ENTRADA, RETORNO> {
             }
     )
     @DeleteMapping("/{id}")
-    ResponseEntity<RETORNO> deletar(@NotNull @PathVariable("id") Integer id, @Valid @RequestBody ContaAcessDTO acess);
+    ResponseEntity<RETORNO> deletar(@NotNull @PathVariable("id") Integer id);
 
     @Operation(summary = "Atualizar dado no Banco de Dados", description = "Atualiza um dado no Banco de Dados pelo id, com todos os campos preenchidos (mesmo que só alguns mudem)")
     @ApiResponses(
@@ -33,5 +32,5 @@ public interface ControleEspecifico<ENTRADA, RETORNO> {
             }
     )
     @PutMapping("/{id}")
-    ResponseEntity<RETORNO> atualizar(@NotNull @PathVariable("id") Integer id, @Valid @RequestBody ENTRADA dado, @Valid @RequestBody ContaAcessDTO acess);
+    ResponseEntity<RETORNO> atualizar(@NotNull @PathVariable("id") Integer id, @Valid @RequestBody ENTRADA dado);
 }

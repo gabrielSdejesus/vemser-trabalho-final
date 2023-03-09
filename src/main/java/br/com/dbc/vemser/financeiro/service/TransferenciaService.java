@@ -1,6 +1,5 @@
 package br.com.dbc.vemser.financeiro.service;
 
-import br.com.dbc.vemser.financeiro.dto.ContaAcessDTO;
 import br.com.dbc.vemser.financeiro.dto.TransferenciaCreateDTO;
 import br.com.dbc.vemser.financeiro.dto.TransferenciaDTO;
 import br.com.dbc.vemser.financeiro.exception.BancoDeDadosException;
@@ -25,8 +24,8 @@ public class TransferenciaService extends Servico {
         this.contaService = contaService;
     }
 
-    public TransferenciaDTO adicionarTransferencia(TransferenciaCreateDTO transferenciaCreateDTO, ContaAcessDTO contaAcessDTO) throws BancoDeDadosException, RegraDeNegocioException {
-        contaService.validandoAcessoConta(contaAcessDTO);
+    public TransferenciaDTO adicionarTransferencia(TransferenciaCreateDTO transferenciaCreateDTO, Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException {
+        contaService.validandoAcessoConta(numeroConta, senha);
         Transferencia transferencia = objectMapper.convertValue(transferenciaCreateDTO, Transferencia.class);
         return objectMapper.convertValue(this.transferenciaRepository.adicionar(transferencia), TransferenciaDTO.class);
     }
@@ -41,8 +40,8 @@ public class TransferenciaService extends Servico {
                 .collect(Collectors.toList());
     }
 
-    public List<TransferenciaDTO> listarTransferenciasDaConta(Integer numeroConta, ContaAcessDTO contaAcessDTO) throws BancoDeDadosException, RegraDeNegocioException {
-        contaService.validandoAcessoConta(contaAcessDTO);
+    public List<TransferenciaDTO> listarTransferenciasDaConta(Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException {
+        contaService.validandoAcessoConta(numeroConta, senha);
         return transferenciaRepository.listarTransferenciasPorConta(numeroConta).stream()
                 .map(transferencia -> objectMapper.convertValue(transferencia, TransferenciaDTO.class))
                 .collect(Collectors.toList());

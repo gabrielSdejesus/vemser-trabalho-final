@@ -37,9 +37,11 @@ public class CartaoController {
     }
 
     @PutMapping("/pagar")
-    public ResponseEntity<CartaoDTO> pagar(@RequestBody @Valid CartaoPagarDTO cartaoPagarDTO) throws BancoDeDadosException, RegraDeNegocioException {
+    public ResponseEntity<CartaoDTO> pagar(@RequestBody @Valid CartaoPagarDTO cartaoPagarDTO,
+                                           @RequestHeader("numeroConta") Integer numeroConta,
+                                           @RequestHeader("senha") String senha) throws BancoDeDadosException, RegraDeNegocioException {
         log.info("Operação pagar com cartão iniciada!");
-        CartaoDTO cartaoDTO = cartaoService.pagar(cartaoPagarDTO);
+        CartaoDTO cartaoDTO = cartaoService.pagar(cartaoPagarDTO, numeroConta, senha);
         log.info("Operação conluída!");
         return ResponseEntity.ok(cartaoDTO);
     }

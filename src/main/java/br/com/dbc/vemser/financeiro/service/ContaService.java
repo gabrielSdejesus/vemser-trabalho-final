@@ -46,9 +46,9 @@ public class ContaService extends Servico {
                 .collect(Collectors.toList());
     }
 
-    public ContaDTO retornarContaCliente(ContaAcessDTO contaAcessDTO) throws BancoDeDadosException, RegraDeNegocioException{
+    public ContaDTO retornarContaCliente(Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException{
         //Verificando senha e recuperando conta
-        return validandoAcessoConta(contaAcessDTO);
+        return validandoAcessoConta(numeroConta, senha);
     }
 
     public ContaDTO criar(ContaCreateDTO contaCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
@@ -80,44 +80,41 @@ public class ContaService extends Servico {
         return contaDTO;
     }
 
-    public ContaDTO alterarSenha(ContaUpdateDTO contaUpdateDTO) throws BancoDeDadosException, RegraDeNegocioException {
+    public ContaDTO alterarSenha(String novaSenha, Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException {
 
         //Vericando acesso a conta que irá ser atualizada
-        ContaAcessDTO contaAcessDTO = new ContaAcessDTO();
-        contaAcessDTO.setNumeroConta(contaUpdateDTO.getNumeroConta());
-        contaAcessDTO.setSenha(contaUpdateDTO.getSenha());
-        ContaDTO contaDTO = validandoAcessoConta(contaAcessDTO);
+        ContaDTO contaDTO = validandoAcessoConta(numeroConta, senha);
 
         //Alterando senha
         Conta conta = objectMapper.convertValue(contaDTO, Conta.class);
-        conta.setSenha(contaUpdateDTO.getSenhaNova());
+        conta.setSenha(novaSenha);
 
         //Executando edição
         return objectMapper.convertValue(contaRepository
                 .editar(conta.getNumeroConta(), conta), ContaDTO.class);
     }
 
-    public ContaDTO sacar(ContaTransfDTO contaTransfDTO) throws BancoDeDadosException, RegraDeNegocioException {
+    public ContaDTO sacar(Double valor, Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException {
         //Validando conta
-        ContaDTO contaDTO = retornarContaCliente(contaTransfDTO);
+        ContaDTO contaDTO = retornarContaCliente(numeroConta, senha);
 
-        if(!(contaDTO.getSaldo() - contaTransfDTO.getValor() >= 0)){
+        if(!(contaDTO.getSaldo() - valor >= 0)){
             throw new RegraDeNegocioException("Operação não realizada, saldo insuficiente! Seu saldo atual: R$" + contaDTO.getSaldo());
         }
 
         //Sacando valor
         Conta conta = objectMapper.convertValue(contaDTO, Conta.class);
-        conta.setSaldo(conta.getSaldo() - contaTransfDTO.getValor());
+        conta.setSaldo(conta.getSaldo() - valor);
         return objectMapper.convertValue(contaRepository.editar(conta.getNumeroConta(), conta), ContaDTO.class);
     }
 
-    public ContaDTO depositar(ContaTransfDTO contaTransfDTO) throws BancoDeDadosException, RegraDeNegocioException {
+    public ContaDTO depositar(Double valor, Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException {
         //Validando conta
-        ContaDTO contaDTO = retornarContaCliente(contaTransfDTO);
+        ContaDTO contaDTO = retornarContaCliente(numeroConta, senha);
 
         //Depositando valor
         Conta conta = objectMapper.convertValue(contaDTO, Conta.class);
-        conta.setSaldo(conta.getSaldo() + contaTransfDTO.getValor());
+        conta.setSaldo(conta.getSaldo() + valor);
         return objectMapper.convertValue(contaRepository.editar(conta.getNumeroConta(), conta), ContaDTO.class);
     }
 
@@ -181,15 +178,15 @@ public class ContaService extends Servico {
         return objects;
     }
 
-    ContaDTO validandoAcessoConta(ContaAcessDTO contaAcessDTO) throws RegraDeNegocioException, BancoDeDadosException {
+    ContaDTO validandoAcessoConta(Integer numeroConta, String senha) throws RegraDeNegocioException, BancoDeDadosException {
 
-        Conta conta = contaRepository.consultarNumeroConta(contaAcessDTO.getNumeroConta());
+        Conta conta = contaRepository.consultarNumeroConta(numeroConta);
 
         if(Objects.isNull(conta)){
             throw new RegraDeNegocioException("Conta inválida!");
         }
 
-        if(!conta.getSenha().equals(contaAcessDTO.getSenha())){
+        if(!conta.getSenha().equals(senha)){
             throw new RegraDeNegocioException("Conta ou Senha inválida!");
         }
 

@@ -46,20 +46,24 @@ public class TransferenciaController implements ControleGeral<TransferenciaCreat
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
     )
-    @GetMapping("/{idConta}/conta")
-    public ResponseEntity<List<TransferenciaDTO>> exibirTransferenciasDaConta(@PathVariable("idConta") Integer idConta, @Valid @RequestBody ContaAcessDTO contaAcessDTO) throws BancoDeDadosException, RegraDeNegocioException {
-        return ResponseEntity.ok(transferenciaService.listarTransferenciasDaConta(idConta, contaAcessDTO));
+    @GetMapping("/conta")
+    public ResponseEntity<List<TransferenciaDTO>> exibirTransferenciasDaConta(@RequestHeader("numeroConta") Integer numeroConta,
+                                                                              @RequestHeader("senha") String senha) throws BancoDeDadosException, RegraDeNegocioException {
+        return ResponseEntity.ok(transferenciaService.listarTransferenciasDaConta(numeroConta, senha));
     }
 
+
     @Override
-    public ResponseEntity<List<TransferenciaDTO>> listar(ContaAcessDTO acess) throws BancoDeDadosException {
+    public ResponseEntity<List<TransferenciaDTO>> listar() throws BancoDeDadosException {
         return ResponseEntity.ok(transferenciaService.listarTransferencias());
     }
 
     @Override
-    public ResponseEntity<TransferenciaDTO> adicionar(TransferenciaCreateDTO dado, ContaAcessDTO acess) throws BancoDeDadosException, RegraDeNegocioException {
+    public ResponseEntity<TransferenciaDTO> adicionar(TransferenciaCreateDTO dado,
+                                                      @RequestHeader("numeroConta") Integer numeroConta,
+                                                      @RequestHeader("senha") String senha) throws BancoDeDadosException, RegraDeNegocioException {
         log.info("Adicionando transferência!");
-        TransferenciaDTO transferenciaDTO = transferenciaService.adicionarTransferencia(dado, acess);
+        TransferenciaDTO transferenciaDTO = transferenciaService.adicionarTransferencia(dado, numeroConta, senha);
         log.info("Transferência adicionada!");
         return ResponseEntity.ok(transferenciaDTO);
     }

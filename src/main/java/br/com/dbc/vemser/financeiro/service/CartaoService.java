@@ -4,7 +4,6 @@ package br.com.dbc.vemser.financeiro.service;
 import br.com.dbc.vemser.financeiro.dto.CartaoCreateDTO;
 import br.com.dbc.vemser.financeiro.dto.CartaoDTO;
 import br.com.dbc.vemser.financeiro.dto.CartaoPagarDTO;
-import br.com.dbc.vemser.financeiro.dto.ContaTransfDTO;
 import br.com.dbc.vemser.financeiro.exception.BancoDeDadosException;
 import br.com.dbc.vemser.financeiro.exception.RegraDeNegocioException;
 import br.com.dbc.vemser.financeiro.model.Cartao;
@@ -57,12 +56,12 @@ public class CartaoService extends Servico {
         }
     }
 
-    public CartaoDTO pagar(CartaoPagarDTO cartaoPagarDTO) throws BancoDeDadosException, RegraDeNegocioException {
+    public CartaoDTO pagar(CartaoPagarDTO cartaoPagarDTO, Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException {
         //Validando acesso a conta
-        contaService.validandoAcessoConta(cartaoPagarDTO.getContaAcessDTO());
+        contaService.validandoAcessoConta(numeroConta, senha);
 
         //Validando e retornando cartões da conta.
-        List<Cartao> cartoes = validarCartao(cartaoPagarDTO);
+        List<Cartao> cartoes = validarCartao(cartaoPagarDTO, numeroConta);
 
         /*********** CARTÃO DE CRÉDITO **********/
 
@@ -94,11 +93,7 @@ public class CartaoService extends Servico {
             cartaoDeDebito = (CartaoDeDebito) cartoes.stream().findFirst().get();
         }
         //Pagando com o cartão de débito
-        ContaTransfDTO contaTransfDTO = new ContaTransfDTO();
-        contaTransfDTO.setValor(cartaoPagarDTO.getValor());
-        contaTransfDTO.setNumeroConta(cartaoPagarDTO.getContaAcessDTO().getNumeroConta());
-        contaTransfDTO.setSenha(cartaoPagarDTO.getContaAcessDTO().getSenha());
-        contaService.sacar(contaTransfDTO);
+        contaService.sacar(cartaoPagarDTO.getValor(), numeroConta, senha);
         return objectMapper.convertValue(cartaoDeDebito, CartaoDTO.class);
     }
 
@@ -133,10 +128,10 @@ public class CartaoService extends Servico {
         cartaoRepository.remover(cartao.getNumeroCartao());
     }
 
-    private List<Cartao> validarCartao(CartaoPagarDTO cartaoPagarDTO) throws BancoDeDadosException, RegraDeNegocioException {
+    private List<Cartao> validarCartao(CartaoPagarDTO cartaoPagarDTO, Integer numeroConta) throws BancoDeDadosException, RegraDeNegocioException {
         List<Cartao> cartoesValidados = cartaoRepository
                 .listarPorNumeroConta(
-                        cartaoPagarDTO.getContaAcessDTO().getNumeroConta())
+                        numeroConta)
                 .stream()
                 .filter(cartao -> cartao.getNumeroCartao().equals(cartaoPagarDTO.getNumeroCartao()))
                 .filter(cartao -> cartao.getCodigoSeguranca().equals(cartaoPagarDTO.getCodigoSeguranca()))

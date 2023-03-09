@@ -1,6 +1,5 @@
 package br.com.dbc.vemser.financeiro.controller;
 
-import br.com.dbc.vemser.financeiro.dto.ContaAcessDTO;
 import br.com.dbc.vemser.financeiro.exception.BancoDeDadosException;
 import br.com.dbc.vemser.financeiro.exception.RegraDeNegocioException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,6 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -26,7 +26,7 @@ public interface ControleGeral<ENTRADA, RETORNO> {
             }
     )
     @GetMapping
-    ResponseEntity<List<RETORNO>> listar(@Valid @RequestBody ContaAcessDTO acess) throws BancoDeDadosException;
+    ResponseEntity<List<RETORNO>> listar() throws BancoDeDadosException;
 
     @Operation(summary = "Adicionar dado no Banco de Dados", description = "Adiciona um dado no Banco de Dados")
     @ApiResponses(
@@ -37,5 +37,6 @@ public interface ControleGeral<ENTRADA, RETORNO> {
             }
     )
     @PostMapping
-    ResponseEntity<RETORNO> adicionar(@Valid @RequestBody ENTRADA dado, @Valid @RequestBody ContaAcessDTO acess) throws BancoDeDadosException, RegraDeNegocioException;
+    ResponseEntity<RETORNO> adicionar(@Valid @RequestBody ENTRADA dado, @Valid @RequestHeader("numeroConta") Integer numeroConta,
+                                      @RequestHeader("senha") String senha) throws BancoDeDadosException, RegraDeNegocioException;
 }

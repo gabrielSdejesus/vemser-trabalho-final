@@ -1,49 +1,68 @@
 package br.com.dbc.vemser.financeiro.service;
 
-import br.com.dbc.vemser.financeiro.dto.CartaoDTO;
-import br.com.dbc.vemser.financeiro.dto.CompraCreateDTO;
-import br.com.dbc.vemser.financeiro.dto.CompraDTO;
-import br.com.dbc.vemser.financeiro.dto.ContaAcessDTO;
+import br.com.dbc.vemser.financeiro.dto.*;
 import br.com.dbc.vemser.financeiro.exception.BancoDeDadosException;
 import br.com.dbc.vemser.financeiro.exception.RegraDeNegocioException;
 import br.com.dbc.vemser.financeiro.model.Cartao;
 import br.com.dbc.vemser.financeiro.model.Compra;
+import br.com.dbc.vemser.financeiro.model.Item;
 import br.com.dbc.vemser.financeiro.repository.CompraRepository;
+import br.com.dbc.vemser.financeiro.repository.ItemRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
 public class CompraService extends Servico {
     private final CompraRepository compraRepository;
+    private final ItemService itemService;
     private final ContaService contaService;
     private final CartaoService cartaoService;
 
-    public CompraService(CompraRepository compraRepository, ObjectMapper objectMapper, ContaService contaService, CartaoService cartaoService) {
+    public CompraService(CompraRepository compraRepository, ObjectMapper objectMapper, ContaService contaService, CartaoService cartaoService, ItemService itemService) {
         super(objectMapper);
         this.compraRepository = compraRepository;
         this.contaService = contaService;
         this.cartaoService = cartaoService;
+        this.itemService = itemService;
     }
 
-    public List<CompraDTO> retornarComprasCartao(Long numeroCartao, ContaAcessDTO contaAcessDTO) throws BancoDeDadosException, RegraDeNegocioException {
+    public List<CompraDTO> retornarComprasCartao(Long numeroCartao, Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException {
+        contaService.validandoAcessoConta(numeroConta, senha);
 
-        contaService.validandoAcessoConta(contaAcessDTO);
-
-        CartaoDTO cartao = cartaoService.listarPorNumeroConta(contaAcessDTO.getNumeroConta()).stream()
+        CartaoDTO cartao = cartaoService.listarPorNumeroConta(numeroConta).stream()
                 .filter(cartaoDTO -> cartaoDTO.getNumeroCartao().equals(numeroCartao))
                 .findFirst()
                 .orElseThrow(()-> new RegraDeNegocioException("Cartão não existente na conta informada!"));
 
-        return compraRepository.listarPorCartao(numeroCartao).stream()
+        List<CompraDTO> comprasDTO =  compraRepository.listarPorCartao(numeroCartao).stream()
                 .map(compra -> objectMapper.convertValue(compra, CompraDTO.class))
                 .collect(Collectors.toList());
+
+        for (CompraDTO compraDTO : comprasDTO) {
+            compraDTO.setItens(itemService.listarItensPorIdCompra(compraDTO.getIdCompra()));
+        }
+
+        return comprasDTO;
     }
 
-    public CompraDTO adicionarCompra(CompraCreateDTO compraCreateDTO) throws BancoDeDadosException, RegraDeNegocioException{
-        Compra compra = this.compraRepository.adicionar(objectMapper.convertValue(compraCreateDTO, Compra.class));
-        return objectMapper.convertValue(compra, CompraDTO.class);
+    public CompraDTO adicionar(CompraCreateDTO compraCreateDTO, Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException{
+        contaService.validandoAcessoConta(numeroConta, senha);
+
+        Compra compra = compraRepository.adicionar(objectMapper.convertValue(compraCreateDTO, Compra.class));
+        CompraDTO compraDTO = objectMapper.convertValue(compra, CompraDTO.class);
+
+        for (ItemCreateDTO item : compraCreateDTO.getItens()) {
+            item.setIdCompra(compra.getIdCompra());
+        }
+        List<ItemDTO> listItemDTO = itemService.adicionar(compraCreateDTO.getItens());
+
+        compraDTO.setItens(listItemDTO);
+
+        return compraDTO;
     }
 }

@@ -2,7 +2,6 @@ package br.com.dbc.vemser.financeiro.controller;
 
 import br.com.dbc.vemser.financeiro.dto.CompraCreateDTO;
 import br.com.dbc.vemser.financeiro.dto.CompraDTO;
-import br.com.dbc.vemser.financeiro.dto.ContaAcessDTO;
 import br.com.dbc.vemser.financeiro.exception.BancoDeDadosException;
 import br.com.dbc.vemser.financeiro.exception.RegraDeNegocioException;
 import br.com.dbc.vemser.financeiro.service.CompraService;
@@ -32,23 +31,17 @@ public class CompraController {
     }
 
     @GetMapping("/{numeroCartao}/cartao")
-    public ResponseEntity<List<CompraDTO>> listarComprasDoCartao(@NotNull @PathVariable("numeroCartao") Long numeroCartao, @Valid @RequestBody ContaAcessDTO contaAcessDTO) throws BancoDeDadosException, RegraDeNegocioException {
-        return ResponseEntity.ok(compraService.retornarComprasCartao(numeroCartao, contaAcessDTO));
+    public ResponseEntity<List<CompraDTO>> listarComprasDoCartao(@NotNull @PathVariable("numeroCartao") Long numeroCartao,
+                                                                 @RequestHeader("numeroConta") Integer numeroConta,
+                                                                 @RequestHeader("senha") String senha) throws BancoDeDadosException, RegraDeNegocioException {
+        return ResponseEntity.ok(compraService.retornarComprasCartao(numeroCartao, numeroConta, senha));
     }
 
-    @PostMapping
-    public ResponseEntity<CompraDTO> criar(@RequestBody @Valid CompraCreateDTO compra){
-        log.info("Criando compra!");
-        log.info("compra Criado!");
-        return null;
-    }
-
-    @PutMapping("/{idCompra}")
-    public ResponseEntity<CompraDTO> atualizar(@NotNull Integer idCompra,
-                                               @RequestBody @Valid CompraCreateDTO compra){
-        log.info("Atualizando compra!");
-        log.info("compra Atualizado!");
-        return null;
+    @PostMapping("/{numeroCartao}/cartao")
+    public ResponseEntity<CompraDTO> criar(@RequestBody @Valid CompraCreateDTO compra,
+                                           @RequestHeader("numeroConta") Integer numeroConta,
+                                           @RequestHeader("senha") String senha) throws BancoDeDadosException, RegraDeNegocioException {
+        return ResponseEntity.ok(compraService.adicionar(compra, numeroConta, senha));
     }
 
     @DeleteMapping("/{idCompra}")
