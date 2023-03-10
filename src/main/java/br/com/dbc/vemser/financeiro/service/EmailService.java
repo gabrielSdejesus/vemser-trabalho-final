@@ -37,10 +37,8 @@ public class EmailService {
     @Value("${spring.mail.username}")
     private String from;
 
-    public void sendEmailCreate(List<Object> object) throws RegraDeNegocioException, BancoDeDadosException {
+    public void sendEmailCreate(Conta conta, CartaoDTO cartaoDTO) throws RegraDeNegocioException, BancoDeDadosException {
         MimeMessage mimeMessage = emailSender.createMimeMessage();
-
-        Conta conta = getConta(object);
         ContatoDTO contato = getContato(conta.getCliente().getIdCliente());
 
         try {
@@ -48,7 +46,7 @@ public class EmailService {
             mimeMessageHelper.setFrom(from);
             mimeMessageHelper.setTo(contato.getEmail());
             mimeMessageHelper.setSubject("Olá, cadastro realizado com sucesso!");
-            mimeMessageHelper.setText(getTemplateCreate(object), true);
+            mimeMessageHelper.setText(getTemplateCreate(conta, cartaoDTO), true);
 
             emailSender.send(mimeMessageHelper.getMimeMessage());
         } catch (MessagingException | IOException | TemplateException e) {
@@ -56,14 +54,8 @@ public class EmailService {
         }
     }
 
-    public String getTemplateCreate(List<Object> object) throws IOException, TemplateException, BancoDeDadosException {
+    public String getTemplateCreate(Conta conta, CartaoDTO cartaoDTO) throws IOException, TemplateException, BancoDeDadosException {
         Map<String, Object> dados = new HashMap<>();
-
-        Conta conta = getConta(object);
-        CartaoDTO cartaoDTO = cartaoService.listarPorNumeroConta(conta.getNumeroConta())
-                .stream()
-                .reduce((primeiro, segundo) -> segundo)
-                .orElse(null);
 
         dados.put("nome", conta.getCliente().getNome());
         dados.put("numero_conta", conta.getNumeroConta().toString());

@@ -63,20 +63,15 @@ public class ContaService extends Servico {
         contaCreateDTO.getEnderecoCreateDTO().setIdCliente(clienteDTO.getIdCliente());
         enderecoService.adicionar(contaCreateDTO.getEnderecoCreateDTO());
 
-        //Criando lista objects, e recebdo list de dados com conta e cartão
-        List<Object> retornoDados = criandoDados(contaCreateDTO, clienteDTO);
-
         //Criando conta
-        Conta conta = (Conta) retornoDados.stream().filter(contas -> contas instanceof Conta).findFirst().orElseThrow();
-        ContaDTO contaDTO = objectMapper.convertValue(contaRepository.adicionar(conta), ContaDTO.class);
+        Conta conta = contaRepository.adicionar(criandoDados(contaCreateDTO, clienteDTO));
 
         //Criando cartão
-        CartaoCreateDTO cartaoCreateDTO = (CartaoCreateDTO) retornoDados.stream().filter(cartao -> cartao instanceof CartaoCreateDTO).findFirst().orElseThrow();
-        cartaoService.criar(contaDTO.getNumeroConta(), contaCreateDTO.getSenha(), TipoCartao.DEBITO);
+        CartaoDTO cartaoDTO = cartaoService.criar(conta.getNumeroConta(), contaCreateDTO.getSenha(), TipoCartao.DEBITO);
 
         //Email
-        emailService.sendEmailCreate(retornoDados);
-        return contaDTO;
+        emailService.sendEmailCreate(conta, cartaoDTO);
+        return objectMapper.convertValue(conta, ContaDTO.class);
     }
 
     public ContaDTO alterarSenha(String novaSenha, Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException {
@@ -125,16 +120,12 @@ public class ContaService extends Servico {
         contaRepository.reativarConta(cpf);
     }
 
-    public void removerConta(Integer idCliente, Integer numeroConta) throws BancoDeDadosException, RegraDeNegocioException {
+    public void removerConta(Integer numeroConta) throws BancoDeDadosException, RegraDeNegocioException {
         //Validando e recuperando conta
         ContaDTO contaDTO = objectMapper.convertValue(contaRepository.consultarNumeroConta(numeroConta), ContaDTO.class);
 
         if(Objects.isNull(contaDTO)){
             throw new RegraDeNegocioException("Esta conta não existe!");
-        }
-
-        if(!(contaDTO.getCliente().getIdCliente().equals(idCliente))){
-            throw new RegraDeNegocioException("Esta conta não pertence a esse cliente!");
         }
 
         if(contaDTO.getStatus().equals(Status.INATIVO)){
@@ -151,12 +142,10 @@ public class ContaService extends Servico {
         contaRepository.remover(numeroConta);
 
         //Deletando cliente
-        clienteService.deletarCliente(idCliente);
+        clienteService.deletarCliente(contaDTO.getCliente().getIdCliente());
     }
 
-    private List<Object> criandoDados(ContaCreateDTO contaCreateDTO, ClienteDTO clienteDTO){
-        //Lista de objetos para passar dois objetos distintos.
-        List<Object> objects = new ArrayList<>();
+    private Conta criandoDados(ContaCreateDTO contaCreateDTO, ClienteDTO clienteDTO){
         Random random = new Random();
 
         //Convertendo a contaCreate em Conta
@@ -170,16 +159,7 @@ public class ContaService extends Servico {
 
         //Gerando um número aleatório de 4 dígitos para agência da conta
         conta.setAgencia(random.nextInt(9000) + 1000);
-        objects.add(conta);
-
-        //Criando cartão de débito
-        CartaoCreateDTO cartaoCreateDTO = new CartaoCreateDTO();
-        cartaoCreateDTO.setTipo(TipoCartao.DEBITO);
-        cartaoCreateDTO.setDataExpedicao(LocalDate.now());
-        cartaoCreateDTO.setVencimento(cartaoCreateDTO.getDataExpedicao().plusYears(4));
-        cartaoCreateDTO.setCodigoSeguranca(random.nextInt(999) + 100);
-        objects.add(cartaoCreateDTO);
-        return objects;
+        return conta;
     }
 
     ContaDTO validandoAcessoConta(Integer numeroConta, String senha) throws RegraDeNegocioException, BancoDeDadosException {

@@ -88,11 +88,11 @@ public class ContaController {
     }
 
     @Operation(summary = "Desativar conta", description = "Desativar conta, cliente e cartões.")
-    @DeleteMapping("/{idCliente}/{numeroConta}/delete")
-    public ResponseEntity<String> removerConta(@PathVariable("idCliente") Integer idCliente,
-                                              @PathVariable("numeroConta") Integer numeroConta) throws BancoDeDadosException, RegraDeNegocioException {
+    @DeleteMapping("/{numeroConta}/delete")
+    public ResponseEntity<String> removerConta(
+                                @PathVariable("numeroConta") Integer numeroConta) throws BancoDeDadosException, RegraDeNegocioException {
         log.info("Deletando Conta!");
-        contaService.removerConta(idCliente,numeroConta);
+        contaService.removerConta(numeroConta);
         log.info("Conta Deletada!");
         return ResponseEntity.ok("Conta desativada!");
     }
