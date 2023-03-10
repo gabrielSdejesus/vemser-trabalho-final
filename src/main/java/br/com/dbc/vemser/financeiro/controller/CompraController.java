@@ -21,22 +21,21 @@ import java.util.List;
 @Slf4j
 @Validated
 @RequiredArgsConstructor
-public class CompraController implements ControleListar<List<CompraDTO>>, ControleDeletar{
+public class CompraController implements ControleListar<List<CompraDTO>>{
 
     private final CompraService compraService;
 
     // admin
-<<<<<<< HEAD
     @Override
     @GetMapping("/lista")
-    public ResponseEntity<List<CompraDTO>> listar(){
-        return ResponseEntity.ok(this.compraService.listar());
-=======
+    public ResponseEntity<List<CompraDTO>> listar() {
+        return ResponseEntity.ok(compraService.list());
+    }
+
     @GetMapping("/listar")
     public ResponseEntity<List<Compra>> listarTodasCompras(@RequestHeader("login") String login,
                                                            @RequestHeader("senha") String senha) throws BancoDeDadosException, RegraDeNegocioException {
         return ResponseEntity.ok(compraService.list(login, senha));
->>>>>>> fde39426e9ac026ec890b618a8872914db662b7d
     }
 
     @GetMapping("/{numeroCartao}/cartao")
