@@ -45,6 +45,7 @@ public class ContaController {
         return ResponseEntity.ok(contaDTO);
     }
 
+    @Operation(summary = "Alterar senha", description = "Alterar senha da conta.")
     @PutMapping("/alterarsenha")
     public ResponseEntity<ContaDTO> alterarSenha(@RequestBody @Valid ContaUpdateDTO contaUpdateDTO,
                                                  @RequestHeader("numeroConta") Integer numeroConta,
@@ -55,6 +56,7 @@ public class ContaController {
         return ResponseEntity.ok(contaDTO);
     }
 
+    @Operation(summary = "Sacar", description = "Sacar valor da conta.")
     @PutMapping("/sacar/{valor}")
     public ResponseEntity<ContaDTO> sacar(@PathVariable("valor") Double valor,
                                           @RequestHeader("numeroConta") Integer numeroConta,
@@ -65,6 +67,7 @@ public class ContaController {
         return ResponseEntity.ok(contaDTO);
     }
 
+    @Operation(summary = "Depositar", description = "Depositar valor na conta.")
     @PutMapping("/depositar/{valor}")
     public ResponseEntity<ContaDTO> depositar(@PathVariable("valor") Double valor,
                                               @RequestHeader("numeroConta") Integer numeroConta,
@@ -75,20 +78,22 @@ public class ContaController {
         return ResponseEntity.ok(contaDTO);
     }
 
+    @Operation(summary = "Reativar conta", description = "Reativar conta, cliente e cartões.")
     @PutMapping("/{cpf}/reativar")
-    public ResponseEntity<Void> reativarConta(@PathVariable("cpf") String cpf) throws BancoDeDadosException {
+    public ResponseEntity<String> reativarConta(@PathVariable("cpf") String cpf) throws BancoDeDadosException, RegraDeNegocioException {
         log.info("Reativando Conta!");
         contaService.reativarConta(cpf);
         log.info("Conta Reativada!");
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("Conta Reativada");
     }
 
+    @Operation(summary = "Desativar conta", description = "Desativar conta, cliente e cartões.")
     @DeleteMapping("/{idCliente}/{numeroConta}/delete")
-    public ResponseEntity<Void> removerConta(@PathVariable("idCliente") Integer idCliente,
+    public ResponseEntity<String> removerConta(@PathVariable("idCliente") Integer idCliente,
                                               @PathVariable("numeroConta") Integer numeroConta) throws BancoDeDadosException, RegraDeNegocioException {
         log.info("Deletando Conta!");
         contaService.removerConta(idCliente,numeroConta);
         log.info("Conta Deletada!");
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("Conta desativada!");
     }
 }

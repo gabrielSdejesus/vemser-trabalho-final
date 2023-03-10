@@ -65,10 +65,33 @@ public class ClienteService extends Servico {
         }
     }
 
-    void validarClientePorCPF(ClienteCreateDTO clienteCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
+    boolean validarClientePorCPF(ClienteCreateDTO clienteCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
+        ClienteDTO clienteDTO = listarClientes().stream()
+                .filter(cliente -> cliente.getCpf().equals(clienteCreateDTO.getCpf()))
+                .findFirst()
+                .orElse(null);
 
-        if(listarClientes().stream().anyMatch(cliente -> cliente.getCpf().equals(clienteCreateDTO.getCpf()))){
-            throw new RegraDeNegocioException("Este cliente já está registrado!");
+        if(clienteCreateDTO.getNome() != null && clienteDTO == null) {
+            return true;
         }
+        if(clienteCreateDTO.getNome() != null && clienteDTO != null && clienteDTO.getStatus().getStatus() == 0) {
+            throw new RegraDeNegocioException("Este CPF está inativo!");
+        }
+
+        if(clienteDTO == null){
+            throw new RegraDeNegocioException("Este cpf não possui registro no banco!");
+        }
+
+        if(clienteDTO.getStatus().getStatus() == 1){
+            throw new RegraDeNegocioException("Este cpf já está registrado e ativo!");
+        }
+
+        if(clienteDTO.getStatus().getStatus() == 0){
+            return false;
+        } else {
+            new RegraDeNegocioException("Este cliente não existe no nosso banco de dados");
+        }
+
+        return true;
     }
 }

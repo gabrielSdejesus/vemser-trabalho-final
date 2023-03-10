@@ -116,7 +116,11 @@ public class ContaService extends Servico {
         return objectMapper.convertValue(contaRepository.editar(conta.getNumeroConta(), conta), ContaDTO.class);
     }
 
-    public void reativarConta(String cpf) throws BancoDeDadosException {
+    public void reativarConta(String cpf) throws BancoDeDadosException, RegraDeNegocioException {
+        ClienteCreateDTO clienteCreateDTO = new ClienteCreateDTO();
+        clienteCreateDTO.setCpf(cpf);
+        clienteService.validarClientePorCPF(clienteCreateDTO);
+
         contaRepository.reativarConta(cpf);
     }
 
