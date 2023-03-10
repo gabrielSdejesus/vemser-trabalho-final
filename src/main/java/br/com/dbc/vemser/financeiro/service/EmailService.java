@@ -36,96 +36,86 @@ public class EmailService {
     private final CartaoService cartaoService;
     @Value("${spring.mail.username}")
     private String from;
-    private static String to;
 
-    public void sendEmailCliente(List<Object> object) throws RegraDeNegocioException, BancoDeDadosException {
-        MimeMessage mimeMessagege = emailSender.createMimeMessage();
+    public void sendEmailCreate(List<Object> object) throws RegraDeNegocioException, BancoDeDadosException {
+        MimeMessage mimeMessage = emailSender.createMimeMessage();
 
-        //Cliente
-        ClienteDTO cliente = (ClienteDTO) object.stream().filter(o -> o.getClass().equals(ClienteDTO.class)).findFirst().orElseThrow();
-        //Contato
-        List<ContatoDTO> contatoDTO = contatoService.listarContatosDoCliente(cliente.getIdCliente());
-        ContatoDTO contatoDTO1 = contatoDTO.get(0);
+        Conta conta = getConta(object);
+        ContatoDTO contato = getContato(conta.getCliente().getIdCliente());
+
         try {
-
-            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessagege, true);
+            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
             mimeMessageHelper.setFrom(from);
-            mimeMessageHelper.setTo(contatoDTO1.getEmail());
+            mimeMessageHelper.setTo(contato.getEmail());
             mimeMessageHelper.setSubject("Olá, cadastro realizado com sucesso!");
+            mimeMessageHelper.setText(getTemplateCreate(object), true);
 
-            mimeMessageHelper.setText(getContentFromTemplateClienteCreate(object), true);
             emailSender.send(mimeMessageHelper.getMimeMessage());
         } catch (MessagingException | IOException | TemplateException e) {
             e.printStackTrace();
         }
     }
 
-    public void sendEmailClienteDelete(Integer idCliente, List<ContatoDTO> contatoDTOS) throws RegraDeNegocioException, BancoDeDadosException {
-        MimeMessage mimeMessagege = emailSender.createMimeMessage();
-        //Buscando cliente
-        Cliente cliente = clienteService.retornandoCliente(idCliente);
-        //Buscando email do contato
-        ContatoDTO contatoDTO = contatoDTOS.stream().findFirst().get();
-
-        try {
-
-            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessagege, true);
-            mimeMessageHelper.setFrom(from);
-            mimeMessageHelper.setTo(contatoDTO.getEmail());
-            mimeMessageHelper.setSubject("Adeus!");
-
-            mimeMessageHelper.setText(getContentFromTemplateClienteDelete(cliente), true);
-            emailSender.send(mimeMessageHelper.getMimeMessage());
-        } catch (MessagingException | IOException | TemplateException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public String getContentFromTemplateClienteCreate(List<Object> object) throws IOException, TemplateException, BancoDeDadosException {
+    public String getTemplateCreate(List<Object> object) throws IOException, TemplateException, BancoDeDadosException {
         Map<String, Object> dados = new HashMap<>();
-        Template template = null;
-        String html;
 
-        //CLIENTE
-        ClienteDTO cliente = (ClienteDTO) object.stream().filter(o -> o.getClass().equals(ClienteDTO.class)).findFirst().get();
-        Cliente clienteEmail = clienteService.retornandoCliente(cliente.getIdCliente());
-
-        //CONTA
-        Conta conta = (Conta) object.stream().filter(o -> o.getClass().equals(Conta.class)).findFirst().get();
-
-        //CARTAO
-        CartaoCreateDTO cartaoCreateDTO = (CartaoCreateDTO) object.stream().filter(o -> o.getClass().equals(CartaoCreateDTO.class)).findFirst().get();
-        List<CartaoDTO> listCartao = cartaoService.listarPorNumeroConta(conta.getNumeroConta());
-        CartaoDTO cartaoDTO = listCartao.stream()
-                .max(Comparator.comparingLong(CartaoDTO::getNumeroCartao))
+        Conta conta = getConta(object);
+        CartaoDTO cartaoDTO = cartaoService.listarPorNumeroConta(conta.getNumeroConta())
+                .stream()
+                .reduce((primeiro, segundo) -> segundo)
                 .orElse(null);
 
-        dados.put("nome", clienteEmail.getNome());
+        dados.put("nome", conta.getCliente().getNome());
         dados.put("numero_conta", conta.getNumeroConta().toString());
         dados.put("agencia", conta.getAgencia().toString());
         dados.put("numero_cartao", cartaoDTO.getNumeroCartao().toString());
-        dados.put("data_expedicao", cartaoCreateDTO.getDataExpedicao());
-        dados.put("codigo_seguranca", cartaoCreateDTO.getCodigoSeguranca());
-        dados.put("tipo_cartao", cartaoCreateDTO.getTipo());
-        dados.put("data_vencimento", cartaoCreateDTO.getVencimento());
+        dados.put("data_expedicao", cartaoDTO.getDataExpedicao());
+        dados.put("codigo_seguranca", cartaoDTO.getCodigoSeguranca());
+        dados.put("tipo_cartao", cartaoDTO.getTipo());
+        dados.put("data_vencimento", cartaoDTO.getVencimento());
         dados.put("email", from);
 
-        template = fmConfiguration.getTemplate("contacreate.ftl");
-
-        html = FreeMarkerTemplateUtils.processTemplateIntoString(template, dados);
-        return html;
+        Template template = fmConfiguration.getTemplate("contacreate.ftl");
+        return FreeMarkerTemplateUtils.processTemplateIntoString(template, dados);
     }
 
-    public String getContentFromTemplateClienteDelete(Cliente cliente) throws IOException, TemplateException, BancoDeDadosException {
+    public void sendEmailDelete(ContaDTO contaDTO) throws RegraDeNegocioException, BancoDeDadosException {
+        MimeMessage mimeMessage = emailSender.createMimeMessage();
+        ContatoDTO contato = getContato(contaDTO.getCliente().getIdCliente());
+
+        try {
+            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+            mimeMessageHelper.setFrom(from);
+            mimeMessageHelper.setTo(contato.getEmail());
+            mimeMessageHelper.setSubject("Adeus!");
+
+            mimeMessageHelper.setText(getTemplateDelete(contato), true);
+            emailSender.send(mimeMessageHelper.getMimeMessage());
+        } catch (MessagingException | IOException | TemplateException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getTemplateDelete(ContatoDTO contato) throws IOException, TemplateException, BancoDeDadosException {
         Map<String, Object> dados = new HashMap<>();
-        Template template = null;
-        String html;
+        ClienteDTO clienteDTO = clienteService.retornandoCliente(contato.getIdCliente());
 
-        dados.put("nome", cliente.getNome());
+        dados.put("nome", clienteDTO.getNome());
         dados.put("email", from);
-        template = fmConfiguration.getTemplate("contadelete.ftl");
 
-        html = FreeMarkerTemplateUtils.processTemplateIntoString(template, dados);
-        return html;
+        Template template = fmConfiguration.getTemplate("contadelete.ftl");
+        return FreeMarkerTemplateUtils.processTemplateIntoString(template, dados);
+    }
+
+
+    private ContatoDTO getContato(Integer idCliente) throws RegraDeNegocioException, BancoDeDadosException {
+        return contatoService.listarContatosDoCliente(idCliente).stream().findFirst().orElseThrow();
+    }
+
+    private Conta getConta(List<Object> object) {
+        return (Conta) object.stream()
+                .filter(o -> o instanceof Conta)
+                .findFirst()
+                .orElseThrow();
     }
 }

@@ -4,6 +4,7 @@ import br.com.dbc.vemser.financeiro.dto.*;
 import br.com.dbc.vemser.financeiro.exception.BancoDeDadosException;
 import br.com.dbc.vemser.financeiro.exception.RegraDeNegocioException;
 import br.com.dbc.vemser.financeiro.service.ContaService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -23,17 +24,19 @@ public class ContaController {
 
     private final ContaService contaService;
 
+    @Operation(summary = "FUNÇÃO ADM", description = "LISTAR TODAS AS CONTAS DO BANCO")
     @GetMapping("/lista")
     public ResponseEntity<List<ContaDTO>> listarContas() throws BancoDeDadosException, RegraDeNegocioException {
         return ResponseEntity.ok(contaService.listar());
     }
-
+    @Operation(summary = "Logando na conta e retornando informações do cliente", description = "Logando na conta através do numero e senha da conta.")
     @GetMapping("/cliente")
     public ResponseEntity<ContaDTO> retornarContaCliente(@RequestHeader("numeroConta") Integer numeroConta,
                                                          @RequestHeader("senha") String senha) throws BancoDeDadosException, RegraDeNegocioException {
         return ResponseEntity.ok(contaService.retornarContaCliente(numeroConta, senha));
     }
 
+    @Operation(summary = "Criar nova conta", description = "Está requisição cria um cliente com conta e um cartão de débito.")
     @PostMapping
     public ResponseEntity<ContaDTO> criar(@RequestBody @Valid ContaCreateDTO contaCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
         log.info("Criando Conta!");

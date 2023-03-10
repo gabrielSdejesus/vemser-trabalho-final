@@ -47,36 +47,34 @@ public class ContaService extends Servico {
     }
 
     public ContaDTO retornarContaCliente(Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException{
-        //Verificando senha e recuperando conta
         return validandoAcessoConta(numeroConta, senha);
     }
 
     public ContaDTO criar(ContaCreateDTO contaCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
-        //Lista de objetos para passando no email.
-        List<Object> listObjects = new ArrayList<>();
         //Criando e validando se já existe um cliente pelo CPF
         ClienteDTO clienteDTO = clienteService.adicionarCliente(contaCreateDTO.getClienteCreateDTO());
-        //Adicionando cliente criado a lista
-        listObjects.add(clienteDTO);
+
         //Criando contato
         contaCreateDTO.getContatoCreateDTO().setIdCliente(clienteDTO.getIdCliente());
         contatoService.adicionar(contaCreateDTO.getContatoCreateDTO());
+
         //Criando endereço
         contaCreateDTO.getEnderecoCreateDTO().setIdCliente(clienteDTO.getIdCliente());
         enderecoService.adicionar(contaCreateDTO.getEnderecoCreateDTO());
+
         //Criando lista objects, e recebdo list de dados com conta e cartão
         List<Object> retornoDados = criandoDados(contaCreateDTO, clienteDTO);
-        //Adicionando conta e cartão a listObjects
-        listObjects.add(retornoDados.get(0));
-        listObjects.add(retornoDados.get(1));
+
         //Criando conta
         Conta conta = (Conta) retornoDados.stream().filter(contas -> contas instanceof Conta).findFirst().orElseThrow();
         ContaDTO contaDTO = objectMapper.convertValue(contaRepository.adicionar(conta), ContaDTO.class);
+
         //Criando cartão
         CartaoCreateDTO cartaoCreateDTO = (CartaoCreateDTO) retornoDados.stream().filter(cartao -> cartao instanceof CartaoCreateDTO).findFirst().orElseThrow();
         cartaoService.criar(contaDTO.getNumeroConta(), cartaoCreateDTO);
-        //Enviando email
-        emailService.sendEmailCliente(listObjects);
+
+        //Email
+        emailService.sendEmailCreate(retornoDados);
         return contaDTO;
     }
 
@@ -125,10 +123,6 @@ public class ContaService extends Servico {
     public void removerConta(Integer idCliente, Integer numeroConta) throws BancoDeDadosException, RegraDeNegocioException {
         //Validando e recuperando conta
         ContaDTO contaDTO = objectMapper.convertValue(contaRepository.consultarNumeroConta(numeroConta), ContaDTO.class);
-        Cliente cliente = clienteService.retornandoCliente(contaDTO.getCliente().getIdCliente());
-        List<ContatoDTO> contatoDTO = contatoService.listarContatosDoCliente(idCliente);
-        List<Cliente> clienteList = new ArrayList<>();
-        clienteList.add(cliente);
 
         if(Objects.isNull(contaDTO)){
             throw new RegraDeNegocioException("Esta conta não existe!");
@@ -142,15 +136,17 @@ public class ContaService extends Servico {
             throw new RegraDeNegocioException("Não foi possível remover a conta! A conta já está inativa.");
         }
 
+        //Email
+        emailService.sendEmailDelete(contaDTO);
+
         //Deletando cartoes
-        cartaoService.deletarTodosCartoes(contaDTO.getNumeroConta());
+        cartaoService.deletarTodosCartoes(numeroConta);
 
         //Deletando conta
         contaRepository.remover(numeroConta);
 
         //Deletando cliente
         clienteService.deletarCliente(idCliente);
-        emailService.sendEmailClienteDelete(idCliente,contatoDTO);
     }
 
     private List<Object> criandoDados(ContaCreateDTO contaCreateDTO, ClienteDTO clienteDTO){
@@ -160,10 +156,13 @@ public class ContaService extends Servico {
 
         //Convertendo a contaCreate em Conta
         Conta conta = objectMapper.convertValue(contaCreateDTO, Conta.class);
+
         //Setando na conta o novo cliente criado no banco de dados
         conta.setCliente(objectMapper.convertValue(contaCreateDTO.getClienteCreateDTO(), Cliente.class));
+
         //Setando o id respectivo gerado na criação do cliente
         conta.getCliente().setIdCliente(clienteDTO.getIdCliente());
+
         //Gerando um número aleatório de 4 dígitos para agência da conta
         conta.setAgencia(random.nextInt(9000) + 1000);
         objects.add(conta);
