@@ -30,6 +30,13 @@ public class CompraService extends Servico {
         this.cartaoService = cartaoService;
         this.itemService = itemService;
     }
+    public List<Compra> list(String login, String senha) throws BancoDeDadosException, RegraDeNegocioException {
+        if (login.equals("admin") && senha.equals("abacaxi")) {
+            return compraRepository.listar();
+        } else {
+            throw new RegraDeNegocioException("Credenciais de Administrador inválidas!");
+        }
+    }
 
     public List<CompraDTO> retornarComprasCartao(Long numeroCartao, Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException {
         contaService.validandoAcessoConta(numeroConta, senha);
