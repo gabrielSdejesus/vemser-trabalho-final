@@ -8,7 +8,6 @@ import br.com.dbc.vemser.financeiro.exception.RegraDeNegocioException;
 import br.com.dbc.vemser.financeiro.model.Endereco;
 import br.com.dbc.vemser.financeiro.repository.EnderecoRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,11 +18,13 @@ public class EnderecoService extends Servico {
 
     private final EnderecoRepository enderecoRepository;
     private final ClienteService clienteService;
+    private final ContaService contaService;
 
-    public EnderecoService(EnderecoRepository enderecoRepository, ClienteService clienteService, ObjectMapper objectMapper) {
+    public EnderecoService(EnderecoRepository enderecoRepository, ClienteService clienteService, ObjectMapper objectMapper, ContaService contaService) {
         super(objectMapper);
         this.enderecoRepository = enderecoRepository;
         this.clienteService = clienteService;
+        this.contaService = contaService;
     }
 
     public List<EnderecoDTO> listarEnderecos() throws BancoDeDadosException {
@@ -41,7 +42,7 @@ public class EnderecoService extends Servico {
     }
 
     public EnderecoDTO retornarEndereco(Integer idEndereco, Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException {
-        //this.contaService.validandoAcessoConta(numeroConta, senha);
+        this.contaService.validandoAcessoConta(numeroConta, senha);
         validarEndereco(idEndereco);
         return objectMapper.convertValue(this.enderecoRepository.retornarEndereco(idEndereco), EnderecoDTO.class);
     }
