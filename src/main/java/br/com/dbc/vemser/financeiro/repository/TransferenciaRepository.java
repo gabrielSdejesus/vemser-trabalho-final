@@ -154,7 +154,7 @@ public class TransferenciaRepository implements Repositorio<Transferencia> {
             stmt.setInt(1, id);
 
             ResultSet res = stmt.executeQuery();
-
+            res.next();
             return getTransferenciaFromResultSet(res);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -171,7 +171,6 @@ public class TransferenciaRepository implements Repositorio<Transferencia> {
     }
 
     private Transferencia getTransferenciaFromResultSet(ResultSet res) throws SQLException {
-        res.next();
         Transferencia transferencia = new Transferencia();
         transferencia.setIdTransferencia(res.getInt("ID_TRANSFERENCIA"));
         transferencia.setContaEnviou(res.getLong("NUMERO_CONTA_ENVIOU"));
