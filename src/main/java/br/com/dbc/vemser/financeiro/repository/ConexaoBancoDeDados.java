@@ -1,9 +1,13 @@
 package br.com.dbc.vemser.financeiro.repository;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+@Component
 public class ConexaoBancoDeDados {
 
     private static final String SERVER = "vemser-dbc.dbccompany.com.br";
@@ -11,9 +15,24 @@ public class ConexaoBancoDeDados {
     private static final String DATABASE = "xe";
 
     // autenticação
-    private static final String USER = "FINANCEIRO";
-    private static final String PASS = "RvshWyfWLZrN";
+    private static String USER;
+    private static String PASS;
     private static final String SCHEMA = "FINANCEIRO";
+
+    @Value("${bd.usuario}")
+    private String usuario;
+    @Value("${bd.senha}")
+    private String senha;
+
+    @Value("${bd.usuario}")
+    public void setUsuarioStatic(String usuario){
+        ConexaoBancoDeDados.USER = usuario;
+    }
+
+    @Value("${bd.senha}")
+    public void setSenhaStatic(String senha){
+        ConexaoBancoDeDados.PASS = senha;
+    }
 
     public static Connection getConnection() throws SQLException {
         String url = "jdbc:oracle:thin:@" + SERVER + ":" + PORT + ":" + DATABASE;
