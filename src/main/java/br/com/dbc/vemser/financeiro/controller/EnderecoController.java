@@ -19,23 +19,14 @@ import java.util.List;
 @Slf4j
 @Validated
 @RequiredArgsConstructor
-public class EnderecoController {
+public class EnderecoController implements ControleListar<List<EnderecoDTO>>,
+        ControleListarPorID<EnderecoDTO>{
 
     private final EnderecoService enderecoService;
-
-    @GetMapping("/lista")
-    public ResponseEntity<List<EnderecoDTO>> listarTodosEnderecos() throws BancoDeDadosException {
-        return ResponseEntity.ok(enderecoService.listarEnderecos());
-    }
 
     @GetMapping("/{idCliente}/cliente")
     public ResponseEntity<List<EnderecoDTO>> listarTodosEnderecosDoCliente(@PathVariable("idCliente") Integer idCliente) throws BancoDeDadosException, RegraDeNegocioException {
         return ResponseEntity.ok(enderecoService.listarEnderecosDoCliente(idCliente));
-    }
-
-    @GetMapping("/{idEndereco}")
-    public ResponseEntity<EnderecoDTO> retornarEndereco(@PathVariable("idEndereco") Integer idEndereco) throws BancoDeDadosException, RegraDeNegocioException {
-        return ResponseEntity.ok(enderecoService.retornarEndereco(idEndereco));
     }
 
     @PostMapping
@@ -62,5 +53,16 @@ public class EnderecoController {
         enderecoService.deletar(idEndereco);
         log.info("Endereço Deletado!");
         return ResponseEntity.ok().build();
+    }
+
+    @Override
+    @GetMapping("/lista")
+    public ResponseEntity<List<EnderecoDTO>> listar() throws BancoDeDadosException, RegraDeNegocioException {//Função do ADM
+        return ResponseEntity.ok(enderecoService.listarEnderecos());
+    }
+
+    @Override
+    public ResponseEntity<EnderecoDTO> listarPorId(Integer id, Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException {
+        return ResponseEntity.ok(enderecoService.retornarEndereco(id, numeroConta, senha));
     }
 }

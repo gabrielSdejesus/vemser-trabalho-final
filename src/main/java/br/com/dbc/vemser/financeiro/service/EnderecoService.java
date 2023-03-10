@@ -18,11 +18,13 @@ public class EnderecoService extends Servico {
 
     private final EnderecoRepository enderecoRepository;
     private final ClienteService clienteService;
+    private final ContaService contaService;
 
-    public EnderecoService(EnderecoRepository enderecoRepository, ClienteService clienteService, ObjectMapper objectMapper) {
+    public EnderecoService(EnderecoRepository enderecoRepository, ClienteService clienteService, ObjectMapper objectMapper, ContaService contaService) {
         super(objectMapper);
         this.enderecoRepository = enderecoRepository;
         this.clienteService = clienteService;
+        this.contaService = contaService;
     }
 
     public List<EnderecoDTO> listarEnderecos() throws BancoDeDadosException {
@@ -39,7 +41,8 @@ public class EnderecoService extends Servico {
                 .collect(Collectors.toList());
     }
 
-    public EnderecoDTO retornarEndereco(Integer idEndereco) throws BancoDeDadosException, RegraDeNegocioException {
+    public EnderecoDTO retornarEndereco(Integer idEndereco, Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException {
+        this.contaService.validandoAcessoConta(numeroConta, senha);
         validarEndereco(idEndereco);
         return objectMapper.convertValue(this.enderecoRepository.retornarEndereco(idEndereco), EnderecoDTO.class);
     }
