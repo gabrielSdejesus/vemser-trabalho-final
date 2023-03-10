@@ -41,12 +41,4 @@ public class ClienteController {
         log.info("Cliente Atualizado!");
         return ResponseEntity.ok(clienteDTO);
     }
-
-    @DeleteMapping("/{idCliente}")
-    public ResponseEntity<Void> deletar(@PathVariable("idCliente") Integer idCliente) throws BancoDeDadosException, RegraDeNegocioException {
-        log.info("Deletando Cliente!");
-        clienteService.deletarCliente(idCliente);
-        log.info("Cliente Deletado!");
-        return ResponseEntity.ok().build();
-    }
 }
