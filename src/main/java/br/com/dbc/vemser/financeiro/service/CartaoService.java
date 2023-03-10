@@ -16,7 +16,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,20 +41,25 @@ public class CartaoService extends Servico {
                 .collect(Collectors.toList());
     }
 
-    public CartaoDTO criar(Integer numeroConta, CartaoCreateDTO cartaoCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
+    public CartaoDTO criar(Integer numeroConta, String senha, TipoCartao tipo) throws BancoDeDadosException, RegraDeNegocioException {
+        contaService.validandoAcessoConta(numeroConta, senha);
         List<Cartao> cartoes = cartaoRepository.listarPorNumeroConta(numeroConta);
         if (cartoes.size() == 2) {
             throw new RegraDeNegocioException("Usuário já possui dois cartões");
         } else {
             Cartao cartao;
-            if (cartaoCreateDTO.getTipo().equals(TipoCartao.DEBITO)) {
-                cartao = objectMapper.convertValue(cartaoCreateDTO, CartaoDeDebito.class);
+            if (tipo.equals(TipoCartao.DEBITO)) {
+                cartao = new CartaoDeDebito();
             } else {
-                cartao = objectMapper.convertValue(cartaoCreateDTO, CartaoDeCredito.class);
+                cartao = new CartaoDeCredito();
             }
             cartao.setNumeroConta(numeroConta);
-            Cartao cartaoCriado = cartaoRepository.adicionar(cartao);
-            return objectMapper.convertValue(cartaoCriado, CartaoDTO.class);
+            cartao.setDataExpedicao(LocalDate.now());
+            cartao.setCodigoSeguranca(ThreadLocalRandom.current().nextInt(100, 999));
+            cartao.setTipo(tipo);
+            cartao.setVencimento(cartao.getDataExpedicao().plusYears(4));
+
+            return objectMapper.convertValue(cartaoRepository.adicionar(cartao), CartaoDTO.class);
         }
     }
 

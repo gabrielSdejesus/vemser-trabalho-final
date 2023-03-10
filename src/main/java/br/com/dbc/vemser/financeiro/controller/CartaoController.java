@@ -5,6 +5,7 @@ import br.com.dbc.vemser.financeiro.dto.CartaoDTO;
 import br.com.dbc.vemser.financeiro.dto.CartaoPagarDTO;
 import br.com.dbc.vemser.financeiro.exception.BancoDeDadosException;
 import br.com.dbc.vemser.financeiro.exception.RegraDeNegocioException;
+import br.com.dbc.vemser.financeiro.model.TipoCartao;
 import br.com.dbc.vemser.financeiro.service.CartaoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,9 +32,11 @@ public class CartaoController {
         return new ResponseEntity<>(cartaoService.listarPorNumeroConta(numeroConta), HttpStatus.OK);
     }
 
-    @PostMapping("/{numeroConta}")
-    public ResponseEntity<CartaoDTO> criar(@PathVariable("numeroConta") Integer numeroConta, @RequestBody CartaoCreateDTO cartaoCreateDTO) throws Exception {
-        return new ResponseEntity<>(cartaoService.criar(numeroConta, cartaoCreateDTO), HttpStatus.OK);
+    @PostMapping("/criar/{tipo}")
+    public ResponseEntity<CartaoDTO> criar(@RequestHeader("numeroConta") Integer numeroConta,
+                                           @RequestHeader("senha") String senha,
+                                           @PathVariable("tipo") TipoCartao tipo) throws Exception {
+        return new ResponseEntity<>(cartaoService.criar(numeroConta, senha, tipo), HttpStatus.OK);
     }
 
     @PutMapping("/pagar")

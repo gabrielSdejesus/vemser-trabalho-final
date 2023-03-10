@@ -10,6 +10,7 @@ import br.com.dbc.vemser.financeiro.model.TipoCartao;
 import br.com.dbc.vemser.financeiro.repository.ContaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.NoArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -30,7 +31,7 @@ public class ContaService extends Servico {
 
     public ContaService(ContaRepository contaRepository, ClienteService clienteService,
                         CartaoService cartaoService, ContatoService contatoService,
-                        EnderecoService enderecoService, ObjectMapper objectMapper, EmailService emailService) {
+                        @Lazy EnderecoService enderecoService, ObjectMapper objectMapper, EmailService emailService) {
         super(objectMapper);
         this.contaRepository = contaRepository;
         this.clienteService = clienteService;
@@ -71,7 +72,7 @@ public class ContaService extends Servico {
 
         //Criando cartão
         CartaoCreateDTO cartaoCreateDTO = (CartaoCreateDTO) retornoDados.stream().filter(cartao -> cartao instanceof CartaoCreateDTO).findFirst().orElseThrow();
-        cartaoService.criar(contaDTO.getNumeroConta(), cartaoCreateDTO);
+        cartaoService.criar(contaDTO.getNumeroConta(), contaCreateDTO.getSenha(), TipoCartao.DEBITO);
 
         //Email
         emailService.sendEmailCreate(retornoDados);
