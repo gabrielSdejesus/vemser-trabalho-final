@@ -11,7 +11,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ClienteService extends Servico {
@@ -25,7 +24,7 @@ public class ClienteService extends Servico {
     public List<ClienteDTO> listarClientes() throws BancoDeDadosException {
         return clienteRepository.listar().stream()
                 .map(cliente -> objectMapper.convertValue(cliente, ClienteDTO.class))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public ClienteDTO visualizarCliente(Integer idCliente) throws BancoDeDadosException, RegraDeNegocioException {
@@ -65,33 +64,22 @@ public class ClienteService extends Servico {
         }
     }
 
-    boolean validarClientePorCPF(ClienteCreateDTO clienteCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
+    void validarClientePorCPF(ClienteCreateDTO clienteCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
         ClienteDTO clienteDTO = listarClientes().stream()
                 .filter(cliente -> cliente.getCpf().equals(clienteCreateDTO.getCpf()))
                 .findFirst()
                 .orElse(null);
 
-        if(clienteCreateDTO.getNome() != null && clienteDTO == null) {
-            return true;
+        if(clienteDTO == null) {
+            return;
         }
-        if(clienteCreateDTO.getNome() != null && clienteDTO != null && clienteDTO.getStatus().getStatus() == 0) {
+
+        if(clienteDTO.getStatus().getStatus() == 0) {
             throw new RegraDeNegocioException("Este CPF está inativo!");
         }
 
-        if(clienteDTO == null){
-            throw new RegraDeNegocioException("Este cpf não possui registro no banco!");
-        }
-
         if(clienteDTO.getStatus().getStatus() == 1){
-            throw new RegraDeNegocioException("Este cpf já está registrado e ativo!");
+            throw new RegraDeNegocioException("Este cpf já está registrado e ativo");
         }
-
-        if(clienteDTO.getStatus().getStatus() == 0){
-            return false;
-        } else {
-            new RegraDeNegocioException("Este cliente não existe no nosso banco de dados");
-        }
-
-        return true;
     }
 }

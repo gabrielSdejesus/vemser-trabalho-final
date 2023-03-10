@@ -47,7 +47,8 @@ public class EnderecoService extends Servico {
         return objectMapper.convertValue(this.enderecoRepository.retornarEndereco(idEndereco), EnderecoDTO.class);
     }
 
-    public EnderecoDTO adicionar(EnderecoCreateDTO enderecoCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
+    public EnderecoDTO adicionar(EnderecoCreateDTO enderecoCreateDTO, Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException {
+        this.contaService.validandoAcessoConta(numeroConta, senha);
         //Validando cliente
         clienteService.visualizarCliente(enderecoCreateDTO.getIdCliente());
         //Validando se o cliente já possui aquele cep registrado no banco de dados.

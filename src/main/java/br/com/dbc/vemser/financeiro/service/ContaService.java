@@ -9,16 +9,12 @@ import br.com.dbc.vemser.financeiro.model.Status;
 import br.com.dbc.vemser.financeiro.model.TipoCartao;
 import br.com.dbc.vemser.financeiro.repository.ContaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.NoArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 @Service
 public class ContaService extends Servico {
@@ -29,8 +25,8 @@ public class ContaService extends Servico {
     private final EnderecoService enderecoService;
     private final EmailService emailService;
 
-    public ContaService(ContaRepository contaRepository, ClienteService clienteService,
-                        CartaoService cartaoService, ContatoService contatoService,
+    public ContaService(ContaRepository contaRepository, @Lazy ClienteService clienteService,
+                        @Lazy CartaoService cartaoService, @Lazy ContatoService contatoService,
                         @Lazy EnderecoService enderecoService, ObjectMapper objectMapper, EmailService emailService) {
         super(objectMapper);
         this.contaRepository = contaRepository;
@@ -41,10 +37,10 @@ public class ContaService extends Servico {
         this.emailService = emailService;
     }
 
-    public List<ContaDTO> listar() throws BancoDeDadosException, RegraDeNegocioException {
+    public List<ContaDTO> listar() throws BancoDeDadosException {
         return contaRepository.listar().stream()
                 .map(conta -> objectMapper.convertValue(conta, ContaDTO.class))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public ContaDTO retornarContaCliente(Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException{
@@ -55,16 +51,17 @@ public class ContaService extends Servico {
         //Criando e validando se já existe um cliente pelo CPF
         ClienteDTO clienteDTO = clienteService.adicionarCliente(contaCreateDTO.getClienteCreateDTO());
 
+        //Criando conta
+        Conta conta = contaRepository.adicionar(criandoDados(contaCreateDTO, clienteDTO));
+
         //Criando contato
         contaCreateDTO.getContatoCreateDTO().setIdCliente(clienteDTO.getIdCliente());
-        contatoService.adicionar(contaCreateDTO.getContatoCreateDTO());
+        contatoService.adicionar(contaCreateDTO.getContatoCreateDTO(), conta.getNumeroConta(), conta.getSenha());
 
         //Criando endereço
         contaCreateDTO.getEnderecoCreateDTO().setIdCliente(clienteDTO.getIdCliente());
-        enderecoService.adicionar(contaCreateDTO.getEnderecoCreateDTO());
+        enderecoService.adicionar(contaCreateDTO.getEnderecoCreateDTO(), conta.getNumeroConta(), conta.getSenha());
 
-        //Criando conta
-        Conta conta = contaRepository.adicionar(criandoDados(contaCreateDTO, clienteDTO));
 
         //Criando cartão
         CartaoDTO cartaoDTO = cartaoService.criar(conta.getNumeroConta(), contaCreateDTO.getSenha(), TipoCartao.DEBITO);
@@ -76,7 +73,7 @@ public class ContaService extends Servico {
 
     public ContaDTO alterarSenha(String novaSenha, Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException {
 
-        //Vericando acesso a conta que irá ser atualizada
+        //Vericando acesso à conta que irá ser atualizada
         ContaDTO contaDTO = validandoAcessoConta(numeroConta, senha);
 
         //Alterando senha
@@ -92,7 +89,7 @@ public class ContaService extends Servico {
         //Validando conta
         ContaDTO contaDTO = retornarContaCliente(numeroConta, senha);
 
-        if(!(contaDTO.getSaldo() - valor >= 0)){
+        if(valor > contaDTO.getSaldo()){
             throw new RegraDeNegocioException("Operação não realizada, saldo insuficiente! Seu saldo atual: R$" + contaDTO.getSaldo());
         }
 
@@ -154,7 +151,7 @@ public class ContaService extends Servico {
         //Setando na conta o novo cliente criado no banco de dados
         conta.setCliente(objectMapper.convertValue(contaCreateDTO.getClienteCreateDTO(), Cliente.class));
 
-        //Setando o id respectivo gerado na criação do cliente
+        //Setando o ‘id’ respetivo gerado na criação do cliente
         conta.getCliente().setIdCliente(clienteDTO.getIdCliente());
 
         //Gerando um número aleatório de 4 dígitos para agência da conta

@@ -2,6 +2,7 @@ package br.com.dbc.vemser.financeiro.controller;
 
 import br.com.dbc.vemser.financeiro.dto.ContatoCreateDTO;
 import br.com.dbc.vemser.financeiro.dto.ContatoDTO;
+import br.com.dbc.vemser.financeiro.dto.EnderecoDTO;
 import br.com.dbc.vemser.financeiro.exception.BancoDeDadosException;
 import br.com.dbc.vemser.financeiro.exception.RegraDeNegocioException;
 import br.com.dbc.vemser.financeiro.service.ContatoService;
@@ -20,32 +21,15 @@ import java.util.List;
 @Slf4j
 @Validated
 @RequiredArgsConstructor
-public class ContatoController {
+public class ContatoController implements ControleAdicionar<ContatoCreateDTO, ContatoDTO>, ControleListar<List<ContatoDTO>>, ControleListarPorID<ContatoDTO>,
+        ControleDeletar{
 
     private final ContatoService contatoService;
-
-    @GetMapping("/lista")
-    public ResponseEntity<List<ContatoDTO>> listarContatos() throws BancoDeDadosException {
-        return ResponseEntity.ok(contatoService.listarContatos());
-    }
 
     @GetMapping("/{idCliente}/cliente")
     public ResponseEntity<List<ContatoDTO>> listarContatosDoCliente(
             @PathVariable("idCliente") Integer idCliente) throws BancoDeDadosException, RegraDeNegocioException {
         return new ResponseEntity<>(contatoService.listarContatosDoCliente(idCliente), HttpStatus.OK);
-    }
-
-    @GetMapping("/{idContato}")
-    public ResponseEntity<ContatoDTO> retornarEndereco(@PathVariable("idContato") Integer idContato) throws BancoDeDadosException, RegraDeNegocioException {
-        return ResponseEntity.ok(contatoService.retornarContato(idContato));
-    }
-
-    @PostMapping
-    public ResponseEntity<ContatoDTO> criar(@RequestBody @Valid ContatoCreateDTO contato) throws BancoDeDadosException, RegraDeNegocioException {
-        log.info("Criando Contato!");
-        ContatoDTO contatoDTO = contatoService.adicionar(contato);
-        log.info("Contato Criado!");
-        return ResponseEntity.ok(contatoDTO);
     }
 
     @PutMapping("/{idContato}")
@@ -57,11 +41,33 @@ public class ContatoController {
         return ResponseEntity.ok(contatoDTO);
     }
 
-    @DeleteMapping("/{idContato}")
-    public ResponseEntity<Void> deletar(@PathVariable("idContato") Integer idContato) throws BancoDeDadosException, RegraDeNegocioException {
+    /////////
+    @Override
+    public ResponseEntity<ContatoDTO> listarPorId(Integer id, Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException {
+        return ResponseEntity.ok(contatoService.retornarContato(id, numeroConta, senha));
+    }
+
+    @Override
+    @GetMapping("/lista")
+    public ResponseEntity<List<ContatoDTO>> listar() throws BancoDeDadosException, RegraDeNegocioException {//Função do ADM
+        return ResponseEntity.ok(contatoService.listarContatos());
+    }
+
+    @Override
+    public ResponseEntity<Boolean> deletar(Integer id, Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException {
         log.info("Deletando Contato!");
-        contatoService.deletar(idContato);
+        Boolean deletado = contatoService.deletar(id, numeroConta, senha);
         log.info("Contato Deletado!");
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(deletado);
+    }
+
+    @Override
+    public ResponseEntity<ContatoDTO> adicionar(ContatoCreateDTO dado,
+                                                Integer numeroConta,
+                                                String senha) throws BancoDeDadosException, RegraDeNegocioException {
+        log.info("Criando Contato!");
+        ContatoDTO contatoDTO = contatoService.adicionar(dado, numeroConta, senha);
+        log.info("Contato Criado!");
+        return ResponseEntity.ok(contatoDTO);
     }
 }

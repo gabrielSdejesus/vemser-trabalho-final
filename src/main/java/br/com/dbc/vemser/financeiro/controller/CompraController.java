@@ -20,14 +20,15 @@ import java.util.List;
 @Slf4j
 @Validated
 @RequiredArgsConstructor
-public class CompraController {
+public class CompraController implements ControleListar<List<CompraDTO>>, ControleDeletar{
 
     private final CompraService compraService;
 
     // admin
+    @Override
     @GetMapping("/lista")
-    public ResponseEntity<List<CompraDTO>> listarTodasCompras(){
-        return null;
+    public ResponseEntity<List<CompraDTO>> listar(){
+        return ResponseEntity.ok(this.compraService.listar());
     }
 
     @GetMapping("/{numeroCartao}/cartao")
@@ -42,12 +43,5 @@ public class CompraController {
                                            @RequestHeader("numeroConta") Integer numeroConta,
                                            @RequestHeader("senha") String senha) throws BancoDeDadosException, RegraDeNegocioException {
         return ResponseEntity.ok(compraService.adicionar(compra, numeroConta, senha));
-    }
-
-    @DeleteMapping("/{idCompra}")
-    public ResponseEntity<Void> deletar(@NotNull Integer idCompra){
-        log.info("Deletando compra!");
-        log.info("compra Deletado!");
-        return null;
     }
 }

@@ -2,6 +2,8 @@ package br.com.dbc.vemser.financeiro.controller;
 
 import br.com.dbc.vemser.financeiro.dto.EnderecoCreateDTO;
 import br.com.dbc.vemser.financeiro.dto.EnderecoDTO;
+import br.com.dbc.vemser.financeiro.dto.TransferenciaCreateDTO;
+import br.com.dbc.vemser.financeiro.dto.TransferenciaDTO;
 import br.com.dbc.vemser.financeiro.exception.BancoDeDadosException;
 import br.com.dbc.vemser.financeiro.exception.RegraDeNegocioException;
 import br.com.dbc.vemser.financeiro.service.EnderecoService;
@@ -31,14 +33,6 @@ public class EnderecoController implements ControleListar<List<EnderecoDTO>>,
         return ResponseEntity.ok(enderecoService.listarEnderecosDoCliente(idCliente));
     }
 
-    @PostMapping
-    public ResponseEntity<EnderecoDTO> criar(@RequestBody @Valid EnderecoCreateDTO endereco) throws BancoDeDadosException, RegraDeNegocioException {
-        log.info("Criando Endereço!");
-        EnderecoDTO endereDTO = enderecoService.adicionar(endereco);
-        log.info("Endereço Criado!");
-        return ResponseEntity.ok(endereDTO);
-    }
-
     @PutMapping("/{idEndereco}")
     public ResponseEntity<EnderecoDTO> atualizar(@PathVariable("idEndereco") Integer idEndereco,
                                  @RequestBody @Valid EnderecoCreateDTO endereco) throws BancoDeDadosException, RegraDeNegocioException {
@@ -48,6 +42,7 @@ public class EnderecoController implements ControleListar<List<EnderecoDTO>>,
         return ResponseEntity.ok(enderecoDTO);
     }
 
+    /////////
     @Override
     @GetMapping("/lista")
     public ResponseEntity<List<EnderecoDTO>> listar() throws BancoDeDadosException, RegraDeNegocioException {//Função do ADM
@@ -65,5 +60,15 @@ public class EnderecoController implements ControleListar<List<EnderecoDTO>>,
         Boolean deletado = enderecoService.deletar(id, numeroConta, senha);
         log.info("Endereço Deletado!");
         return ResponseEntity.ok(deletado);
+    }
+
+    @Override
+    public ResponseEntity<EnderecoDTO> adicionar(EnderecoCreateDTO dado,
+                                                      Integer numeroConta,
+                                                      String senha) throws BancoDeDadosException, RegraDeNegocioException {
+        log.info("Criando Endereço!");
+        EnderecoDTO endereDTO = enderecoService.adicionar(dado, numeroConta, senha);
+        log.info("Endereço Criado!");
+        return ResponseEntity.ok(endereDTO);
     }
 }

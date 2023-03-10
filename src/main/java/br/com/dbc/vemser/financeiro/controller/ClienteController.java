@@ -33,17 +33,9 @@ public class ClienteController {
         return ResponseEntity.ok(clienteService.visualizarCliente(idCliente));
     }
 
-    @PostMapping
-    public ResponseEntity<ClienteDTO> criar(@RequestBody @Valid ClienteCreateDTO cliente) throws BancoDeDadosException, RegraDeNegocioException {
-        log.info("Criando Cliente!");
-        ClienteDTO clienteDTO = clienteService.adicionarCliente(cliente);
-        log.info("Cliente Criado!");
-        return ResponseEntity.ok(clienteDTO);
-    }
-
     @PutMapping("/{idCliente}")
     public ResponseEntity<ClienteDTO> atualizar(@PathVariable("idCliente") Integer idCliente,
-                                                @RequestBody @Valid ClienteCreateDTO cliente) throws BancoDeDadosException, RegraDeNegocioException {
+                                                @RequestBody @Valid ClienteCreateDTO cliente) throws BancoDeDadosException {
         log.info("Atualizando Cliente!");
         ClienteDTO clienteDTO = clienteService.alterarCliente(idCliente, cliente);
         log.info("Cliente Atualizado!");
