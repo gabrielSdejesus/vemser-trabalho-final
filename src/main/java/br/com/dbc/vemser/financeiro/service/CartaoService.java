@@ -1,9 +1,7 @@
 package br.com.dbc.vemser.financeiro.service;
 
-
 import br.com.dbc.vemser.financeiro.dto.CartaoCreateDTO;
 import br.com.dbc.vemser.financeiro.dto.CartaoDTO;
-import br.com.dbc.vemser.financeiro.dto.CartaoPagarDTO;
 import br.com.dbc.vemser.financeiro.exception.BancoDeDadosException;
 import br.com.dbc.vemser.financeiro.exception.RegraDeNegocioException;
 import br.com.dbc.vemser.financeiro.model.Cartao;
@@ -19,7 +17,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -38,7 +35,7 @@ public class CartaoService extends Servico {
         List<Cartao> cartoes = cartaoRepository.listarPorNumeroConta(numeroConta);
         return cartoes.stream()
                 .map(cartao -> objectMapper.convertValue(cartao, CartaoDTO.class))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public CartaoDTO criar(Integer numeroConta, String senha, TipoCartao tipo) throws BancoDeDadosException, RegraDeNegocioException {
@@ -70,11 +67,10 @@ public class CartaoService extends Servico {
         //Validando e retornando cartões da conta.
         Cartao cartao = validarCartao(cartaoDTO, numeroConta);
 
-        /*********** CARTÃO DE CRÉDITO **********/
+        /* ********* CARTÃO DE CRÉDITO ********* */
 
         //Validando e pegando cartão de crédito
-        if (cartao instanceof CartaoDeCredito){
-            CartaoDeCredito cartaoDeCredito = (CartaoDeCredito) cartao;
+        if (cartao instanceof CartaoDeCredito cartaoDeCredito){
 
             //Verificando o limite
             if (cartaoDeCredito.getLimite() < valor) {
@@ -88,11 +84,10 @@ public class CartaoService extends Servico {
             return cartaoDTOAtualizado;
         }
 
-        /*********** CARTÃO DE DÉBITO **********/
+        /* ********** CARTÃO DE DÉBITO ********* */
 
         //Validando e pagando com cartão de débito
-        if (cartao instanceof CartaoDeDebito){
-            CartaoDeDebito cartaoDeDebito = (CartaoDeDebito) cartao;
+        if (cartao instanceof CartaoDeDebito cartaoDeDebito){
             contaService.sacar(valor, numeroConta, senha);
             return objectMapper.convertValue(cartaoDeDebito, CartaoDTO.class);
         }
