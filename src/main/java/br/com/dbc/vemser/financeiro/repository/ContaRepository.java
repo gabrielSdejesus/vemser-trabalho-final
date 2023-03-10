@@ -144,24 +144,24 @@ public class ContaRepository implements Repositorio<Conta> {
         try {
             con = ConexaoBancoDeDados.getConnection();
 
-            String sql1 = "UPDATE CLIENTE C SET c.STATUS = 1 WHERE c.CPF_CLIENTE = ?";
-            String sql = "UPDATE CONTA C SET C.STATUS = 1 WHERE c.ID_CLIENTE =\n" +
+            String sqlCliente = "UPDATE CLIENTE C SET c.STATUS = 1 WHERE c.CPF_CLIENTE = ?";
+            String sqlConta = "UPDATE CONTA C SET C.STATUS = 1 WHERE c.ID_CLIENTE =\n" +
                     " (SELECT ID_CLIENTE FROM CLIENTE c2 WHERE c2.CPF_CLIENTE = ?)";
-            String sql2 = "UPDATE CARTAO C SET C.STATUS = 1 WHERE c.NUMERO_CONTA =\n" +
+            String sqlCartao = "UPDATE CARTAO C SET C.STATUS = 1 WHERE c.NUMERO_CONTA =\n" +
                     " (SELECT NUMERO_CONTA FROM CONTA c2 WHERE c2.ID_CLIENTE =(SELECT ID_CLIENTE FROM CLIENTE c2 WHERE C2.CPF_CLIENTE = ?))";
 
             //reativar cliente
-            PreparedStatement stmt = con.prepareStatement(sql1);
+            PreparedStatement stmt = con.prepareStatement(sqlCliente);
             stmt.setString(1, cpf);
             int res = stmt.executeUpdate();
 
             //reativar conta
-            stmt = con.prepareStatement(sql);
+            stmt = con.prepareStatement(sqlConta);
             stmt.setString(1, cpf);
             res += stmt.executeUpdate();
 
             //reativar cartões
-            stmt = con.prepareStatement(sql2);
+            stmt = con.prepareStatement(sqlCartao);
             stmt.setString(1, cpf);
             res += stmt.executeUpdate();
 
