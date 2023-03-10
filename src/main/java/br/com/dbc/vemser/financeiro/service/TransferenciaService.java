@@ -35,10 +35,14 @@ public class TransferenciaService extends Servico {
         return objectMapper.convertValue(this.transferenciaRepository.retornarTransferencia(idTransferencia), TransferenciaDTO.class);
     }
 
-    public List<TransferenciaDTO> listarTransferencias() throws BancoDeDadosException {
-        return transferenciaRepository.listar().stream()
-                .map(transferencia -> objectMapper.convertValue(transferencia, TransferenciaDTO.class))
-                .collect(Collectors.toList());
+    public List<TransferenciaDTO> listarTransferencias(String login, String senha) throws BancoDeDadosException, RegraDeNegocioException {
+        if (login.equals("admin") && senha.equals("abacaxi")) {
+            return transferenciaRepository.listar().stream()
+                    .map(transferencia -> objectMapper.convertValue(transferencia, TransferenciaDTO.class))
+                    .toList();
+        }else{
+            throw new RegraDeNegocioException("Credenciais de Administrador inválidas!");
+        }
     }
 
     public List<TransferenciaDTO> listarTransferenciasDaConta(Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException {

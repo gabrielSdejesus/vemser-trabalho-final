@@ -40,9 +40,10 @@ public class TransferenciaController implements ControleListar<List<Transferenci
         return ResponseEntity.ok(transferenciaService.listarTransferenciasDaConta(numeroConta, senha));
     }
 
+    //função do ADM
     @Override
-    public ResponseEntity<List<TransferenciaDTO>> listar() throws BancoDeDadosException {//função do ADM
-        return ResponseEntity.ok(transferenciaService.listarTransferencias());
+    public ResponseEntity<List<TransferenciaDTO>> listar(String login, String senha) throws BancoDeDadosException, RegraDeNegocioException {
+        return ResponseEntity.ok(transferenciaService.listarTransferencias(login, senha));
     }
 
     @Override

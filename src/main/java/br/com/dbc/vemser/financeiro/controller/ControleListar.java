@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 @Validated
 public interface ControleListar<RETORNO> {
@@ -20,5 +21,6 @@ public interface ControleListar<RETORNO> {
             }
     )
     @GetMapping
-    ResponseEntity<RETORNO> listar() throws BancoDeDadosException, RegraDeNegocioException;
+    ResponseEntity<RETORNO> listar(@RequestHeader("login") String login,
+                                   @RequestHeader("senha") String senha) throws BancoDeDadosException, RegraDeNegocioException;
 }

@@ -50,10 +50,14 @@ public class ItemService extends Servico {
         return objectMapper.convertValue(this.itemRepository.retornarItem(idItem), ItemDTO.class);
     }
 
-    public List<ItemDTO> listar() throws BancoDeDadosException, RegraDeNegocioException {
-        return itemRepository.listar().stream()
-                .map(item -> objectMapper.convertValue(item, ItemDTO.class))
-                .collect(Collectors.toList());
+    public List<ItemDTO> listar(String login, String senha) throws BancoDeDadosException, RegraDeNegocioException {
+        if (login.equals("admin") && senha.equals("abacaxi")) {
+            return itemRepository.listar().stream()
+                    .map(item -> objectMapper.convertValue(item, ItemDTO.class))
+                    .toList();
+        }else{
+            throw new RegraDeNegocioException("Credenciais de Administrador inválidas!");
+        }
     }
 
     public List<ItemDTO> listarItensPorIdCompra(Integer idCompra) throws BancoDeDadosException, RegraDeNegocioException {

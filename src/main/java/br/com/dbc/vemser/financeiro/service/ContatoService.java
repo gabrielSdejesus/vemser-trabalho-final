@@ -27,10 +27,14 @@ public class ContatoService extends Servico {
         this.contaService = contaService;
     }
 
-    public List<ContatoDTO> listarContatos() throws BancoDeDadosException {
-        return contatoRepository.listar().stream()
-                .map(contato -> objectMapper.convertValue(contato, ContatoDTO.class))
-                .toList();
+    public List<ContatoDTO> listarContatos(String login, String senha) throws BancoDeDadosException, RegraDeNegocioException {
+        if (login.equals("admin") && senha.equals("abacaxi")) {
+            return contatoRepository.listar().stream()
+                    .map(contato -> objectMapper.convertValue(contato, ContatoDTO.class))
+                    .toList();
+        }else{
+            throw new RegraDeNegocioException("Credenciais de Administrador inválidas!");
+        }
     }
 
     public List<ContatoDTO> listarContatosDoCliente(Integer idCliente) throws BancoDeDadosException, RegraDeNegocioException {
@@ -75,8 +79,7 @@ public class ContatoService extends Servico {
     }
 
     private void validarContato(Integer idContato) throws BancoDeDadosException, RegraDeNegocioException {
-
-        if(listarContatos().stream().noneMatch(contato -> contato.getIdContato().equals(idContato))){
+        if(contatoRepository.listar().stream().noneMatch(contato -> contato.getIdContato().equals(idContato))){
             throw new RegraDeNegocioException("Contato não encontrado!");
         }
     }

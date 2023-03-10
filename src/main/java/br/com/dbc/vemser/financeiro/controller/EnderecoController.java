@@ -45,8 +45,8 @@ public class EnderecoController implements ControleListar<List<EnderecoDTO>>,
     /////////
     @Override
     @GetMapping("/lista")
-    public ResponseEntity<List<EnderecoDTO>> listar() throws BancoDeDadosException, RegraDeNegocioException {//Função do ADM
-        return ResponseEntity.ok(enderecoService.listarEnderecos());
+    public ResponseEntity<List<EnderecoDTO>> listar(String login, String senha) throws BancoDeDadosException, RegraDeNegocioException {//Função do ADM
+        return ResponseEntity.ok(enderecoService.listarEnderecos(login, senha));
     }
 
     @Override

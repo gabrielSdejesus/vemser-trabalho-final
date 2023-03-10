@@ -1,6 +1,5 @@
 package br.com.dbc.vemser.financeiro.controller;
 
-import br.com.dbc.vemser.financeiro.dto.ItemCreateDTO;
 import br.com.dbc.vemser.financeiro.dto.ItemDTO;
 import br.com.dbc.vemser.financeiro.exception.BancoDeDadosException;
 import br.com.dbc.vemser.financeiro.exception.RegraDeNegocioException;
@@ -15,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -24,9 +22,7 @@ import java.util.List;
 @Slf4j
 @Validated
 @RequiredArgsConstructor
-public class ItemController implements ControleListar<List<ItemDTO>>,
-        ControleAdicionar<List<ItemCreateDTO>, List<ItemDTO>>,
-        ControleDeletar{
+public class ItemController {
 
     private final ItemService itemService;
 
@@ -41,26 +37,5 @@ public class ItemController implements ControleListar<List<ItemDTO>>,
     @GetMapping("/{idCompra}/compra")
     public ResponseEntity<List<ItemDTO>> listarItensDaCompra(@NotNull @PathVariable("idCompra") Integer idCompra) throws BancoDeDadosException, RegraDeNegocioException {
         return new ResponseEntity<>(itemService.listarItensPorIdCompra(idCompra), HttpStatus.OK);
-    }
-
-    @Override
-    @GetMapping("/lista")
-    public ResponseEntity<List<ItemDTO>> listar() throws BancoDeDadosException, RegraDeNegocioException {//Função do ADM
-        return ResponseEntity.ok(this.itemService.listar());
-    }
-
-    @Override
-    public ResponseEntity<List<ItemDTO>> adicionar(List<ItemCreateDTO> dado, Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException {
-        log.info("Criando compra!");
-        log.info("compra Criado!");
-        return new ResponseEntity<>(itemService.adicionar(dado, numeroConta, senha), HttpStatus.OK);
-    }
-
-    @Override
-    public ResponseEntity<Boolean> deletar(Integer id, Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException {
-        log.info("Deletando compra...");
-        Boolean deletado = itemService.deletar(id, numeroConta, senha);
-        log.info("compra Deletada!");
-        return ResponseEntity.ok(deletado);
     }
 }

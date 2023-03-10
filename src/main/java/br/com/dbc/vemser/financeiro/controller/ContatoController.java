@@ -49,8 +49,8 @@ public class ContatoController implements ControleAdicionar<ContatoCreateDTO, Co
 
     @Override
     @GetMapping("/lista")
-    public ResponseEntity<List<ContatoDTO>> listar() throws BancoDeDadosException, RegraDeNegocioException {//Função do ADM
-        return ResponseEntity.ok(contatoService.listarContatos());
+    public ResponseEntity<List<ContatoDTO>> listar(String login, String senha) throws BancoDeDadosException, RegraDeNegocioException {//Função do ADM
+        return ResponseEntity.ok(contatoService.listarContatos(login, senha));
     }
 
     @Override
