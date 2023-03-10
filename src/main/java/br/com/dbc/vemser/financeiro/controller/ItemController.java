@@ -43,14 +43,6 @@ public class ItemController implements ControleListar<List<ItemDTO>>,
         return new ResponseEntity<>(itemService.listarItensPorIdCompra(idCompra), HttpStatus.OK);
     }
 
-    @PutMapping("/{idItem}")
-    public ResponseEntity<ItemDTO> atualizar(@NotNull @PathVariable("idItem") Integer idItem,
-                                               @RequestBody @Valid ItemCreateDTO itemCreateDTO) throws BancoDeDadosException {
-        log.info("Atualizando compra!");
-        log.info("compra Atualizado!");
-        return new ResponseEntity<>(itemService.atualizar(idItem, itemCreateDTO), HttpStatus.OK);
-    }
-
     @Override
     @GetMapping("/lista")
     public ResponseEntity<List<ItemDTO>> listar() throws BancoDeDadosException, RegraDeNegocioException {//Função do ADM

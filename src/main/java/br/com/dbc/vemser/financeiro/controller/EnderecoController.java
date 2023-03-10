@@ -20,6 +20,7 @@ import java.util.List;
 @Validated
 @RequiredArgsConstructor
 public class EnderecoController implements ControleListar<List<EnderecoDTO>>,
+        ControleAdicionar<EnderecoCreateDTO, EnderecoDTO>,
         ControleListarPorID<EnderecoDTO>,
         ControleDeletar{
 
