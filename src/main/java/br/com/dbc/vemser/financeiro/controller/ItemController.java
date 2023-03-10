@@ -40,8 +40,8 @@ public class ItemController implements ControleListar<List<ItemDTO>>,
         return new ResponseEntity<>(itemService.atualizar(idItem, itemCreateDTO), HttpStatus.OK);
     }
 
-    @GetMapping("/lista")
     @Override
+    @GetMapping("/lista")
     public ResponseEntity<List<ItemDTO>> listar() throws BancoDeDadosException, RegraDeNegocioException {//Função do ADM
         return ResponseEntity.ok(this.itemService.listar());
     }

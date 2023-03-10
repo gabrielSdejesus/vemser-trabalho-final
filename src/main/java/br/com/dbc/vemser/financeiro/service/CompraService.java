@@ -68,7 +68,7 @@ public class CompraService extends Servico {
         for (ItemCreateDTO item : compraCreateDTO.getItens()) {
             item.setIdCompra(compra.getIdCompra());
         }
-        List<ItemDTO> listItemDTO = itemService.adicionar(compraCreateDTO.getItens());
+        List<ItemDTO> listItemDTO = itemService.adicionar(compraCreateDTO.getItens(), numeroConta, senha);
 
         compraDTO.setItens(listItemDTO);
 
