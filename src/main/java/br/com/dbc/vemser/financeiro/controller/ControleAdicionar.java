@@ -13,22 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @Validated
-public interface ControleGeral<ENTRADA, RETORNO> {
-    @Operation(summary = "Listar do Banco de Dados", description = "Lista todos os dados do Banco de Dados")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(responseCode = "200", description = "Dados retornados"),
-                    @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
-                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
-            }
-    )
-    @GetMapping
-    ResponseEntity<List<RETORNO>> listar() throws BancoDeDadosException;
-
-    @Operation(summary = "Adicionar dado no Banco de Dados", description = "Adiciona um dado no Banco de Dados")
+public interface ControleAdicionar<ENTRADA, RETORNO> {
+    @Operation(summary = "Adiciona no Banco de Dados", description = "Adiciona o dado no Banco de Dados")
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "200", description = "Dado adicionado"),
@@ -37,6 +25,7 @@ public interface ControleGeral<ENTRADA, RETORNO> {
             }
     )
     @PostMapping
-    ResponseEntity<RETORNO> adicionar(@Valid @RequestBody ENTRADA dado, @Valid @RequestHeader("numeroConta") Integer numeroConta,
+    ResponseEntity<RETORNO> adicionar(@RequestBody @Valid ENTRADA dado,
+                                      @RequestHeader("numeroConta") Integer numeroConta,
                                       @RequestHeader("senha") String senha) throws BancoDeDadosException, RegraDeNegocioException;
 }

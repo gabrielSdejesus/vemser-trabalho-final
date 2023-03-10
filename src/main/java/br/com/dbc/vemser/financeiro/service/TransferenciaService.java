@@ -30,7 +30,8 @@ public class TransferenciaService extends Servico {
         return objectMapper.convertValue(this.transferenciaRepository.adicionar(transferencia), TransferenciaDTO.class);
     }
 
-    public TransferenciaDTO retornarTransferencia(Integer idTransferencia) throws BancoDeDadosException {
+    public TransferenciaDTO retornarTransferencia(Integer idTransferencia, Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException {
+        contaService.validandoAcessoConta(numeroConta, senha);
         return objectMapper.convertValue(this.transferenciaRepository.retornarTransferencia(idTransferencia), TransferenciaDTO.class);
     }
 

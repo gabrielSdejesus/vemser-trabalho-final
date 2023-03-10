@@ -21,25 +21,15 @@ import java.util.List;
 @Slf4j
 @Validated
 @RequiredArgsConstructor
-public class ItemController {
+public class ItemController implements ControleListar<List<ItemDTO>>,
+        ControleAdicionar<List<ItemCreateDTO>, List<ItemDTO>>,
+        ControleDeletar{
 
     private final ItemService itemService;
-
-    @GetMapping("/lista")
-    public ResponseEntity<List<ItemDTO>> listarTodosItens(){
-        return null;
-    }
 
     @GetMapping("/{idCompra}/compra")
     public ResponseEntity<List<ItemDTO>> listarItensDaCompra(@NotNull @PathVariable("idCompra") Integer idCompra) throws BancoDeDadosException, RegraDeNegocioException {
         return new ResponseEntity<>(itemService.listarItensPorIdCompra(idCompra), HttpStatus.OK);
-    }
-
-    @PostMapping
-    public ResponseEntity<List<ItemDTO>> criar(@RequestBody @Valid List<ItemCreateDTO> itensCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
-        log.info("Criando compra!");
-        log.info("compra Criado!");
-        return new ResponseEntity<>(itemService.adicionar(itensCreateDTO), HttpStatus.OK);
     }
 
     @PutMapping("/{idItem}")
@@ -50,11 +40,24 @@ public class ItemController {
         return new ResponseEntity<>(itemService.atualizar(idItem, itemCreateDTO), HttpStatus.OK);
     }
 
-    @DeleteMapping("/{idItem}")
-    public ResponseEntity<Void> deletar(@NotNull @PathVariable("idItem") Integer idItem) throws BancoDeDadosException {
+    @GetMapping("/lista")
+    @Override
+    public ResponseEntity<List<ItemDTO>> listar() throws BancoDeDadosException, RegraDeNegocioException {//Função do ADM
+        return ResponseEntity.ok(this.itemService.listar());
+    }
+
+    @Override
+    public ResponseEntity<List<ItemDTO>> adicionar(List<ItemCreateDTO> dado, Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException {
+        log.info("Criando compra!");
+        log.info("compra Criado!");
+        return new ResponseEntity<>(itemService.adicionar(dado, numeroConta, senha), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<Boolean> deletar(Integer id, Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException {
         log.info("Deletando compra...");
-        itemService.deletar(idItem);
+        Boolean deletado = itemService.deletar(id, numeroConta, senha);
         log.info("compra Deletada!");
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(deletado);
     }
 }

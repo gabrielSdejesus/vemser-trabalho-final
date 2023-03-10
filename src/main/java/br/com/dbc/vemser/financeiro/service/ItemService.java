@@ -17,14 +17,16 @@ import java.util.stream.Collectors;
 public class ItemService extends Servico {
 
     private final ItemRepository itemRepository;
+    private final ContaService contaService;
 
-    public ItemService(ItemRepository itemRepository, ObjectMapper objectMapper) {
+    public ItemService(ItemRepository itemRepository, ObjectMapper objectMapper, ContaService contaService) {
         super(objectMapper);
         this.itemRepository = itemRepository;
+        this.contaService = contaService;
     }
 
-    public List<ItemDTO> adicionar(List<ItemCreateDTO> itensCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
-
+    public List<ItemDTO> adicionar(List<ItemCreateDTO> itensCreateDTO, Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException {
+        contaService.validandoAcessoConta(numeroConta, senha);
         List<Item> itens = itensCreateDTO.stream()
                 .map(itemCreateDTO -> objectMapper.convertValue(itemCreateDTO, Item.class))
                 .toList();
@@ -60,7 +62,8 @@ public class ItemService extends Servico {
                 .collect(Collectors.toList());
     }
 
-    public void deletar(Integer idItem) throws BancoDeDadosException {
-        itemRepository.deletar(idItem);
+    public boolean deletar(Integer idItem, Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException {
+        this.contaService.validandoAcessoConta(numeroConta, senha);
+        return itemRepository.deletar(idItem);
     }
 }
