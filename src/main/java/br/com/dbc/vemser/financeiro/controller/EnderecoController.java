@@ -20,7 +20,8 @@ import java.util.List;
 @Validated
 @RequiredArgsConstructor
 public class EnderecoController implements ControleListar<List<EnderecoDTO>>,
-        ControleListarPorID<EnderecoDTO>{
+        ControleListarPorID<EnderecoDTO>,
+        ControleDeletar{
 
     private final EnderecoService enderecoService;
 
@@ -46,15 +47,6 @@ public class EnderecoController implements ControleListar<List<EnderecoDTO>>,
         return ResponseEntity.ok(enderecoDTO);
     }
 
-    @DeleteMapping("/{idEndereco}")
-    public ResponseEntity<Void> deletar(
-            @PathVariable("idEndereco") Integer idEndereco) throws BancoDeDadosException, RegraDeNegocioException {
-        log.info("Deletando Endereço!");
-        enderecoService.deletar(idEndereco);
-        log.info("Endereço Deletado!");
-        return ResponseEntity.ok().build();
-    }
-
     @Override
     @GetMapping("/lista")
     public ResponseEntity<List<EnderecoDTO>> listar() throws BancoDeDadosException, RegraDeNegocioException {//Função do ADM
@@ -64,5 +56,13 @@ public class EnderecoController implements ControleListar<List<EnderecoDTO>>,
     @Override
     public ResponseEntity<EnderecoDTO> listarPorId(Integer id, Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException {
         return ResponseEntity.ok(enderecoService.retornarEndereco(id, numeroConta, senha));
+    }
+
+    @Override
+    public ResponseEntity<Boolean> deletar(Integer id, Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException {
+        log.info("Deletando Endereço!");
+        Boolean deletado = enderecoService.deletar(id, numeroConta, senha);
+        log.info("Endereço Deletado!");
+        return ResponseEntity.ok(deletado);
     }
 }

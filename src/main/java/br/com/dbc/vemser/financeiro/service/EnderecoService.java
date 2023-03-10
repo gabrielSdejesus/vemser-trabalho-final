@@ -63,10 +63,9 @@ public class EnderecoService extends Servico {
         return objectMapper.convertValue(enderecoRepository.editar(idEndereco, endereco), EnderecoDTO.class);
     }
 
-    public boolean deletar(Integer idEndereco) throws BancoDeDadosException, RegraDeNegocioException {
-
+    public boolean deletar(Integer idEndereco, Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException {
         //Validando se o cliente deve ter ao menos 1 endereço
-        List<EnderecoDTO> enderecoDTOS = listarEnderecosDoCliente(retornarEndereco(idEndereco).getIdCliente());
+        List<EnderecoDTO> enderecoDTOS = listarEnderecosDoCliente(retornarEndereco(idEndereco, numeroConta, senha).getIdCliente());
         if(enderecoDTOS.size() == 1){
             throw new RegraDeNegocioException("É necessário ter ao menos um endereço!");
         }
