@@ -84,7 +84,6 @@ public class EnderecoRepository implements Repositorio<Endereco> {
             // Executar consulta
             int res = stmt.executeUpdate();
             return res > 0;
-
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
         } finally {

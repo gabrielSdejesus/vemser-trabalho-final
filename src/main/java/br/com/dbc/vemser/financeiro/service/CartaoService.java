@@ -1,10 +1,7 @@
 package br.com.dbc.vemser.financeiro.service;
 
-
 import br.com.dbc.vemser.financeiro.dto.CartaoCreateDTO;
 import br.com.dbc.vemser.financeiro.dto.CartaoDTO;
-import br.com.dbc.vemser.financeiro.dto.CartaoPagarDTO;
-import br.com.dbc.vemser.financeiro.dto.ContaTransfDTO;
 import br.com.dbc.vemser.financeiro.exception.BancoDeDadosException;
 import br.com.dbc.vemser.financeiro.exception.RegraDeNegocioException;
 import br.com.dbc.vemser.financeiro.model.Cartao;
@@ -17,8 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 @Slf4j
@@ -37,69 +35,64 @@ public class CartaoService extends Servico {
         List<Cartao> cartoes = cartaoRepository.listarPorNumeroConta(numeroConta);
         return cartoes.stream()
                 .map(cartao -> objectMapper.convertValue(cartao, CartaoDTO.class))
-                .collect(Collectors.toList());
+                .toList();
     }
 
-    public CartaoDTO criar(Integer numeroConta, CartaoCreateDTO cartaoCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
+    public CartaoDTO criar(Integer numeroConta, String senha, TipoCartao tipo) throws BancoDeDadosException, RegraDeNegocioException {
+        contaService.validandoAcessoConta(numeroConta, senha);
         List<Cartao> cartoes = cartaoRepository.listarPorNumeroConta(numeroConta);
         if (cartoes.size() == 2) {
             throw new RegraDeNegocioException("Usuário já possui dois cartões");
         } else {
             Cartao cartao;
-            if (cartaoCreateDTO.getTipo().equals(TipoCartao.DEBITO)) {
-                cartao = objectMapper.convertValue(cartaoCreateDTO, CartaoDeDebito.class);
+            if (tipo.equals(TipoCartao.DEBITO)) {
+                cartao = new CartaoDeDebito();
             } else {
-                cartao = objectMapper.convertValue(cartaoCreateDTO, CartaoDeCredito.class);
+                cartao = new CartaoDeCredito();
             }
             cartao.setNumeroConta(numeroConta);
-            Cartao cartaoCriado = cartaoRepository.adicionar(cartao);
-            return objectMapper.convertValue(cartaoCriado, CartaoDTO.class);
+            cartao.setDataExpedicao(LocalDate.now());
+            cartao.setCodigoSeguranca(ThreadLocalRandom.current().nextInt(100, 999));
+            cartao.setTipo(tipo);
+            cartao.setVencimento(cartao.getDataExpedicao().plusYears(4));
+
+            return objectMapper.convertValue(cartaoRepository.adicionar(cartao), CartaoDTO.class);
         }
     }
 
-    public CartaoDTO pagar(CartaoPagarDTO cartaoPagarDTO) throws BancoDeDadosException, RegraDeNegocioException {
+    public CartaoDTO pagar(CartaoDTO cartaoDTO, Double valor, Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException {
         //Validando acesso a conta
-        contaService.validandoAcessoConta(cartaoPagarDTO.getContaAcessDTO());
+        contaService.validandoAcessoConta(numeroConta, senha);
 
         //Validando e retornando cartões da conta.
-        List<Cartao> cartoes = validarCartao(cartaoPagarDTO);
+        Cartao cartao = validarCartao(cartaoDTO, numeroConta);
 
-        /*********** CARTÃO DE CRÉDITO **********/
+        /* ********* CARTÃO DE CRÉDITO ********* */
 
-        //Validando e pagando com cartão de crédito
-        if (cartaoPagarDTO.getTipoCartao().equals(TipoCartao.CREDITO)) {
-            //Validando e pegando cartão de crédito
-            if (cartoes.get(0) instanceof CartaoDeCredito){
-                CartaoDeCredito cartaoDeCredito = (CartaoDeCredito) cartoes.stream().findFirst().get();
+        //Validando e pegando cartão de crédito
+        if (cartao instanceof CartaoDeCredito cartaoDeCredito){
 
             //Verificando o limite
-            if (cartaoDeCredito.getLimite() < cartaoPagarDTO.getValor()) {
+            if (cartaoDeCredito.getLimite() < valor) {
                 throw new RegraDeNegocioException("Cartão de crédito não possui limite suficiente!");
             }
-
             //Pagando com o cartão de crédito
-            cartaoDeCredito.setLimite(cartaoDeCredito.getLimite() - cartaoPagarDTO.getValor());
-            Cartao cartao = cartaoRepository.editar(cartaoDeCredito.getNumeroCartao(), cartaoDeCredito);
-            CartaoDTO cartaoDTO = objectMapper.convertValue(cartao, CartaoDTO.class);
-            cartaoDTO.setarLimite(cartaoDeCredito.getLimite());
-            return cartaoDTO;
-            }
+            cartaoDeCredito.setLimite(cartaoDeCredito.getLimite() - valor);
+            Cartao cartaoAtualizado = cartaoRepository.editar(cartaoDeCredito.getNumeroCartao(), cartaoDeCredito);
+            CartaoDTO cartaoDTOAtualizado = objectMapper.convertValue(cartaoAtualizado, CartaoDTO.class);
+            cartaoDTOAtualizado.setarLimite(cartaoDeCredito.getLimite());
+            return cartaoDTOAtualizado;
         }
 
-        /*********** CARTÃO DE DÉBITO **********/
+        /* ********** CARTÃO DE DÉBITO ********* */
 
         //Validando e pagando com cartão de débito
-        CartaoDeDebito cartaoDeDebito = null;
-        if (cartoes.get(0) instanceof CartaoDeDebito){
-            cartaoDeDebito = (CartaoDeDebito) cartoes.stream().findFirst().get();
+        if (cartao instanceof CartaoDeDebito cartaoDeDebito){
+            contaService.sacar(valor, numeroConta, senha);
+            return objectMapper.convertValue(cartaoDeDebito, CartaoDTO.class);
         }
-        //Pagando com o cartão de débito
-        ContaTransfDTO contaTransfDTO = new ContaTransfDTO();
-        contaTransfDTO.setValor(cartaoPagarDTO.getValor());
-        contaTransfDTO.setNumeroConta(cartaoPagarDTO.getContaAcessDTO().getNumeroConta());
-        contaTransfDTO.setSenha(cartaoPagarDTO.getContaAcessDTO().getSenha());
-        contaService.sacar(contaTransfDTO);
-        return objectMapper.convertValue(cartaoDeDebito, CartaoDTO.class);
+
+        return null;
     }
 
     public CartaoDTO atualizar(Long numeroCartao, CartaoCreateDTO cartaoCreateDTO) throws RegraDeNegocioException, BancoDeDadosException {
@@ -133,21 +126,15 @@ public class CartaoService extends Servico {
         cartaoRepository.remover(cartao.getNumeroCartao());
     }
 
-    private List<Cartao> validarCartao(CartaoPagarDTO cartaoPagarDTO) throws BancoDeDadosException, RegraDeNegocioException {
-        List<Cartao> cartoesValidados = cartaoRepository
+    private Cartao validarCartao(CartaoDTO cartaoDTO, Integer numeroConta) throws BancoDeDadosException, RegraDeNegocioException {
+        return cartaoRepository
                 .listarPorNumeroConta(
-                        cartaoPagarDTO.getContaAcessDTO().getNumeroConta())
+                        numeroConta)
                 .stream()
-                .filter(cartao -> cartao.getNumeroCartao().equals(cartaoPagarDTO.getNumeroCartao()))
-                .filter(cartao -> cartao.getCodigoSeguranca().equals(cartaoPagarDTO.getCodigoSeguranca()))
-                .filter(cartao -> cartao.getTipo().equals(cartaoPagarDTO.getTipoCartao()))
-                .collect(Collectors.toList());
-
-        if(cartoesValidados.isEmpty()){
-            throw new RegraDeNegocioException("Dados do cartão inválido!");
-        }
-
-        return cartoesValidados;
+                .filter(cartao -> cartao.getNumeroCartao().equals(cartaoDTO.getNumeroCartao()))
+                .filter(cartao -> cartao.getCodigoSeguranca().equals(cartaoDTO.getCodigoSeguranca()))
+                .findFirst()
+                .orElseThrow(()-> new RegraDeNegocioException("Dados do cartão inválido!"));
     }
 
     void deletarTodosCartoes(Integer numeroConta) throws BancoDeDadosException {

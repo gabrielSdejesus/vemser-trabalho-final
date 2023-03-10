@@ -1,6 +1,5 @@
 package br.com.dbc.vemser.financeiro.service;
 
-import br.com.dbc.vemser.financeiro.dto.ContaAcessDTO;
 import br.com.dbc.vemser.financeiro.dto.TransferenciaCreateDTO;
 import br.com.dbc.vemser.financeiro.dto.TransferenciaDTO;
 import br.com.dbc.vemser.financeiro.exception.BancoDeDadosException;
@@ -25,24 +24,29 @@ public class TransferenciaService extends Servico {
         this.contaService = contaService;
     }
 
-    public TransferenciaDTO adicionarTransferencia(TransferenciaCreateDTO transferenciaCreateDTO, ContaAcessDTO contaAcessDTO) throws BancoDeDadosException, RegraDeNegocioException {
-        contaService.validandoAcessoConta(contaAcessDTO);
+    public TransferenciaDTO adicionarTransferencia(TransferenciaCreateDTO transferenciaCreateDTO, Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException {
+        contaService.validandoAcessoConta(numeroConta, senha);
         Transferencia transferencia = objectMapper.convertValue(transferenciaCreateDTO, Transferencia.class);
         return objectMapper.convertValue(this.transferenciaRepository.adicionar(transferencia), TransferenciaDTO.class);
     }
 
-    public TransferenciaDTO retornarTransferencia(Integer idTransferencia) throws BancoDeDadosException {
+    public TransferenciaDTO retornarTransferencia(Integer idTransferencia, Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException {
+        contaService.validandoAcessoConta(numeroConta, senha);
         return objectMapper.convertValue(this.transferenciaRepository.retornarTransferencia(idTransferencia), TransferenciaDTO.class);
     }
 
-    public List<TransferenciaDTO> listarTransferencias() throws BancoDeDadosException {
-        return transferenciaRepository.listar().stream()
-                .map(transferencia -> objectMapper.convertValue(transferencia, TransferenciaDTO.class))
-                .collect(Collectors.toList());
+    public List<TransferenciaDTO> listarTransferencias(String login, String senha) throws BancoDeDadosException, RegraDeNegocioException {
+        if (login.equals("admin") && senha.equals("abacaxi")) {
+            return transferenciaRepository.listar().stream()
+                    .map(transferencia -> objectMapper.convertValue(transferencia, TransferenciaDTO.class))
+                    .toList();
+        }else{
+            throw new RegraDeNegocioException("Credenciais de Administrador inválidas!");
+        }
     }
 
-    public List<TransferenciaDTO> listarTransferenciasDaConta(Integer numeroConta, ContaAcessDTO contaAcessDTO) throws BancoDeDadosException, RegraDeNegocioException {
-        contaService.validandoAcessoConta(contaAcessDTO);
+    public List<TransferenciaDTO> listarTransferenciasDaConta(Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException {
+        contaService.validandoAcessoConta(numeroConta, senha);
         return transferenciaRepository.listarTransferenciasPorConta(numeroConta).stream()
                 .map(transferencia -> objectMapper.convertValue(transferencia, TransferenciaDTO.class))
                 .collect(Collectors.toList());

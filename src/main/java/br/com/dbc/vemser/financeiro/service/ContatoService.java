@@ -7,6 +7,7 @@ import br.com.dbc.vemser.financeiro.exception.RegraDeNegocioException;
 import br.com.dbc.vemser.financeiro.model.Contato;
 import br.com.dbc.vemser.financeiro.repository.ContatoRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,18 +18,23 @@ public class ContatoService extends Servico {
 
     private final ContatoRepository contatoRepository;
     private final ClienteService clienteService;
+    private final ContaService contaService;
 
-    public ContatoService(ContatoRepository contatoRepository, ClienteService clienteService,
-                          ObjectMapper objectMapper) {
+    public ContatoService(ContatoRepository contatoRepository, ClienteService clienteService, ObjectMapper objectMapper, @Lazy ContaService contaService) {
         super(objectMapper);
         this.clienteService = clienteService;
         this.contatoRepository = contatoRepository;
+        this.contaService = contaService;
     }
 
-    public List<ContatoDTO> listarContatos() throws BancoDeDadosException {
-        return contatoRepository.listar().stream()
-                .map(contato -> objectMapper.convertValue(contato, ContatoDTO.class))
-                .collect(Collectors.toList());
+    public List<ContatoDTO> listarContatos(String login, String senha) throws BancoDeDadosException, RegraDeNegocioException {
+        if (login.equals("admin") && senha.equals("abacaxi")) {
+            return contatoRepository.listar().stream()
+                    .map(contato -> objectMapper.convertValue(contato, ContatoDTO.class))
+                    .toList();
+        }else{
+            throw new RegraDeNegocioException("Credenciais de Administrador inválidas!");
+        }
     }
 
     public List<ContatoDTO> listarContatosDoCliente(Integer idCliente) throws BancoDeDadosException, RegraDeNegocioException {
@@ -36,16 +42,18 @@ public class ContatoService extends Servico {
         clienteService.visualizarCliente(idCliente);
         return contatoRepository.listarContatosPorPessoa(idCliente).stream()
                 .map(contato -> objectMapper.convertValue(contato, ContatoDTO.class))
-                .collect(Collectors.toList());
+                .toList();
     }
 
-    public ContatoDTO retornarContato(Integer idContato) throws BancoDeDadosException, RegraDeNegocioException {
+    public ContatoDTO retornarContato(Integer idContato, Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException {
+        this.contaService.validandoAcessoConta(numeroConta, senha);
         validarContato(idContato);
         return objectMapper.convertValue(contatoRepository.retornarContato(idContato), ContatoDTO.class);
     }
 
-    public ContatoDTO adicionar(ContatoCreateDTO contatoCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
+    public ContatoDTO adicionar(ContatoCreateDTO contatoCreateDTO, Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException {
         //Validando cliente
+        this.contaService.validandoAcessoConta(numeroConta, senha);
         clienteService.visualizarCliente(contatoCreateDTO.getIdCliente());
         //Validando se o cliente já possui aquele telefone registrado
         validarNumeroContato(contatoCreateDTO);
@@ -60,10 +68,10 @@ public class ContatoService extends Servico {
         return objectMapper.convertValue(this.contatoRepository.editar(idContato, contato), ContatoDTO.class);
     }
 
-    public boolean deletar(Integer idContato) throws BancoDeDadosException, RegraDeNegocioException {
-
+    public boolean deletar(Integer idContato, Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException {
+        this.contaService.validandoAcessoConta(numeroConta, senha);
         //Validando se o cliente deve ter ao menos 1 contato
-        List<ContatoDTO> contatoDTOS = listarContatosDoCliente(retornarContato(idContato).getIdCliente());
+        List<ContatoDTO> contatoDTOS = listarContatosDoCliente(retornarContato(idContato, numeroConta, senha).getIdCliente());
         if(contatoDTOS.size() == 1){
             throw new RegraDeNegocioException("É necessário ter ao menos um contato!");
         }
@@ -71,8 +79,7 @@ public class ContatoService extends Servico {
     }
 
     private void validarContato(Integer idContato) throws BancoDeDadosException, RegraDeNegocioException {
-
-        if(listarContatos().stream().noneMatch(contato -> contato.getIdContato().equals(idContato))){
+        if(contatoRepository.listar().stream().noneMatch(contato -> contato.getIdContato().equals(idContato))){
             throw new RegraDeNegocioException("Contato não encontrado!");
         }
     }

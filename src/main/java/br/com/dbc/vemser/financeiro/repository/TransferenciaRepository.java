@@ -146,7 +146,7 @@ public class TransferenciaRepository implements Repositorio<Transferencia> {
             con = ConexaoBancoDeDados.getConnection();
 
             String sql = """
-                    SELECT t.* FROM TRANSFERENCIA
+                    SELECT t.* FROM TRANSFERENCIA t
                     WHERE t.id_transferencia = ?
                     """;
 
@@ -154,7 +154,7 @@ public class TransferenciaRepository implements Repositorio<Transferencia> {
             stmt.setInt(1, id);
 
             ResultSet res = stmt.executeQuery();
-
+            res.next();
             return getTransferenciaFromResultSet(res);
         } catch (SQLException e) {
             e.printStackTrace();

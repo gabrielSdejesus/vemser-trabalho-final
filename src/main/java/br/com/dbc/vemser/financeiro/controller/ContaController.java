@@ -4,6 +4,7 @@ import br.com.dbc.vemser.financeiro.dto.*;
 import br.com.dbc.vemser.financeiro.exception.BancoDeDadosException;
 import br.com.dbc.vemser.financeiro.exception.RegraDeNegocioException;
 import br.com.dbc.vemser.financeiro.service.ContaService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @RequestMapping("/conta")
 @RestController
@@ -22,16 +24,19 @@ public class ContaController {
 
     private final ContaService contaService;
 
+    @Operation(summary = "FUNÇÃO ADM", description = "LISTAR TODAS AS CONTAS DO BANCO")
     @GetMapping("/lista")
     public ResponseEntity<List<ContaDTO>> listarContas() throws BancoDeDadosException, RegraDeNegocioException {
         return ResponseEntity.ok(contaService.listar());
     }
-
+    @Operation(summary = "Logando na conta e retornando informações do cliente", description = "Logando na conta através do numero e senha da conta.")
     @GetMapping("/cliente")
-    public ResponseEntity<ContaDTO> retornarContaCliente(@RequestBody @Valid ContaAcessDTO contaAcessDTO) throws BancoDeDadosException, RegraDeNegocioException {
-        return ResponseEntity.ok(contaService.retornarContaCliente(contaAcessDTO));
+    public ResponseEntity<ContaDTO> retornarContaCliente(@RequestHeader("numeroConta") Integer numeroConta,
+                                                         @RequestHeader("senha") String senha) throws BancoDeDadosException, RegraDeNegocioException {
+        return ResponseEntity.ok(contaService.retornarContaCliente(numeroConta, senha));
     }
 
+    @Operation(summary = "Criar nova conta", description = "Está requisição cria um cliente com conta e um cartão de débito.")
     @PostMapping
     public ResponseEntity<ContaDTO> criar(@RequestBody @Valid ContaCreateDTO contaCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
         log.info("Criando Conta!");
@@ -40,44 +45,55 @@ public class ContaController {
         return ResponseEntity.ok(contaDTO);
     }
 
+    @Operation(summary = "Alterar senha", description = "Alterar senha da conta.")
     @PutMapping("/alterarsenha")
-    public ResponseEntity<ContaDTO> alterarSenha(@RequestBody @Valid ContaUpdateDTO contaUpdateDTO) throws BancoDeDadosException, RegraDeNegocioException {
+    public ResponseEntity<ContaDTO> alterarSenha(@RequestBody @Valid ContaUpdateDTO contaUpdateDTO,
+                                                 @RequestHeader("numeroConta") Integer numeroConta,
+                                                 @RequestHeader("senha") String senha) throws BancoDeDadosException, RegraDeNegocioException {
         log.info("Alterando Senha!");
-        ContaDTO contaDTO = contaService.alterarSenha(contaUpdateDTO);
+        ContaDTO contaDTO = contaService.alterarSenha(contaUpdateDTO.getSenhaNova(), numeroConta, senha);
         log.info("Senha Alterada!");
         return ResponseEntity.ok(contaDTO);
     }
 
-    @PutMapping("/sacar")
-    public ResponseEntity<ContaDTO> sacar(@RequestBody @Valid ContaTransfDTO contaTransfDTO) throws BancoDeDadosException, RegraDeNegocioException {
-        log.info("Sacando valor: R$" + contaTransfDTO.getValor());
-        ContaDTO contaDTO = contaService.sacar(contaTransfDTO);
-        log.info("Valor Sacado: R$" + contaTransfDTO.getValor());
+    @Operation(summary = "Sacar", description = "Sacar valor da conta.")
+    @PutMapping("/sacar/{valor}")
+    public ResponseEntity<ContaDTO> sacar(@PathVariable("valor") Double valor,
+                                          @RequestHeader("numeroConta") Integer numeroConta,
+                                          @RequestHeader("senha") String senha) throws BancoDeDadosException, RegraDeNegocioException {
+        log.info("Sacando valor: R$" + valor);
+        ContaDTO contaDTO = contaService.sacar(valor, numeroConta, senha);
+        log.info("Valor Sacado: R$" + valor);
         return ResponseEntity.ok(contaDTO);
     }
 
-    @PutMapping("/depositar")
-    public ResponseEntity<ContaDTO> depositar(@RequestBody @Valid ContaTransfDTO contaTransfDTO) throws BancoDeDadosException, RegraDeNegocioException {
-        log.info("Depositando valor: R$" + contaTransfDTO.getValor());
-        ContaDTO contaDTO = contaService.depositar(contaTransfDTO);
-        log.info("Valor Depositado: R$" + contaTransfDTO.getValor());
+    @Operation(summary = "Depositar", description = "Depositar valor na conta.")
+    @PutMapping("/depositar/{valor}")
+    public ResponseEntity<ContaDTO> depositar(@PathVariable("valor") Double valor,
+                                              @RequestHeader("numeroConta") Integer numeroConta,
+                                              @RequestHeader("senha") String senha) throws BancoDeDadosException, RegraDeNegocioException {
+        log.info("Depositando valor: R$" + valor);
+        ContaDTO contaDTO = contaService.depositar(valor, numeroConta, senha);
+        log.info("Valor Depositado: R$" + valor);
         return ResponseEntity.ok(contaDTO);
     }
 
+    @Operation(summary = "Reativar conta", description = "Reativar conta, cliente e cartões.")
     @PutMapping("/{cpf}/reativar")
-    public ResponseEntity<Void> reativarConta(@PathVariable("cpf") String cpf) throws BancoDeDadosException {
+    public ResponseEntity<String> reativarConta(@PathVariable("cpf") String cpf) throws BancoDeDadosException, RegraDeNegocioException {
         log.info("Reativando Conta!");
         contaService.reativarConta(cpf);
         log.info("Conta Reativada!");
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("Conta Reativada");
     }
 
-    @DeleteMapping("/{idCliente}/{numeroConta}/delete")
-    public ResponseEntity<Void> removerConta(@PathVariable("idCliente") Integer idCliente,
-                                              @PathVariable("numeroConta") Integer numeroConta) throws BancoDeDadosException, RegraDeNegocioException {
+    @Operation(summary = "Desativar conta", description = "Desativar conta, cliente e cartões.")
+    @DeleteMapping("/{numeroConta}/delete")
+    public ResponseEntity<String> removerConta(
+                                @PathVariable("numeroConta") Integer numeroConta) throws BancoDeDadosException, RegraDeNegocioException {
         log.info("Deletando Conta!");
-        contaService.removerConta(idCliente,numeroConta);
+        contaService.removerConta(numeroConta);
         log.info("Conta Deletada!");
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("Conta desativada!");
     }
 }

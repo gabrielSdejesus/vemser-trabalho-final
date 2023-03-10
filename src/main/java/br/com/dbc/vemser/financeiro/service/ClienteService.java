@@ -11,7 +11,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ClienteService extends Servico {
@@ -25,13 +24,17 @@ public class ClienteService extends Servico {
     public List<ClienteDTO> listarClientes() throws BancoDeDadosException {
         return clienteRepository.listar().stream()
                 .map(cliente -> objectMapper.convertValue(cliente, ClienteDTO.class))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public ClienteDTO visualizarCliente(Integer idCliente) throws BancoDeDadosException, RegraDeNegocioException {
         ClienteDTO clienteDTO = objectMapper.convertValue(clienteRepository.consultarPorIdCliente(idCliente), ClienteDTO.class);
         validarClienteInativo(clienteDTO);
         return clienteDTO;
+    }
+
+    protected ClienteDTO retornandoCliente(Integer idCliente) throws BancoDeDadosException {
+        return objectMapper.convertValue(clienteRepository.consultarPorIdCliente(idCliente), ClienteDTO.class);
     }
 
     public ClienteDTO adicionarCliente(ClienteCreateDTO clienteCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
@@ -62,9 +65,21 @@ public class ClienteService extends Servico {
     }
 
     void validarClientePorCPF(ClienteCreateDTO clienteCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
+        ClienteDTO clienteDTO = listarClientes().stream()
+                .filter(cliente -> cliente.getCpf().equals(clienteCreateDTO.getCpf()))
+                .findFirst()
+                .orElse(null);
 
-        if(listarClientes().stream().anyMatch(cliente -> cliente.getCpf().equals(clienteCreateDTO.getCpf()))){
-            throw new RegraDeNegocioException("Este cliente já está registrado!");
+        if(clienteDTO == null) {
+            return;
+        }
+
+        if(clienteDTO.getStatus().getStatus() == 0) {
+            throw new RegraDeNegocioException("Este CPF está inativo!");
+        }
+
+        if(clienteDTO.getStatus().getStatus() == 1){
+            throw new RegraDeNegocioException("Este cpf já está registrado e ativo");
         }
     }
 }

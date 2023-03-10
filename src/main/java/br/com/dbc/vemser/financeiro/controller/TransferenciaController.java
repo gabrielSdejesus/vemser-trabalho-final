@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RequestMapping("/transferencia")
@@ -21,22 +20,11 @@ import java.util.List;
 @Slf4j
 @Validated
 @RequiredArgsConstructor
-public class TransferenciaController implements ControleGeral<TransferenciaCreateDTO, TransferenciaDTO>{
+public class TransferenciaController implements ControleListar<List<TransferenciaDTO>>,
+        ControleAdicionar<TransferenciaCreateDTO, TransferenciaDTO>,
+        ControleListarPorID<TransferenciaDTO>{
 
     private final TransferenciaService transferenciaService;
-
-    @Operation(summary = "Lista do Banco de Dados uma transferência", description = "Lista do Banco de Dados uma transferência pelo seu id")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(responseCode = "200", description = "Transferencia retornada"),
-                    @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
-                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
-            }
-    )
-    @GetMapping("/{idTransferencia}")
-    public ResponseEntity<TransferenciaDTO> exibirTransferenciaPeloId(@PathVariable("idTransferencia") Integer idTransferencia) throws BancoDeDadosException {
-        return ResponseEntity.ok(transferenciaService.retornarTransferencia(idTransferencia));
-    }
 
     @Operation(summary = "Listar do Banco de Dados as transferências de uma conta", description = "Lista do Banco de Dados todas as transferência que uma conta enviou")
     @ApiResponses(
@@ -46,21 +34,30 @@ public class TransferenciaController implements ControleGeral<TransferenciaCreat
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
     )
-    @GetMapping("/{idConta}/conta")
-    public ResponseEntity<List<TransferenciaDTO>> exibirTransferenciasDaConta(@PathVariable("idConta") Integer idConta, @Valid @RequestBody ContaAcessDTO contaAcessDTO) throws BancoDeDadosException, RegraDeNegocioException {
-        return ResponseEntity.ok(transferenciaService.listarTransferenciasDaConta(idConta, contaAcessDTO));
+    @GetMapping("/conta")
+    public ResponseEntity<List<TransferenciaDTO>> exibirTransferenciasDaConta(@RequestHeader("numeroConta") Integer numeroConta,
+                                                                              @RequestHeader("senha") String senha) throws BancoDeDadosException, RegraDeNegocioException {
+        return ResponseEntity.ok(transferenciaService.listarTransferenciasDaConta(numeroConta, senha));
+    }
+
+    //função do ADM
+    @Override
+    public ResponseEntity<List<TransferenciaDTO>> listar(String login, String senha) throws BancoDeDadosException, RegraDeNegocioException {
+        return ResponseEntity.ok(transferenciaService.listarTransferencias(login, senha));
     }
 
     @Override
-    public ResponseEntity<List<TransferenciaDTO>> listar(ContaAcessDTO acess) throws BancoDeDadosException {
-        return ResponseEntity.ok(transferenciaService.listarTransferencias());
-    }
-
-    @Override
-    public ResponseEntity<TransferenciaDTO> adicionar(TransferenciaCreateDTO dado, ContaAcessDTO acess) throws BancoDeDadosException, RegraDeNegocioException {
+    public ResponseEntity<TransferenciaDTO> adicionar(TransferenciaCreateDTO dado,
+                                                      Integer numeroConta,
+                                                      String senha) throws BancoDeDadosException, RegraDeNegocioException {
         log.info("Adicionando transferência!");
-        TransferenciaDTO transferenciaDTO = transferenciaService.adicionarTransferencia(dado, acess);
+        TransferenciaDTO transferenciaDTO = transferenciaService.adicionarTransferencia(dado, numeroConta, senha);
         log.info("Transferência adicionada!");
         return ResponseEntity.ok(transferenciaDTO);
+    }
+
+    @Override
+    public ResponseEntity<TransferenciaDTO> listarPorId(Integer id, Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException {
+        return ResponseEntity.ok(transferenciaService.retornarTransferencia(id, numeroConta, senha));
     }
 }

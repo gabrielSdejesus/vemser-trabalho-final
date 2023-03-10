@@ -8,7 +8,6 @@ import java.time.LocalDate;
 
 @Data
 public class CartaoCreateDTO {
-
     private LocalDate dataExpedicao;
     private Integer codigoSeguranca;
     private TipoCartao tipo;

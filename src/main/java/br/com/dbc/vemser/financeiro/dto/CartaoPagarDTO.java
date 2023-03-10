@@ -14,9 +14,6 @@ import javax.validation.constraints.Positive;
 @Data
 public class CartaoPagarDTO {
 
-    @NotNull
-    @Valid
-    private ContaAcessDTO contaAcessDTO;
     @NotNull(message = "Informe o número do cartão!")
     private Long numeroCartao;
     @NotNull(message = "Informe um valor!")

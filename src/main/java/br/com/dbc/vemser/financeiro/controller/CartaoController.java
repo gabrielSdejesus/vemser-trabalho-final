@@ -5,6 +5,7 @@ import br.com.dbc.vemser.financeiro.dto.CartaoDTO;
 import br.com.dbc.vemser.financeiro.dto.CartaoPagarDTO;
 import br.com.dbc.vemser.financeiro.exception.BancoDeDadosException;
 import br.com.dbc.vemser.financeiro.exception.RegraDeNegocioException;
+import br.com.dbc.vemser.financeiro.model.TipoCartao;
 import br.com.dbc.vemser.financeiro.service.CartaoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,17 +32,22 @@ public class CartaoController {
         return new ResponseEntity<>(cartaoService.listarPorNumeroConta(numeroConta), HttpStatus.OK);
     }
 
-    @PostMapping("/{numeroConta}")
-    public ResponseEntity<CartaoDTO> criar(@PathVariable("numeroConta") Integer numeroConta, @RequestBody CartaoCreateDTO cartaoCreateDTO) throws Exception {
-        return new ResponseEntity<>(cartaoService.criar(numeroConta, cartaoCreateDTO), HttpStatus.OK);
+    @PostMapping("/criar/{tipo}")
+    public ResponseEntity<CartaoDTO> criar(@RequestHeader("numeroConta") Integer numeroConta,
+                                           @RequestHeader("senha") String senha,
+                                           @PathVariable("tipo") TipoCartao tipo) throws Exception {
+        return new ResponseEntity<>(cartaoService.criar(numeroConta, senha, tipo), HttpStatus.OK);
     }
 
     @PutMapping("/pagar")
-    public ResponseEntity<CartaoDTO> pagar(@RequestBody @Valid CartaoPagarDTO cartaoPagarDTO) throws BancoDeDadosException, RegraDeNegocioException {
+    public ResponseEntity<CartaoDTO> pagar(@RequestBody @Valid CartaoDTO cartaoDTO,
+                                           @RequestParam("valor") @NotNull Double valor,
+                                           @RequestHeader("numeroConta") Integer numeroConta,
+                                           @RequestHeader("senha") String senha) throws BancoDeDadosException, RegraDeNegocioException {
         log.info("Operação pagar com cartão iniciada!");
-        CartaoDTO cartaoDTO = cartaoService.pagar(cartaoPagarDTO);
+        CartaoDTO cartaoDTOAtualizado = cartaoService.pagar(cartaoDTO, valor, numeroConta, senha);
         log.info("Operação conluída!");
-        return ResponseEntity.ok(cartaoDTO);
+        return ResponseEntity.ok(cartaoDTOAtualizado);
     }
 
     @PutMapping("/{numeroCartao}")

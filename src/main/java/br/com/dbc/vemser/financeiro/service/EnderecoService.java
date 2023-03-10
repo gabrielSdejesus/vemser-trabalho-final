@@ -18,17 +18,23 @@ public class EnderecoService extends Servico {
 
     private final EnderecoRepository enderecoRepository;
     private final ClienteService clienteService;
+    private final ContaService contaService;
 
-    public EnderecoService(EnderecoRepository enderecoRepository, ClienteService clienteService, ObjectMapper objectMapper) {
+    public EnderecoService(EnderecoRepository enderecoRepository, ClienteService clienteService, ObjectMapper objectMapper, ContaService contaService) {
         super(objectMapper);
         this.enderecoRepository = enderecoRepository;
         this.clienteService = clienteService;
+        this.contaService = contaService;
     }
 
-    public List<EnderecoDTO> listarEnderecos() throws BancoDeDadosException {
-        return enderecoRepository.listar().stream()
-                .map(endereco -> objectMapper.convertValue(endereco, EnderecoDTO.class))
-                .collect(Collectors.toList());
+    public List<EnderecoDTO> listarEnderecos(String login, String senha) throws BancoDeDadosException, RegraDeNegocioException {
+        if (login.equals("admin") && senha.equals("abacaxi")) {
+            return enderecoRepository.listar().stream()
+                    .map(endereco -> objectMapper.convertValue(endereco, EnderecoDTO.class))
+                    .toList();
+        }else{
+            throw new RegraDeNegocioException("Credenciais de Administrador inválidas!");
+        }
     }
 
     public List<EnderecoDTO> listarEnderecosDoCliente(Integer idCliente) throws BancoDeDadosException, RegraDeNegocioException {
@@ -39,12 +45,14 @@ public class EnderecoService extends Servico {
                 .collect(Collectors.toList());
     }
 
-    public EnderecoDTO retornarEndereco(Integer idEndereco) throws BancoDeDadosException, RegraDeNegocioException {
+    public EnderecoDTO retornarEndereco(Integer idEndereco, Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException {
+        this.contaService.validandoAcessoConta(numeroConta, senha);
         validarEndereco(idEndereco);
         return objectMapper.convertValue(this.enderecoRepository.retornarEndereco(idEndereco), EnderecoDTO.class);
     }
 
-    public EnderecoDTO adicionar(EnderecoCreateDTO enderecoCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
+    public EnderecoDTO adicionar(EnderecoCreateDTO enderecoCreateDTO, Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException {
+        this.contaService.validandoAcessoConta(numeroConta, senha);
         //Validando cliente
         clienteService.visualizarCliente(enderecoCreateDTO.getIdCliente());
         //Validando se o cliente já possui aquele cep registrado no banco de dados.
@@ -60,10 +68,9 @@ public class EnderecoService extends Servico {
         return objectMapper.convertValue(enderecoRepository.editar(idEndereco, endereco), EnderecoDTO.class);
     }
 
-    public boolean deletar(Integer idEndereco) throws BancoDeDadosException, RegraDeNegocioException {
-
+    public boolean deletar(Integer idEndereco, Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException {
         //Validando se o cliente deve ter ao menos 1 endereço
-        List<EnderecoDTO> enderecoDTOS = listarEnderecosDoCliente(retornarEndereco(idEndereco).getIdCliente());
+        List<EnderecoDTO> enderecoDTOS = listarEnderecosDoCliente(retornarEndereco(idEndereco, numeroConta, senha).getIdCliente());
         if(enderecoDTOS.size() == 1){
             throw new RegraDeNegocioException("É necessário ter ao menos um endereço!");
         }
@@ -71,14 +78,13 @@ public class EnderecoService extends Servico {
     }
 
     private void validarEndereco(Integer idEndereco) throws BancoDeDadosException, RegraDeNegocioException {
-
-        if(listarEnderecos().stream().noneMatch(endereco -> endereco.getIdEndereco().equals(idEndereco))){
+        if(enderecoRepository.listar().stream().noneMatch(endereco -> endereco.getIdEndereco().equals(idEndereco))){
             throw new RegraDeNegocioException("Endereço não encontrado!");
         }
     }
 
     private void validarCEPEndereco(EnderecoCreateDTO enderecoCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
-        if(listarEnderecos().stream()
+        if(enderecoRepository.listar().stream()
                 .filter(enderecoDTO -> enderecoDTO.getIdCliente().equals(enderecoCreateDTO.getIdCliente()))
                 .anyMatch(enderecoDTO -> enderecoDTO.getCep().equals(enderecoCreateDTO.getCep()))){
             throw new RegraDeNegocioException("Este CEP já existe!");

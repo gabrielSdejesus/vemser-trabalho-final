@@ -269,7 +269,6 @@ public class ContaRepository implements Repositorio<Conta> {
             }
         }
     }
-
     private Conta getContaFromResultSet(ResultSet res) throws SQLException {
 
         Conta conta = new Conta();
@@ -287,5 +286,4 @@ public class ContaRepository implements Repositorio<Conta> {
         conta.setCliente(cliente);
         return conta;
     }
-
 }
