@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -46,9 +47,13 @@ public class EnderecoService extends Servico {
     }
 
     public EnderecoDTO retornarEndereco(Integer idEndereco, Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException {
-        this.contaService.validandoAcessoConta(numeroConta, senha);
+        contaService.validandoAcessoConta(numeroConta, senha);
         validarEndereco(idEndereco);
-        return objectMapper.convertValue(this.enderecoRepository.retornarEndereco(idEndereco), EnderecoDTO.class);
+        if(Objects.equals(this.enderecoRepository.retornarEndereco(idEndereco).getIdCliente(), contaService.retornarContaCliente(numeroConta, senha).getCliente().getIdCliente())){
+            return objectMapper.convertValue(this.enderecoRepository.retornarEndereco(idEndereco), EnderecoDTO.class);
+        }else{
+            throw new RegraDeNegocioException("Esse endereço não te pertence!");
+        }
     }
 
     public EnderecoDTO adicionar(EnderecoCreateDTO enderecoCreateDTO, Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException {
@@ -61,7 +66,8 @@ public class EnderecoService extends Servico {
         return objectMapper.convertValue(this.enderecoRepository.adicionar(endereco), EnderecoDTO.class);
     }
 
-    public EnderecoDTO atualizar(Integer idEndereco, EnderecoCreateDTO enderecoCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
+    public EnderecoDTO atualizar(Integer idEndereco, EnderecoCreateDTO enderecoCreateDTO, Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException {
+        contaService.validandoAcessoConta(numeroConta, senha);
         validarEndereco(idEndereco);
         validarCEPEndereco(enderecoCreateDTO);
         Endereco endereco = objectMapper.convertValue(enderecoCreateDTO, Endereco.class);

@@ -20,9 +20,7 @@ import java.util.List;
 @Slf4j
 @Validated
 @RequiredArgsConstructor
-public class TransferenciaController implements ControleListar<List<TransferenciaDTO>>,
-        ControleAdicionar<TransferenciaCreateDTO, TransferenciaDTO>,
-        ControleListarPorID<TransferenciaDTO>{
+public class TransferenciaController implements ControleListar<List<TransferenciaDTO>>, ControleAdicionar<TransferenciaCreateDTO, TransferenciaDTO>, ControleListarPorID<TransferenciaDTO>{
 
     private final TransferenciaService transferenciaService;
 
@@ -40,8 +38,9 @@ public class TransferenciaController implements ControleListar<List<Transferenci
         return ResponseEntity.ok(transferenciaService.listarTransferenciasDaConta(numeroConta, senha));
     }
 
-    //função do ADM
     @Override
+    @GetMapping("/lista")
+    @Operation(summary = "FUNÇÃO ADM", description = "LISTAR TODAS AS TRANSFERÊNCIAS DO BANCO")
     public ResponseEntity<List<TransferenciaDTO>> listar(String login, String senha) throws BancoDeDadosException, RegraDeNegocioException {
         return ResponseEntity.ok(transferenciaService.listarTransferencias(login, senha));
     }

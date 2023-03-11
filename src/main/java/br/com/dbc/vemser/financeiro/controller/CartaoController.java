@@ -2,7 +2,6 @@ package br.com.dbc.vemser.financeiro.controller;
 
 import br.com.dbc.vemser.financeiro.dto.CartaoCreateDTO;
 import br.com.dbc.vemser.financeiro.dto.CartaoDTO;
-import br.com.dbc.vemser.financeiro.dto.CartaoPagarDTO;
 import br.com.dbc.vemser.financeiro.exception.BancoDeDadosException;
 import br.com.dbc.vemser.financeiro.exception.RegraDeNegocioException;
 import br.com.dbc.vemser.financeiro.model.TipoCartao;

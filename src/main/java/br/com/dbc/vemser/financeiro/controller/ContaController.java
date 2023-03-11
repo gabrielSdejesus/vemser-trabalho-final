@@ -7,7 +7,6 @@ import br.com.dbc.vemser.financeiro.service.ContaService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -15,22 +14,23 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.util.List;
-import java.util.Map;
 
 @RequestMapping("/conta")
 @RestController
 @Slf4j
 @Validated
 @RequiredArgsConstructor
-public class ContaController {
+public class ContaController implements ControleListar<List<ContaDTO>>{
 
     private final ContaService contaService;
 
+    @Override
     @Operation(summary = "FUNÇÃO ADM", description = "LISTAR TODAS AS CONTAS DO BANCO")
     @GetMapping("/lista")
-    public ResponseEntity<List<ContaDTO>> listarContas() throws BancoDeDadosException, RegraDeNegocioException {
-        return ResponseEntity.ok(contaService.listar());
+    public ResponseEntity<List<ContaDTO>> listar(String login, String senha) throws BancoDeDadosException, RegraDeNegocioException {
+        return ResponseEntity.ok(contaService.listar(login, senha));
     }
+
     @Operation(summary = "Logando na conta e retornando informações do cliente", description = "Logando na conta através do numero e senha da conta.")
     @GetMapping("/cliente")
     public ResponseEntity<ContaDTO> retornarContaCliente(@RequestHeader("numeroConta") Integer numeroConta,

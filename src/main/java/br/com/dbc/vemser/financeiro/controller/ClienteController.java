@@ -5,6 +5,7 @@ import br.com.dbc.vemser.financeiro.dto.ClienteDTO;
 import br.com.dbc.vemser.financeiro.exception.BancoDeDadosException;
 import br.com.dbc.vemser.financeiro.exception.RegraDeNegocioException;
 import br.com.dbc.vemser.financeiro.service.ClienteService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -19,14 +20,9 @@ import java.util.List;
 @Slf4j
 @Validated
 @RequiredArgsConstructor
-public class ClienteController {
+public class ClienteController implements ControleListar<List<ClienteDTO>> {
 
     private final ClienteService clienteService;
-
-    @GetMapping("/lista")
-    public ResponseEntity<List<ClienteDTO>> listarClientes() throws BancoDeDadosException {
-        return ResponseEntity.ok(clienteService.listarClientes());
-    }
 
     @GetMapping("/{idCliente}")
     public ResponseEntity<ClienteDTO> exibirCliente(@PathVariable("idCliente") Integer idCliente) throws BancoDeDadosException, RegraDeNegocioException {
@@ -40,5 +36,12 @@ public class ClienteController {
         ClienteDTO clienteDTO = clienteService.alterarCliente(idCliente, cliente);
         log.info("Cliente Atualizado!");
         return ResponseEntity.ok(clienteDTO);
+    }
+
+    @Override
+    @Operation(summary = "FUNÇÃO ADM", description = "LISTAR TODOS OS CLIENTES DO BANCO")
+    @GetMapping("/lista")
+    public ResponseEntity<List<ClienteDTO>> listar(String login, String senha) throws BancoDeDadosException, RegraDeNegocioException {
+        return ResponseEntity.ok(clienteService.listarClientes(login, senha));
     }
 }

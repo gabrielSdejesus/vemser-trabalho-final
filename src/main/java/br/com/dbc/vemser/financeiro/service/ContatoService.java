@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -46,14 +47,18 @@ public class ContatoService extends Servico {
     }
 
     public ContatoDTO retornarContato(Integer idContato, Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException {
-        this.contaService.validandoAcessoConta(numeroConta, senha);
+        contaService.validandoAcessoConta(numeroConta, senha);
         validarContato(idContato);
-        return objectMapper.convertValue(contatoRepository.retornarContato(idContato), ContatoDTO.class);
+        if(Objects.equals(contatoRepository.retornarContato(idContato).getIdCliente(), contaService.retornarContaCliente(numeroConta, senha).getCliente().getIdCliente())){
+            return objectMapper.convertValue(contatoRepository.retornarContato(idContato), ContatoDTO.class);
+        }else{
+            throw new RegraDeNegocioException("Esse contato não te pertence!");
+        }
     }
 
     public ContatoDTO adicionar(ContatoCreateDTO contatoCreateDTO, Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException {
         //Validando cliente
-        this.contaService.validandoAcessoConta(numeroConta, senha);
+        contaService.validandoAcessoConta(numeroConta, senha);
         clienteService.visualizarCliente(contatoCreateDTO.getIdCliente());
         //Validando se o cliente já possui aquele telefone registrado
         validarNumeroContato(contatoCreateDTO);
@@ -61,7 +66,8 @@ public class ContatoService extends Servico {
         return objectMapper.convertValue(this.contatoRepository.adicionar(contato), ContatoDTO.class);
     }
 
-    public ContatoDTO atualizar(Integer idContato, ContatoCreateDTO contatoCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
+    public ContatoDTO atualizar(Integer idContato, ContatoCreateDTO contatoCreateDTO, Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException {
+        contaService.validandoAcessoConta(numeroConta, senha);
         validarContato(idContato);
         validarNumeroContato(contatoCreateDTO);
         Contato contato = objectMapper.convertValue(contatoCreateDTO, Contato.class);

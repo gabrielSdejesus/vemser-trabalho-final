@@ -21,10 +21,14 @@ public class ClienteService extends Servico {
         this.clienteRepository = clienteRepository;
     }
 
-    public List<ClienteDTO> listarClientes() throws BancoDeDadosException {
-        return clienteRepository.listar().stream()
-                .map(cliente -> objectMapper.convertValue(cliente, ClienteDTO.class))
-                .toList();
+    public List<ClienteDTO> listarClientes(String login, String senha) throws BancoDeDadosException, RegraDeNegocioException {
+        if (login.equals("admin") && senha.equals("abacaxi")) {
+            return clienteRepository.listar().stream()
+                    .map(cliente -> objectMapper.convertValue(cliente, ClienteDTO.class))
+                    .toList();
+        }else{
+            throw new RegraDeNegocioException("Credenciais de Administrador inválidas!");
+        }
     }
 
     public ClienteDTO visualizarCliente(Integer idCliente) throws BancoDeDadosException, RegraDeNegocioException {
@@ -65,10 +69,10 @@ public class ClienteService extends Servico {
     }
 
     void validarClientePorCPF(ClienteCreateDTO clienteCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
-        ClienteDTO clienteDTO = listarClientes().stream()
+        ClienteDTO clienteDTO = objectMapper.convertValue(clienteRepository.listar().stream()
                 .filter(cliente -> cliente.getCpf().equals(clienteCreateDTO.getCpf()))
                 .findFirst()
-                .orElse(null);
+                .orElse(null), ClienteDTO.class);
 
         if(clienteDTO == null) {
             return;

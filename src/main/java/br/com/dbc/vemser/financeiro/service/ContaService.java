@@ -37,10 +37,14 @@ public class ContaService extends Servico {
         this.emailService = emailService;
     }
 
-    public List<ContaDTO> listar() throws BancoDeDadosException {
-        return contaRepository.listar().stream()
-                .map(conta -> objectMapper.convertValue(conta, ContaDTO.class))
-                .toList();
+    public List<ContaDTO> listar(String login, String senha) throws BancoDeDadosException, RegraDeNegocioException {
+        if (login.equals("admin") && senha.equals("abacaxi")) {
+            return contaRepository.listar().stream()
+                    .map(conta -> objectMapper.convertValue(conta, ContaDTO.class))
+                    .toList();
+        }else{
+            throw new RegraDeNegocioException("Credenciais de Administrador inválidas!");
+        }
     }
 
     public ContaDTO retornarContaCliente(Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException{

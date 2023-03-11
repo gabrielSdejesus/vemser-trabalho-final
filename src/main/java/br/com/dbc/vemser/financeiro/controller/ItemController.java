@@ -22,7 +22,7 @@ import java.util.List;
 @Slf4j
 @Validated
 @RequiredArgsConstructor
-public class ItemController {
+public class ItemController implements ControleListar<List<ItemDTO>>{
 
     private final ItemService itemService;
 
@@ -35,7 +35,16 @@ public class ItemController {
             }
     )
     @GetMapping("/{idCompra}/compra")
-    public ResponseEntity<List<ItemDTO>> listarItensDaCompra(@NotNull @PathVariable("idCompra") Integer idCompra) throws BancoDeDadosException, RegraDeNegocioException {
-        return new ResponseEntity<>(itemService.listarItensPorIdCompra(idCompra), HttpStatus.OK);
+    public ResponseEntity<List<ItemDTO>> listarItensDaCompra(@NotNull @PathVariable("idCompra") Integer idCompra,
+                                                             @RequestHeader("numeroConta") Integer numeroConta,
+                                                             @RequestHeader("senha") String senha) throws BancoDeDadosException, RegraDeNegocioException {
+        return new ResponseEntity<>(itemService.listarItensPorIdCompra(idCompra, numeroConta, senha), HttpStatus.OK);
+    }
+
+    @Override
+    @GetMapping("/lista")
+    @Operation(summary = "FUNÇÃO ADM", description = "LISTAR TODOS OS ITENS DO BANCO")
+    public ResponseEntity<List<ItemDTO>> listar(String login, String senha) throws BancoDeDadosException, RegraDeNegocioException {
+        return ResponseEntity.ok(itemService.listar(login, senha));
     }
 }
