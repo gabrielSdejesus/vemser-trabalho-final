@@ -1,10 +1,13 @@
 package br.com.dbc.vemser.financeiro.service;
 
 
+import br.com.dbc.vemser.financeiro.dto.ClienteDTO;
+import br.com.dbc.vemser.financeiro.dto.ContaDTO;
 import br.com.dbc.vemser.financeiro.dto.EnderecoCreateDTO;
 import br.com.dbc.vemser.financeiro.dto.EnderecoDTO;
 import br.com.dbc.vemser.financeiro.exception.BancoDeDadosException;
 import br.com.dbc.vemser.financeiro.exception.RegraDeNegocioException;
+import br.com.dbc.vemser.financeiro.model.Cliente;
 import br.com.dbc.vemser.financeiro.model.Endereco;
 import br.com.dbc.vemser.financeiro.repository.EnderecoRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -38,10 +41,10 @@ public class EnderecoService extends Servico {
         }
     }
 
-    public List<EnderecoDTO> listarEnderecosDoCliente(Integer idCliente) throws BancoDeDadosException, RegraDeNegocioException {
-        //Validando cliente
-        clienteService.visualizarCliente(idCliente);
-        return this.enderecoRepository.listarEnderecosPorPessoa(idCliente).stream()
+    public List<EnderecoDTO> listarEnderecosDoCliente(Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException {
+        ContaDTO conta = contaService.validandoAcessoConta(numeroConta, senha);
+        clienteService.visualizarCliente(conta.getCliente().getIdCliente());
+        return this.enderecoRepository.listarEnderecosPorPessoa(conta.getCliente().getIdCliente()).stream()
                 .map(endereco -> objectMapper.convertValue(endereco, EnderecoDTO.class))
                 .collect(Collectors.toList());
     }
@@ -75,8 +78,8 @@ public class EnderecoService extends Servico {
     }
 
     public boolean deletar(Integer idEndereco, Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException {
-        //Validando se o cliente deve ter ao menos 1 endereço
-        List<EnderecoDTO> enderecoDTOS = listarEnderecosDoCliente(retornarEndereco(idEndereco, numeroConta, senha).getIdCliente());
+        List<EnderecoDTO> enderecoDTOS = listarEnderecosDoCliente(numeroConta, senha);
+
         if(enderecoDTOS.size() == 1){
             throw new RegraDeNegocioException("É necessário ter ao menos um endereço!");
         }

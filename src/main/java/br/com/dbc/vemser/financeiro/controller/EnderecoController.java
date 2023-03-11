@@ -6,6 +6,8 @@ import br.com.dbc.vemser.financeiro.exception.BancoDeDadosException;
 import br.com.dbc.vemser.financeiro.exception.RegraDeNegocioException;
 import br.com.dbc.vemser.financeiro.service.EnderecoService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -19,13 +21,22 @@ import java.util.List;
 @Slf4j
 @Validated
 @RequiredArgsConstructor
-public class EnderecoController implements ControleListar<List<EnderecoDTO>>, ControleAdicionar<EnderecoCreateDTO, EnderecoDTO>, ControleListarPorID<EnderecoDTO>, ControleDeletar, ControleAtualizar<EnderecoCreateDTO, EnderecoDTO>{
+public class EnderecoController implements ControleListar<List<EnderecoDTO>>, ControleAdicionar<EnderecoCreateDTO, EnderecoDTO>, ControleDeletar, ControleAtualizar<EnderecoCreateDTO, EnderecoDTO>{
 
     private final EnderecoService enderecoService;
 
-    @GetMapping("/{idCliente}/cliente")
-    public ResponseEntity<List<EnderecoDTO>> listarTodosEnderecosDoCliente(@PathVariable("idCliente") Integer idCliente) throws BancoDeDadosException, RegraDeNegocioException {
-        return ResponseEntity.ok(enderecoService.listarEnderecosDoCliente(idCliente));
+    @Operation(summary = "Retorna os endereços do cliente", description = "Retorna os endereços do cliente do Banco de Dados")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Endereços retornados"),
+                    @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
+                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
+            }
+    )
+    @GetMapping("/cliente")
+    public ResponseEntity<List<EnderecoDTO>> listarEnderecosDoCliente(@RequestHeader("numeroConta") Integer numeroConta,
+                                                                      @RequestHeader("senha") String senha) throws BancoDeDadosException, RegraDeNegocioException {
+        return ResponseEntity.ok(enderecoService.listarEnderecosDoCliente(numeroConta, senha));
     }
 
     @Override
@@ -33,11 +44,6 @@ public class EnderecoController implements ControleListar<List<EnderecoDTO>>, Co
     @Operation(summary = "FUNÇÃO ADM", description = "LISTAR TODOS OS ENDEREÇOS DO BANCO")
     public ResponseEntity<List<EnderecoDTO>> listar(String login, String senha) throws BancoDeDadosException, RegraDeNegocioException {//Função do ADM
         return ResponseEntity.ok(enderecoService.listarEnderecos(login, senha));
-    }
-
-    @Override
-    public ResponseEntity<EnderecoDTO> listarPorId(Integer id, Integer numeroConta, String senha) throws BancoDeDadosException, RegraDeNegocioException {
-        return ResponseEntity.ok(enderecoService.retornarEndereco(id, numeroConta, senha));
     }
 
     @Override
